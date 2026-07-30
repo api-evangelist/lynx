@@ -1,7 +1,31 @@
 aid: lynx
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/lynx.png
 name: Lynx
-description: Lynx is a company surfaced as a portfolio company of obvious-ventures and added to the API
-  Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Lynx (Lynx FinHealth) is a healthcare fintech platform that provides embedded
+  banking, payments, benefits, and e-commerce infrastructure for health plans,
+  providers, and digital health companies. Its API-first and white-label
+  platform powers consumer-directed health accounts (HSA/FSA), ICHRA
+  administration, directed and filtered spend accounts, instant physical and
+  virtual card issuance with merchant and SKU-level controls, supplemental
+  benefits, pharmacy access, rewards and incentive programs, and a qualified
+  medical expense (QME) e-commerce marketplace with end-to-end fulfillment. Lynx
+  is SOC 2 and HITRUST certified and exposes a developer hub, dated changelog,
+  hosted sandbox, and Atlassian status page. Surfaced as a portfolio company of
+  Obvious Ventures and enriched from the public Lynx surface (the full API
+  reference, authentication model, and test data are gated behind developer
+  login).
 url: https://raw.githubusercontent.com/api-evangelist/lynx/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -11,10 +35,32 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-20'
 tags:
 - Company
-apis: []
+- Healthcare
+- Fintech
+- Payments
+- Benefits
+- Health Savings Accounts
+- Embedded Finance
+- Card Issuing
+- Insurance
+apis:
+- name: Lynx API
+  description: >-
+    Lynx FinHealth API for embedded health accounts, enrollment, contributions,
+    payments and distributions, transactions, and card issuance/management.
+    Reference is gated behind developer login; a hosted sandbox is available.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  properties:
+  - type: Documentation
+    url: https://docs.lynx-fh.com/
+  - type: APIReference
+    url: https://docs.lynx-fh.com/api-reference
+  - type: GettingStarted
+    url: https://docs.lynx-fh.com/
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -23,3 +69,46 @@ maintainers:
 common:
 - type: Website
   url: https://lynx-fh.com
+- type: DeveloperPortal
+  url: https://docs.lynx-fh.com/
+- type: Documentation
+  url: https://docs.lynx-fh.com/
+- type: APIReference
+  url: https://docs.lynx-fh.com/api-reference
+- type: GettingStarted
+  url: https://docs.lynx-fh.com/
+- type: ChangeLog
+  url: https://docs.lynx-fh.com/changelog
+- type: StatusPage
+  url: https://status.lynx-fh.com/
+- type: Sandbox
+  url: https://sandbox.lynx-fh.co/client-ui/
+- type: SignUp
+  url: https://www.lynx-fh.com/request-lynx-api-access
+- type: Support
+  url: https://www.lynx-fh.com/contact-us
+- type: Blog
+  url: https://www.lynx-fh.com/blog
+- type: PrivacyPolicy
+  url: https://www.lynx-fh.com/website-privacy-policy
+- type: TermsOfService
+  url: https://www.lynx-fh.com/website-terms-conditions
+- type: Compliance
+  url: https://www.lynx-fh.com/
+- type: Conformance
+  url: conformance/lynx-conformance.yml
+- type: Lifecycle
+  url: lifecycle/lynx-lifecycle.yml
+- type: ChangeLog
+  url: changelog/lynx-changelog.yml
+- type: Sandbox
+  url: sandbox/lynx-sandbox.yml
+- type: DomainSecurity
+  url: security/lynx-domain-security.yml
+- type: LLMsTxt
+  url: llms/lynx-llms.txt
+x-enrichment:
+  date: '2026-07-20'
+  status: enriched
+  artifacts_added: 7
+  pass: local-v1
