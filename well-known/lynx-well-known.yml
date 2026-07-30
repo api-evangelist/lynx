@@ -1,0 +1,38 @@
+generated: '2026-07-20'
+method: searched
+source: live probes of Lynx FinHealth hosts
+notes: >-
+  Probed the /.well-known/ discovery surface on the website, developer hub, and
+  sandbox hosts. None returned 200; recorded as honest empty result. No
+  security.txt, OIDC, OAuth AS metadata, or api-catalog is published.
+documents:
+  - host: https://www.lynx-fh.com
+    path: /.well-known/security.txt
+    status: 404
+  - host: https://www.lynx-fh.com
+    path: /.well-known/api-catalog
+    status: 404
+  - host: https://www.lynx-fh.com
+    path: /.well-known/openid-configuration
+    status: 404
+  - host: https://docs.lynx-fh.com
+    path: /.well-known/security.txt
+    status: 404
+  - host: https://docs.lynx-fh.com
+    path: /.well-known/api-catalog
+    status: 404
+  - host: https://docs.lynx-fh.com
+    path: /.well-known/openid-configuration
+    status: 404
+  - host: https://docs.lynx-fh.com
+    path: /.well-known/oauth-authorization-server
+    status: 404
+  - host: https://sandbox.lynx-fh.co
+    path: /.well-known/security.txt
+    status: 404
+  - host: https://sandbox.lynx-fh.co
+    path: /.well-known/openid-configuration
+    status: 404
+  - host: https://sandbox.lynx-fh.co
+    path: /.well-known/oauth-authorization-server
+    status: 404

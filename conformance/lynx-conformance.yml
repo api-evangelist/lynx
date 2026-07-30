@@ -1,0 +1,21 @@
+generated: '2026-07-20'
+method: searched
+source: https://www.lynx-fh.com/
+notes: >-
+  Lynx FinHealth publishes SOC 2 and HITRUST certification badges in the site
+  footer ("Scale with Security"). No public OpenAPI is available (the API
+  reference at docs.lynx-fh.com/api-reference is gated behind login), so
+  spec-derived standards conformance could not be asserted.
+standards:
+  - id: soc2
+    conforms: true
+    evidence: SOC 2 certification badge published on lynx-fh.com footer
+  - id: hitrust
+    conforms: true
+    evidence: HITRUST r2 certification badge published on lynx-fh.com footer
+  - id: oauth2
+    conforms: unknown
+    evidence: API reference is gated; auth method not publicly documented
+  - id: rfc9457-problem-details
+    conforms: unknown
+    evidence: no public OpenAPI to inspect error media types

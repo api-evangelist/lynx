@@ -1,0 +1,28 @@
+generated: '2026-07-20'
+method: searched
+source: https://status.lynx-fh.com/ ; https://docs.lynx-fh.com/changelog
+status_page: https://status.lynx-fh.com/
+status_page_provider: Atlassian Statuspage
+status_page_components:
+  - API Endpoints
+  - Enrollment
+  - Cards
+  - Payments
+  - Member Management
+  - Sandbox
+changelog: https://docs.lynx-fh.com/changelog
+versioning:
+  scheme: unknown
+  docs: https://docs.lynx-fh.com/
+deprecation:
+  policy_url: null
+  sunset_header: unknown
+sla:
+  url: null
+  uptime_target: null
+deprecated_operations: []
+notes: >-
+  Atlassian Statuspage confirmed live at status.lynx-fh.com with six components,
+  all "All Systems Operational" (100% 90-day uptime as of 2026-07-06). A dated
+  changelog exists on the ReadMe-style developer hub. No public deprecation
+  policy or published SLA was found; the API reference is gated behind login.

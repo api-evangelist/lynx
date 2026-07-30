@@ -1,0 +1,17 @@
+generated: '2026-07-20'
+method: searched
+source: https://www.lynx-fh.com/request-lynx-api-access ; https://status.lynx-fh.com/
+sandbox:
+  hosted_ui: https://sandbox.lynx-fh.co/client-ui/
+  status_component: Sandbox (listed on status.lynx-fh.com)
+  access: >-
+    Sandbox access and test credentials are provisioned after requesting API
+    access at https://www.lynx-fh.com/request-lynx-api-access. Test card
+    numbers, test member/account fixtures, and API keys are documented inside
+    the gated developer hub (docs.lynx-fh.com) rather than published publicly.
+test_values: []
+notes: >-
+  Lynx operates a dedicated hosted sandbox (sandbox.lynx-fh.co) with a client UI
+  and a monitored "Sandbox" status component. No test cards or magic test values
+  are published on the public surface; they live behind the developer login, so
+  none were captured (never fabricated).

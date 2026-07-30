@@ -1,0 +1,19 @@
+generated: '2026-07-20'
+method: searched
+source: https://docs.lynx-fh.com/changelog
+url: https://docs.lynx-fh.com/changelog
+platform: ReadMe developer hub
+scheme: dated
+current_version: unknown
+entries:
+  - title: Welcome to Lynx API
+    author: Ryan Leary
+    date: unknown
+    note: >-
+      Earliest published changelog post on the Lynx developer hub. Detailed
+      dated entries are gated behind developer login; only the changelog index
+      is publicly reachable.
+notes: >-
+  Lynx maintains a dated changelog on its ReadMe-style developer hub at
+  docs.lynx-fh.com/changelog. The full entry list requires authentication, so
+  only the changelog surface and its earliest visible post were captured.
