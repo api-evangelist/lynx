@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-get-account-performance-response-schema.json",
+  "title": "GetAccountPerformanceResponse",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-investments-api-openapi.yml#/components/schemas/GetAccountPerformanceResponse",
+  "type": "object",
+  "properties": {
+    "clientOrg": {
+      "$ref": "#/$defs/ClientOrgDto"
+    },
+    "member": {
+      "$ref": "#/$defs/BaseMember"
+    },
+    "startDate": {
+      "type": "string",
+      "description": "Start date of requested time frame of the accounts performance; format should follow 2019-07-08 or 2019-07-08T00:00:00Z"
+    },
+    "endDate": {
+      "type": "string",
+      "description": "End date of requested time frame of the accounts performance; format should follow 2019-07-08 or 2019-07-08T00:00:00Z"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "description": "Date and time of last performance update"
+    },
+    "performance": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/PerformanceDTO"
+      }
+    }
+  },
+  "$defs": {
+    "BaseMember": {
+      "type": "object",
+      "properties": {
+        "clientMemberId": {
+          "type": "string",
+          "description": "Unique client-side identifier for the member"
+        }
+      },
+      "required": [
+        "clientMemberId"
+      ]
+    },
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "PerformanceDTO": {
+      "type": "object",
+      "properties": {
+        "realizedDayPL": {
+          "type": "number",
+          "description": "The actual profit or loss on the day in USD"
+        },
+        "unrealizedDayPL": {
+          "type": "number",
+          "description": "Unrealized day profit and loss for the position"
+        },
+        "cumRealizedPL": {
+          "type": "number",
+          "description": "The cumulative realized profit/loss from inception of account, each day adds to previous days"
+        },
+        "date": {
+          "type": "string",
+          "description": "The date of the performance array values"
+        },
+        "equity": {
+          "type": "number",
+          "description": "Invested equity (excluding cash) for this day (see performance.date). For Total Equity add performance equity and performance cash."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1031 @@
+{
+  "@context": {
+    "@vocab": "https://lynx-fh.com/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "lynx": "https://lynx-fh.com/schema#",
+    "ClientOrgDto": "lynx:ClientOrgDto",
+    "name": {
+      "@id": "lynx:name",
+      "@type": "xsd:string"
+    },
+    "ExceptionBaseResponse": "lynx:ExceptionBaseResponse",
+    "data": {
+      "@id": "lynx:data"
+    },
+    "exceptions": {
+      "@id": "lynx:exceptions",
+      "@container": "@list"
+    },
+    "ResponseException": "lynx:ResponseException",
+    "errorCode": {
+      "@id": "lynx:errorCode",
+      "@type": "xsd:string"
+    },
+    "exceptionSource": {
+      "@id": "lynx:exceptionSource",
+      "@type": "xsd:string"
+    },
+    "exceptionMessage": {
+      "@id": "lynx:exceptionMessage",
+      "@type": "xsd:string"
+    },
+    "ClientOrgAccountNumberDto": "lynx:ClientOrgAccountNumberDto",
+    "id": {
+      "@id": "lynx:id",
+      "@type": "xsd:string"
+    },
+    "accountNumber": {
+      "@id": "lynx:accountNumber",
+      "@type": "xsd:string"
+    },
+    "GetClientOrgAccountNumberResponse": "lynx:GetClientOrgAccountNumberResponse",
+    "clientOrg": {
+      "@id": "lynx:clientOrg",
+      "@type": "@id"
+    },
+    "clientOrgAccount": {
+      "@id": "lynx:clientOrgAccount",
+      "@type": "@id"
+    },
+    "AccountBalanceDto": "lynx:AccountBalanceDto",
+    "availableAmount": {
+      "@id": "lynx:availableAmount",
+      "@type": "xsd:decimal"
+    },
+    "balanceAmount": {
+      "@id": "lynx:balanceAmount",
+      "@type": "xsd:decimal"
+    },
+    "lastFourAccountNumber": {
+      "@id": "lynx:lastFourAccountNumber",
+      "@type": "xsd:string"
+    },
+    "routingNumber": {
+      "@id": "lynx:routingNumber",
+      "@type": "xsd:string"
+    },
+    "type": {
+      "@id": "lynx:type",
+      "@type": "xsd:string"
+    },
+    "accountQualifierType": {
+      "@id": "lynx:accountQualifierType",
+      "@type": "xsd:string"
+    },
+    "verifiedDate": {
+      "@id": "lynx:verifiedDate",
+      "@type": "xsd:dateTime"
+    },
+    "verifiedIndicator": {
+      "@id": "lynx:verifiedIndicator",
+      "@type": "xsd:boolean"
+    },
+    "updateDate": {
+      "@id": "lynx:updateDate",
+      "@type": "xsd:dateTime"
+    },
+    "GetClientOrgBankAccountBalanceResponse": "lynx:GetClientOrgBankAccountBalanceResponse",
+    "clientOrgBankAccounts": {
+      "@id": "lynx:clientOrgBankAccounts",
+      "@container": "@list"
+    },
+    "ClientOrgAccountDetailsDto": "lynx:ClientOrgAccountDetailsDto",
+    "GetClientOrgAccountsResponse": "lynx:GetClientOrgAccountsResponse",
+    "clientOrgAccounts": {
+      "@id": "lynx:clientOrgAccounts",
+      "@container": "@list"
+    },
+    "BaseMember": "lynx:BaseMember",
+    "clientMemberId": {
+      "@id": "lynx:clientMemberId",
+      "@type": "xsd:string"
+    },
+    "GetMemberAccountNumberResponse": "lynx:GetMemberAccountNumberResponse",
+    "memberAccount": {
+      "@id": "lynx:memberAccount",
+      "@type": "@id"
+    },
+    "member": {
+      "@id": "lynx:member",
+      "@type": "@id"
+    },
+    "MemberFullAccountNumberDto": "lynx:MemberFullAccountNumberDto",
+    "effectiveDate": {
+      "@id": "lynx:effectiveDate",
+      "@type": "xsd:dateTime"
+    },
+    "expirationDate": {
+      "@id": "lynx:expirationDate",
+      "@type": "xsd:dateTime"
+    },
+    "GetMemberAccountBalanceResponse": "lynx:GetMemberAccountBalanceResponse",
+    "memberAccounts": {
+      "@id": "lynx:memberAccounts",
+      "@container": "@list"
+    },
+    "MemberAccountBalanceDto": "lynx:MemberAccountBalanceDto",
+    "incentiveRatio": {
+      "@id": "lynx:incentiveRatio",
+      "@type": "xsd:decimal"
+    },
+    "incentiveValue": {
+      "@id": "lynx:incentiveValue",
+      "@type": "xsd:decimal"
+    },
+    "creationDate": {
+      "@id": "lynx:creationDate",
+      "@type": "xsd:dateTime"
+    },
+    "nextScheduledFundsLoadDate": {
+      "@id": "lynx:nextScheduledFundsLoadDate",
+      "@type": "xsd:dateTime"
+    },
+    "Idempotency": "lynx:Idempotency",
+    "idempotencyKey": {
+      "@id": "lynx:idempotencyKey",
+      "@type": "xsd:string"
+    },
+    "BaseMemberProduct": "lynx:BaseMemberProduct",
+    "productName": {
+      "@id": "lynx:productName",
+      "@type": "xsd:string"
+    },
+    "MemberAccountStatusRequest": "lynx:MemberAccountStatusRequest",
+    "idempotency": {
+      "@id": "lynx:idempotency",
+      "@type": "@id"
+    },
+    "PatchAccountStatusMemberDto": "lynx:PatchAccountStatusMemberDto",
+    "memberBankAccountId": {
+      "@id": "lynx:memberBankAccountId",
+      "@type": "xsd:string"
+    },
+    "PatchMemberAccountStatusDto": "lynx:PatchMemberAccountStatusDto",
+    "accountType": {
+      "@id": "lynx:accountType",
+      "@type": "xsd:string"
+    },
+    "PatchUpdateMemberAccountStatusRequest": "lynx:PatchUpdateMemberAccountStatusRequest",
+    "memberProduct": {
+      "@id": "lynx:memberProduct",
+      "@type": "@id"
+    },
+    "status": {
+      "@id": "lynx:status",
+      "@type": "xsd:string"
+    },
+    "statusReason": {
+      "@id": "lynx:statusReason",
+      "@type": "xsd:string"
+    },
+    "memberAuthorized": {
+      "@id": "lynx:memberAuthorized",
+      "@type": "xsd:boolean"
+    },
+    "memberAuthorizedDate": {
+      "@id": "lynx:memberAuthorizedDate",
+      "@type": "xsd:string"
+    },
+    "MemberAccountStatusDto": "lynx:MemberAccountStatusDto",
+    "UpdateMemberAccountStatusResponse": "lynx:UpdateMemberAccountStatusResponse",
+    "AccountDto": "lynx:AccountDto",
+    "AccountTransferData": "lynx:AccountTransferData",
+    "amount": {
+      "@id": "lynx:amount",
+      "@type": "xsd:decimal"
+    },
+    "dateOfTransfer": {
+      "@id": "lynx:dateOfTransfer",
+      "@type": "xsd:string"
+    },
+    "transferType": {
+      "@id": "lynx:transferType",
+      "@type": "xsd:string"
+    },
+    "transferScope": {
+      "@id": "lynx:transferScope",
+      "@type": "xsd:string"
+    },
+    "priorCustodianName": {
+      "@id": "lynx:priorCustodianName",
+      "@type": "xsd:string"
+    },
+    "priorCustodianAccountNumber": {
+      "@id": "lynx:priorCustodianAccountNumber",
+      "@type": "xsd:string"
+    },
+    "attestEligibleAccount": {
+      "@id": "lynx:attestEligibleAccount",
+      "@type": "xsd:boolean"
+    },
+    "attestWithin60Days": {
+      "@id": "lynx:attestWithin60Days",
+      "@type": "xsd:boolean"
+    },
+    "attestNoPriorRollover": {
+      "@id": "lynx:attestNoPriorRollover",
+      "@type": "xsd:boolean"
+    },
+    "priorCustodianAttention": {
+      "@id": "lynx:priorCustodianAttention",
+      "@type": "xsd:string"
+    },
+    "priorCustodianAddressLine1": {
+      "@id": "lynx:priorCustodianAddressLine1",
+      "@type": "xsd:string"
+    },
+    "priorCustodianAddressLine2": {
+      "@id": "lynx:priorCustodianAddressLine2",
+      "@type": "xsd:string"
+    },
+    "priorCustodianCity": {
+      "@id": "lynx:priorCustodianCity",
+      "@type": "xsd:string"
+    },
+    "priorCustodianState": {
+      "@id": "lynx:priorCustodianState",
+      "@type": "xsd:string"
+    },
+    "priorCustodianZip": {
+      "@id": "lynx:priorCustodianZip",
+      "@type": "xsd:string"
+    },
+    "priorCustodianPhone": {
+      "@id": "lynx:priorCustodianPhone",
+      "@type": "xsd:string"
+    },
+    "investmentsLiquidated": {
+      "@id": "lynx:investmentsLiquidated",
+      "@type": "xsd:boolean"
+    },
+    "MemberAccountTransferRequestData": "lynx:MemberAccountTransferRequestData",
+    "account": {
+      "@id": "lynx:account",
+      "@type": "@id"
+    },
+    "product": {
+      "@id": "lynx:product",
+      "@type": "@id"
+    },
+    "memberBankAccount": {
+      "@id": "lynx:memberBankAccount",
+      "@type": "@id"
+    },
+    "accountTransfer": {
+      "@id": "lynx:accountTransfer",
+      "@type": "@id"
+    },
+    "MemberBankAccount": "lynx:MemberBankAccount",
+    "PostMemberAccountTransferRequest": "lynx:PostMemberAccountTransferRequest",
+    "ProductDto": "lynx:ProductDto",
+    "PostMemberAccountTransferResponse": "lynx:PostMemberAccountTransferResponse",
+    "AccountTransferRequestInfo": "lynx:AccountTransferRequestInfo",
+    "requestedDate": {
+      "@id": "lynx:requestedDate",
+      "@type": "xsd:date"
+    },
+    "settlementStatus": {
+      "@id": "lynx:settlementStatus",
+      "@type": "xsd:string"
+    },
+    "memberAccountId": {
+      "@id": "lynx:memberAccountId",
+      "@type": "xsd:string"
+    },
+    "GetMemberAccountTransferResponse": "lynx:GetMemberAccountTransferResponse",
+    "accountTransfers": {
+      "@id": "lynx:accountTransfers",
+      "@container": "@list"
+    },
+    "MemberAccountData": "lynx:MemberAccountData",
+    "electionAmount": {
+      "@id": "lynx:electionAmount",
+      "@type": "xsd:decimal"
+    },
+    "PatchMemberAccountRequest": "lynx:PatchMemberAccountRequest",
+    "PatchMemberAccountRequestDoc": "lynx:PatchMemberAccountRequestDoc",
+    "PatchMemberAccountResponse": "lynx:PatchMemberAccountResponse",
+    "BaseMemberCard": "lynx:BaseMemberCard",
+    "cardDesign": {
+      "@id": "lynx:cardDesign",
+      "@type": "@id"
+    },
+    "expirationMonth": {
+      "@id": "lynx:expirationMonth",
+      "@type": "xsd:integer"
+    },
+    "expirationYear": {
+      "@id": "lynx:expirationYear",
+      "@type": "xsd:integer"
+    },
+    "cvv": {
+      "@id": "lynx:cvv",
+      "@type": "xsd:integer"
+    },
+    "brand": {
+      "@id": "lynx:brand",
+      "@type": "xsd:string"
+    },
+    "deliveryMethod": {
+      "@id": "lynx:deliveryMethod",
+      "@type": "xsd:string"
+    },
+    "nameOnCard": {
+      "@id": "lynx:nameOnCard",
+      "@type": "xsd:string"
+    },
+    "motherMaidenName": {
+      "@id": "lynx:motherMaidenName",
+      "@type": "xsd:string"
+    },
+    "issuingAgency": {
+      "@id": "lynx:issuingAgency",
+      "@type": "xsd:string"
+    },
+    "fulfillingAgency": {
+      "@id": "lynx:fulfillingAgency",
+      "@type": "xsd:string"
+    },
+    "cardLastFour": {
+      "@id": "lynx:cardLastFour",
+      "@type": "xsd:string"
+    },
+    "cardProxy": {
+      "@id": "lynx:cardProxy",
+      "@type": "xsd:string"
+    },
+    "issueDate": {
+      "@id": "lynx:issueDate",
+      "@type": "xsd:date"
+    },
+    "activationDate": {
+      "@id": "lynx:activationDate",
+      "@type": "xsd:date"
+    },
+    "secondaryCardIssuedIndicator": {
+      "@id": "lynx:secondaryCardIssuedIndicator",
+      "@type": "xsd:boolean"
+    },
+    "relatedPersonId": {
+      "@id": "lynx:relatedPersonId",
+      "@type": "xsd:string"
+    },
+    "addDatetime": {
+      "@id": "lynx:addDatetime",
+      "@type": "xsd:dateTime"
+    },
+    "CardDesignDto": "lynx:CardDesignDto",
+    "GetMemberCardsResponse": "lynx:GetMemberCardsResponse",
+    "memberAccountCards": {
+      "@id": "lynx:memberAccountCards",
+      "@container": "@list"
+    },
+    "MemberAccountCardDto": "lynx:MemberAccountCardDto",
+    "memberCard": {
+      "@id": "lynx:memberCard",
+      "@type": "@id"
+    },
+    "MemberAccountDto": "lynx:MemberAccountDto",
+    "GetCardDetailsResponseDoc": "lynx:GetCardDetailsResponseDoc",
+    "MemberAndMemberCardDto": "lynx:MemberAndMemberCardDto",
+    "CardRequestDto": "lynx:CardRequestDto",
+    "partnerCardId": {
+      "@id": "lynx:partnerCardId",
+      "@type": "xsd:string"
+    },
+    "cardDeliveryStatus": {
+      "@id": "lynx:cardDeliveryStatus",
+      "@type": "xsd:string"
+    },
+    "estimatedDeliveryDate": {
+      "@id": "lynx:estimatedDeliveryDate",
+      "@type": "xsd:dateTime"
+    },
+    "deliveryDate": {
+      "@id": "lynx:deliveryDate",
+      "@type": "xsd:dateTime"
+    },
+    "trackingNumber": {
+      "@id": "lynx:trackingNumber",
+      "@type": "xsd:string"
+    },
+    "trackingUrl": {
+      "@id": "lynx:trackingUrl",
+      "@type": "xsd:string"
+    },
+    "shippingMethod": {
+      "@id": "lynx:shippingMethod",
+      "@type": "xsd:string"
+    },
+    "shipToAddress1": {
+      "@id": "lynx:shipToAddress1",
+      "@type": "xsd:string"
+    },
+    "shipToAddress2": {
+      "@id": "lynx:shipToAddress2",
+      "@type": "xsd:string"
+    },
+    "shipToCity": {
+      "@id": "lynx:shipToCity",
+      "@type": "xsd:string"
+    },
+    "shipToState": {
+      "@id": "lynx:shipToState",
+      "@type": "xsd:string"
+    },
+    "shipToPostal": {
+      "@id": "lynx:shipToPostal",
+      "@type": "xsd:string"
+    },
+    "jobNumber": {
+      "@id": "lynx:jobNumber",
+      "@type": "xsd:string"
+    },
+    "programDescription": {
+      "@id": "lynx:programDescription",
+      "@type": "xsd:string"
+    },
+    "pullType": {
+      "@id": "lynx:pullType",
+      "@type": "xsd:string"
+    },
+    "GetCardRequestsResponse": "lynx:GetCardRequestsResponse",
+    "cardRequest": {
+      "@id": "lynx:cardRequest",
+      "@container": "@list"
+    },
+    "GetCardRequestsResponseDoc": "lynx:GetCardRequestsResponseDoc",
+    "CardStatusDto": "lynx:CardStatusDto",
+    "MemberCardStatus": "lynx:MemberCardStatus",
+    "memberCardStatus": {
+      "@id": "lynx:memberCardStatus",
+      "@type": "@id"
+    },
+    "MemberCardStatusResponseDoc": "lynx:MemberCardStatusResponseDoc",
+    "MemberCardIdDto": "lynx:MemberCardIdDto",
+    "BaseAddress": "lynx:BaseAddress",
+    "line1": {
+      "@id": "lynx:line1",
+      "@type": "xsd:string"
+    },
+    "line2": {
+      "@id": "lynx:line2",
+      "@type": "xsd:string"
+    },
+    "city": {
+      "@id": "lynx:city",
+      "@type": "xsd:string"
+    },
+    "stateProvince": {
+      "@id": "lynx:stateProvince",
+      "@type": "xsd:string"
+    },
+    "country": {
+      "@id": "lynx:country",
+      "@type": "xsd:string"
+    },
+    "postalCode": {
+      "@id": "lynx:postalCode",
+      "@type": "xsd:string"
+    },
+    "postalCodeExtension": {
+      "@id": "lynx:postalCodeExtension",
+      "@type": "xsd:string"
+    },
+    "DependentCardRequest": "lynx:DependentCardRequest",
+    "dependent": {
+      "@id": "lynx:dependent",
+      "@type": "@id"
+    },
+    "DependentRushDeliveryDto": "lynx:DependentRushDeliveryDto",
+    "rushDelivery": {
+      "@id": "lynx:rushDelivery",
+      "@type": "xsd:boolean"
+    },
+    "address": {
+      "@id": "lynx:address",
+      "@type": "@id"
+    },
+    "waiveRushDeliveryFee": {
+      "@id": "lynx:waiveRushDeliveryFee",
+      "@type": "xsd:boolean"
+    },
+    "DocPostDependentCardRequest": "lynx:DocPostDependentCardRequest",
+    "PostDependentCardResponse": "lynx:PostDependentCardResponse",
+    "dependentCard": {
+      "@id": "lynx:dependentCard",
+      "@type": "@id"
+    },
+    "MemberCardRushDeliveryDto": "lynx:MemberCardRushDeliveryDto",
+    "CardResponseDoc": "lynx:CardResponseDoc",
+    "MemberCardResponse": "lynx:MemberCardResponse",
+    "ReissueCardRequest": "lynx:ReissueCardRequest",
+    "ReissueCardRequestDoc": "lynx:ReissueCardRequestDoc",
+    "ReplaceCardRequest": "lynx:ReplaceCardRequest",
+    "cardPackageName": {
+      "@id": "lynx:cardPackageName",
+      "@type": "xsd:string"
+    },
+    "ReplaceCardRequestDoc": "lynx:ReplaceCardRequestDoc",
+    "ClientOrg": "lynx:ClientOrg",
+    "Data": "lynx:Data",
+    "Member": "lynx:Member",
+    "MemberCard": "lynx:MemberCard",
+    "MemberCardRequest": "lynx:MemberCardRequest",
+    "CardStatusChangeRequest": "lynx:CardStatusChangeRequest",
+    "CardStatusRequest": "lynx:CardStatusRequest",
+    "MemberClaimUpdateDto": "lynx:MemberClaimUpdateDto",
+    "itemDescription": {
+      "@id": "lynx:itemDescription",
+      "@type": "xsd:string"
+    },
+    "MemberClaimsData": "lynx:MemberClaimsData",
+    "claimNumber": {
+      "@id": "lynx:claimNumber",
+      "@type": "xsd:string"
+    },
+    "claimAmount": {
+      "@id": "lynx:claimAmount",
+      "@type": "xsd:decimal"
+    },
+    "expenseDate": {
+      "@id": "lynx:expenseDate",
+      "@type": "xsd:string"
+    },
+    "merchantName": {
+      "@id": "lynx:merchantName",
+      "@type": "xsd:string"
+    },
+    "category": {
+      "@id": "lynx:category",
+      "@type": "xsd:string"
+    },
+    "description": {
+      "@id": "lynx:description",
+      "@type": "xsd:string"
+    },
+    "items": {
+      "@id": "lynx:items",
+      "@container": "@list"
+    },
+    "PutMemberClaimRequest": "lynx:PutMemberClaimRequest",
+    "PersistClaimsResponse": "lynx:PersistClaimsResponse",
+    "CreateClaimRequestData": "lynx:CreateClaimRequestData",
+    "reimbursementType": {
+      "@id": "lynx:reimbursementType",
+      "@type": "xsd:string"
+    },
+    "serviceType": {
+      "@id": "lynx:serviceType",
+      "@type": "xsd:string"
+    },
+    "MemberAccountIdDto": "lynx:MemberAccountIdDto",
+    "MemberBankAccountDto": "lynx:MemberBankAccountDto",
+    "MemberClaimItemDto": "lynx:MemberClaimItemDto",
+    "PostMemberClaimRequest": "lynx:PostMemberClaimRequest",
+    "MemberDto": "lynx:MemberDto",
+    "firstName": {
+      "@id": "lynx:firstName",
+      "@type": "xsd:string"
+    },
+    "lastName": {
+      "@id": "lynx:lastName",
+      "@type": "xsd:string"
+    },
+    "AiAdjudicationResultDTO": "lynx:AiAdjudicationResultDTO",
+    "aiValidAmount": {
+      "@id": "lynx:aiValidAmount",
+      "@type": "xsd:decimal"
+    },
+    "aiDenyReason": {
+      "@id": "lynx:aiDenyReason",
+      "@type": "xsd:string"
+    },
+    "aiRecommendation": {
+      "@id": "lynx:aiRecommendation",
+      "@type": "xsd:string"
+    },
+    "confidence": {
+      "@id": "lynx:confidence",
+      "@type": "xsd:decimal"
+    },
+    "suggestion": {
+      "@id": "lynx:suggestion",
+      "@type": "xsd:string"
+    },
+    "flags": {
+      "@id": "lynx:flags",
+      "@container": "@list"
+    },
+    "merchant": {
+      "@id": "lynx:merchant",
+      "@type": "xsd:string"
+    },
+    "receiptTotal": {
+      "@id": "lynx:receiptTotal",
+      "@type": "xsd:decimal"
+    },
+    "receiptMerchant": {
+      "@id": "lynx:receiptMerchant",
+      "@type": "xsd:string"
+    },
+    "receiptDate": {
+      "@id": "lynx:receiptDate",
+      "@type": "xsd:dateTime"
+    },
+    "ClaimDetailItem": "lynx:ClaimDetailItem",
+    "GetClaimDetailResponse": "lynx:GetClaimDetailResponse",
+    "memberClaim": {
+      "@id": "lynx:memberClaim",
+      "@type": "@id"
+    },
+    "MemberClaimDetailDto": "lynx:MemberClaimDetailDto",
+    "approvedAmount": {
+      "@id": "lynx:approvedAmount",
+      "@type": "xsd:decimal"
+    },
+    "addDateTime": {
+      "@id": "lynx:addDateTime",
+      "@type": "xsd:string"
+    },
+    "receipt": {
+      "@id": "lynx:receipt",
+      "@type": "@id"
+    },
+    "aiAdjudicationResult": {
+      "@id": "lynx:aiAdjudicationResult",
+      "@type": "@id"
+    },
+    "ReceiptDto": "lynx:ReceiptDto",
+    "receiptId": {
+      "@id": "lynx:receiptId",
+      "@type": "xsd:string"
+    },
+    "receiptUrl": {
+      "@id": "lynx:receiptUrl",
+      "@type": "xsd:string"
+    },
+    "GetClaimsResponse": "lynx:GetClaimsResponse",
+    "memberClaims": {
+      "@id": "lynx:memberClaims",
+      "@container": "@list"
+    },
+    "MemberClaimDetailInfo": "lynx:MemberClaimDetailInfo",
+    "ClientOrgWebHookDto": "lynx:ClientOrgWebHookDto",
+    "url": {
+      "@id": "lynx:url",
+      "@type": "xsd:string"
+    },
+    "encryptionIndicator": {
+      "@id": "lynx:encryptionIndicator",
+      "@type": "xsd:boolean"
+    },
+    "deliveryMode": {
+      "@id": "lynx:deliveryMode",
+      "@type": "xsd:string"
+    },
+    "active": {
+      "@id": "lynx:active",
+      "@type": "xsd:boolean"
+    },
+    "token": {
+      "@id": "lynx:token",
+      "@type": "xsd:string"
+    },
+    "ClientOrgWebHooks": "lynx:ClientOrgWebHooks",
+    "clientOrgWebHooks": {
+      "@id": "lynx:clientOrgWebHooks",
+      "@container": "@list"
+    },
+    "WebHook": "lynx:WebHook",
+    "WebHookRequest": "lynx:WebHookRequest",
+    "ClientOrgApplicationDto": "lynx:ClientOrgApplicationDto",
+    "partnerOrg": {
+      "@id": "lynx:partnerOrg",
+      "@type": "@id"
+    },
+    "partnerApplicationId": {
+      "@id": "lynx:partnerApplicationId",
+      "@type": "xsd:string"
+    },
+    "partnerClientOrgId": {
+      "@id": "lynx:partnerClientOrgId",
+      "@type": "xsd:string"
+    },
+    "clientOrgDocuments": {
+      "@id": "lynx:clientOrgDocuments",
+      "@container": "@list"
+    },
+    "clientOrgContactId": {
+      "@id": "lynx:clientOrgContactId",
+      "@type": "xsd:string"
+    },
+    "parentName": {
+      "@id": "lynx:parentName",
+      "@type": "xsd:string"
+    },
+    "clientName": {
+      "@id": "lynx:clientName",
+      "@type": "xsd:string"
+    },
+    "treeLevel": {
+      "@id": "lynx:treeLevel",
+      "@type": "xsd:integer"
+    },
+    "ClientOrgApplicationsResponse": "lynx:ClientOrgApplicationsResponse",
+    "clientOrgApplications": {
+      "@id": "lynx:clientOrgApplications",
+      "@container": "@list"
+    },
+    "ClientOrgDocumentDto": "lynx:ClientOrgDocumentDto",
+    "PartnerOrgDto": "lynx:PartnerOrgDto",
+    "ClientOrgSubscribedEventDto": "lynx:ClientOrgSubscribedEventDto",
+    "eventName": {
+      "@id": "lynx:eventName",
+      "@type": "xsd:string"
+    },
+    "eventType": {
+      "@id": "lynx:eventType",
+      "@type": "xsd:string"
+    },
+    "subscribed": {
+      "@id": "lynx:subscribed",
+      "@type": "xsd:boolean"
+    },
+    "disabled": {
+      "@id": "lynx:disabled",
+      "@type": "xsd:boolean"
+    },
+    "GetClientOrgSubscribedEventsResponse": "lynx:GetClientOrgSubscribedEventsResponse",
+    "clientOrgSubscribedEvents": {
+      "@id": "lynx:clientOrgSubscribedEvents",
+      "@container": "@list"
+    },
+    "ClientOrgSubscribedEventsRequest": "lynx:ClientOrgSubscribedEventsRequest",
+    "ApplicationTokenDto": "lynx:ApplicationTokenDto",
+    "scopes": {
+      "@id": "lynx:scopes",
+      "@container": "@list"
+    },
+    "ClientOrgApplicationTokenRequest": "lynx:ClientOrgApplicationTokenRequest",
+    "childClientOrg": {
+      "@id": "lynx:childClientOrg",
+      "@type": "@id"
+    },
+    "applicationToken": {
+      "@id": "lynx:applicationToken",
+      "@type": "@id"
+    },
+    "ClientOrgApplicationTokenRequestDoc": "lynx:ClientOrgApplicationTokenRequestDoc",
+    "ClientOrgApplicationTokenResponse": "lynx:ClientOrgApplicationTokenResponse",
+    "clientId": {
+      "@id": "lynx:clientId",
+      "@type": "xsd:string"
+    },
+    "clientSecret": {
+      "@id": "lynx:clientSecret",
+      "@type": "xsd:string"
+    },
+    "CardPackageDetailsDto": "lynx:CardPackageDetailsDto",
+    "clientOrgCardPackageId": {
+      "@id": "lynx:clientOrgCardPackageId",
+      "@type": "xsd:string"
+    },
+    "partnerId": {
+      "@id": "lynx:partnerId",
+      "@type": "xsd:string"
+    },
+    "binType": {
+      "@id": "lynx:binType",
+      "@type": "xsd:string"
+    },
+    "virtualCardIndicator": {
+      "@id": "lynx:virtualCardIndicator",
+      "@type": "xsd:boolean"
+    },
+    "prin": {
+      "@id": "lynx:prin",
+      "@type": "xsd:string"
+    },
+    "beginAgent": {
+      "@id": "lynx:beginAgent",
+      "@type": "xsd:integer"
+    },
+    "endAgent": {
+      "@id": "lynx:endAgent",
+      "@type": "xsd:integer"
+    },
+    "cardPackageId": {
+      "@id": "lynx:cardPackageId",
+      "@type": "xsd:string"
+    },
+    "ClientOrgCardSubprogramDetailsDto": "lynx:ClientOrgCardSubprogramDetailsDto",
+    "products": {
+      "@id": "lynx:products",
+      "@container": "@list"
+    },
+    "cardPackages": {
+      "@id": "lynx:cardPackages",
+      "@container": "@list"
+    },
+    "ClientOrgPlanDto": "lynx:ClientOrgPlanDto",
+    "ClientOrgPlanSummaryDto": "lynx:ClientOrgPlanSummaryDto",
+    "plans": {
+      "@id": "lynx:plans",
+      "@container": "@list"
+    },
+    "GetClientOrgPlanSummaryResponse": "lynx:GetClientOrgPlanSummaryResponse",
+    "clientOrgs": {
+      "@id": "lynx:clientOrgs",
+      "@container": "@list"
+    },
+    "ProductNameDto": "lynx:ProductNameDto",
+    "ClientOrgSubstantiationModelData": "lynx:ClientOrgSubstantiationModelData",
+    "enabled": {
+      "@id": "lynx:enabled",
+      "@type": "xsd:boolean"
+    },
+    "copayIndicator": {
+      "@id": "lynx:copayIndicator",
+      "@type": "xsd:boolean"
+    },
+    "recurringExpenseIndicator": {
+      "@id": "lynx:recurringExpenseIndicator",
+      "@type": "xsd:boolean"
+    },
+    "carrierClaimsIndicator": {
+      "@id": "lynx:carrierClaimsIndicator",
+      "@type": "xsd:boolean"
+    },
+    "pbmIndicator": {
+      "@id": "lynx:pbmIndicator",
+      "@type": "xsd:boolean"
+    },
+    "deMinimisIndicator": {
+      "@id": "lynx:deMinimisIndicator",
+      "@type": "xsd:boolean"
+    },
+    "deMinimisAmount": {
+      "@id": "lynx:deMinimisAmount",
+      "@type": "xsd:decimal"
+    },
+    "useDefaultConfigurationIndicator": {
+      "@id": "lynx:useDefaultConfigurationIndicator",
+      "@type": "xsd:boolean"
+    },
+    "stages": {
+      "@id": "lynx:stages",
+      "@container": "@list"
+    },
+    "ClientOrgSubstantiationModelRequest": "lynx:ClientOrgSubstantiationModelRequest",
+    "ClientOrgSubstantiationModelStageData": "lynx:ClientOrgSubstantiationModelStageData",
+    "stageCode": {
+      "@id": "lynx:stageCode",
+      "@type": "xsd:string"
+    },
+    "daysInStage": {
+      "@id": "lynx:daysInStage",
+      "@type": "xsd:integer"
+    },
+    "blockAccountIndicator": {
+      "@id": "lynx:blockAccountIndicator",
+      "@type": "xsd:boolean"
+    },
+    "sendEmailIndicator": {
+      "@id": "lynx:sendEmailIndicator",
+      "@type": "xsd:boolean"
+    },
+    "sendEventIndicator": {
+      "@id": "lynx:sendEventIndicator",
+      "@type": "xsd:boolean"
+    },
+    "PatchClientOrgSubstantiationModelResponse": "lynx:PatchClientOrgSubstantiationModelResponse",
+    "clientOrgName": {
+      "@id": "lynx:clientOrgName",
+      "@type": "xsd:string"
+    },
+    "ClientOrgSubstantiationModelDto": "lynx:ClientOrgSubstantiationModelDto",
+    "deMinimasAmount": {
+      "@id": "lynx:deMinimasAmount",
+      "@type": "xsd:decimal"
+    },
+    "ClientOrgSubstantiationModelStageDto": "lynx:ClientOrgSubstantiationModelStageDto",
+    "stageName": {
+      "@id": "lynx:stageName",
+      "@type": "xsd:string"
+    },
+    "CommerceOrderDto": "lynx:CommerceOrderDto",
+    "orderNumber": {
+      "@id": "lynx:orderNumber",
+      "@type": "xsd:string"
+    },
+    "orderDatetime": {
+      "@id": "lynx:orderDatetime",
+      "@type": "xsd:dateTime"
+    },
+    "expectedDeliveryDatetime": {
+      "@id": "lynx:expectedDeliveryDatetime",
+      "@type": "xsd:dateTime"
+    },
+    "totalAmount": {
+      "@id": "lynx:totalAmount",
+      "@type": "xsd:decimal"
+    },
+    "shipToAddress": {
+      "@id": "lynx:shipToAddress",
+      "@type": "@id"
+    },
+    "memberCommerceOrderLines": {
+      "@id": "lynx:memberCommerceOrderLines",
+      "@container": "@list"
+    },
+    "CommerceOrderLineDto": "lynx:CommerceOrderLineDto",
+    "quantity": {
+      "@id": "lynx:quantity",
+      "@type": "xsd:integer"
+    },
+    "sku": {
+      "@id": "lynx:sku",
+      "@type": "xsd:string"
+    },
+    "retailPrice": {
+      "@id": "lynx:retailPrice",
+      "@type": "xsd:decimal"
+    },
+    "salesTax": {
+      "@id": "lynx:salesTax",
+      "@type": "xsd:decimal"
+    },
+    "primaryImage": {
+      "@id": "lynx:primaryImage",
+      "@type": "xsd:string"
+    },
+    "commodityTitle": {
+      "@id": "lynx:commodityTitle",
+      "@type": "xsd:string"
+    },
+    "commodityDescription": {
+      "@id": "lynx:commodityDescription",
+      "@type": "xsd:string"
+    },
+    "GetOrderListDocModelResponse": "lynx:GetOrderListDocModelResponse",
+    "GetOrderListResponse": "lynx:GetOrderListResponse",
+    "memberCommerceOrders": {
+      "@id": "lynx:memberCommerceOrders",
+      "@container": "@list"
+    },
+    "BaseCouponRedemptionDto": "lynx:BaseCouponRedemptionDto",
+    "code": {
+      "@id": "lynx:code",
+      "@type": "xsd:string"
+    },
+    "discountAmount": {
+      "@id": "lynx:discountAmount",
+      "@type": "xsd:decimal"
+    },
+    "CommerceOrderAccountDto": "lynx:CommerceOrderAccountDto",
+    "displayName": {
+      "@id": "lynx:displayName",
+      "@type": "xsd:string"
+    },
+    "CommerceOrderDetailDto": "lynx:CommerceOrderDetailDto",
+    "shippingAmount": {
+      "@id": "lynx:shippingAmount",
+      "@type": "xsd:decimal"
+    },
+    "accounts": {
+      "@id": "lynx:accounts",
+      "@container": "@list"
+    },
+    "cards": {
+      "@id": "lynx:cards",
+      "@container": "@list"
+    },
+    "coupon": {
+      "@id": "lynx:coupon",
+      "@type": "@id"
+    },
+    "ExternalCardDto": "lynx:ExternalCardDto",
+    "lastFour": {
+      "@id": "lynx:lastFour",
+      "@type": "xsd:string"
+    },
+    "expiration": {
+      "@id": "lynx:expiration",
+      "@type": "xsd:string"
+    }
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Lynx API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Lynx's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-14) from openapi/lynx-account-api-openapi.yml, openapi/lynx-card-management-api-openapi.yml, openapi/lynx-claims-service-api-openapi.yml.",
+  "dcterms:created": "2026-10-14",
+  "dcterms:source": [
+    "openapi/lynx-account-api-openapi.yml",
+    "openapi/lynx-card-management-api-openapi.yml",
+    "openapi/lynx-claims-service-api-openapi.yml",
+    "openapi/lynx-client-org-management-api-openapi.yml",
+    "openapi/lynx-commerce-order-api-openapi.yml"
+  ]
+}

@@ -1,0 +1,552 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-patch-member-enrollment-request-doc-schema.json",
+  "title": "PatchMemberEnrollmentRequestDoc",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-enrollment-api-openapi.yml#/components/schemas/PatchMemberEnrollmentRequestDoc",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/PatchMemberEnrollmentDoc"
+    },
+    "idempotency": {
+      "$ref": "#/$defs/Idempotency",
+      "description": "Unique identifier that represents the operation"
+    }
+  },
+  "required": [
+    "data",
+    "idempotency"
+  ],
+  "$defs": {
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ConsentDoc": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the consent to be accepted",
+          "enum": [
+            "INVESTMENT_TERMS_OF_USE",
+            "INVESTMENT_CUSTOMER_AGREEMENT",
+            "INVESTMENT_MARKET_DATA_AGREEMENT",
+            "INVESTMENT_RULE_14B_AGREEMENT",
+            "INVESTMENT_PRIVACY_POLICY",
+            "INVESTMENT_DATA_SHARING_AGREEMENT",
+            "INVESTMENT_MARGIN_AGREEMENT",
+            "DRIVEWEALTH_W9_AGREEMENT",
+            "INVESTMENT_ACCOUNT_TERMS_AND_CONDITIONS",
+            "RIA_TERMS_AND_AGREEMENTS"
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "DirectorDoc": {
+      "type": "object",
+      "properties": {
+        "companyName": {
+          "type": "string",
+          "description": "The company name if the member is a director or owns more than 10% of a publicly traded company"
+        },
+        "symbol": {
+          "type": "string",
+          "description": "The ticker symbol if the member is a director or owns more than 10% of a publicly traded company"
+        }
+      }
+    },
+    "Idempotency": {
+      "type": "object",
+      "properties": {
+        "idempotencyKey": {
+          "type": "string",
+          "description": "Unique identifier that represents the operation"
+        }
+      }
+    },
+    "MemberAccount": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "default": "VSA",
+          "description": "Type of account for this member product"
+        },
+        "incentiveRatio": {
+          "type": "number",
+          "format": "double",
+          "default": "1.2",
+          "description": "The number that is multiplied by the cash deposit value to determine the incentive value"
+        },
+        "electionAmount": {
+          "type": "number",
+          "description": "Amount of tax-deductible funds chosen by the member to use on eligible health care or dependent care expenses throughout the plan year"
+        },
+        "numPayPeriod": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The annual election amount is divided evenly by the number of paychecks that an employee has for the year, and that amount is deducted from each paycheck by the employer"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "MemberCardPreferences": {
+      "type": "object",
+      "properties": {
+        "planName": {
+          "type": "string",
+          "description": "The name of the plan"
+        },
+        "cardPackageName": {
+          "type": "string",
+          "description": "The name of the card package"
+        },
+        "rushDelivery": {
+          "type": "boolean",
+          "description": "Indicates whether to ship the card via express mail; if omitted, default is false to ship first class mail"
+        }
+      },
+      "required": [
+        "cardPackageName",
+        "planName"
+      ]
+    },
+    "MemberConsentDoc": {
+      "type": "object",
+      "properties": {
+        "consent": {
+          "$ref": "#/$defs/ConsentDoc"
+        },
+        "acceptedIndicator": {
+          "type": "boolean",
+          "description": "Indicates the member accepted the consent"
+        },
+        "electronicSignature": {
+          "type": "string",
+          "description": "The member’s digital signature (full name)"
+        },
+        "consentDate": {
+          "type": "string",
+          "description": "Date the consent was accepted"
+        }
+      },
+      "required": [
+        "acceptedIndicator",
+        "consent"
+      ]
+    },
+    "MemberPlanBenefitPackage": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "A unique identifier assigned by CMS (Centers for Medicare & Medicaid Services) to each plan benefit package (PBP) within a contract that a plan sponsor has with CMS.  This number is used to link the plan sponsor's contract and plan identifiers"
+        },
+        "effectiveDate": {
+          "type": "string",
+          "description": "Effective date of the Plan Benefit Package"
+        },
+        "expirationDate": {
+          "type": "string",
+          "description": "Expiration date of the Plan Benefit Package"
+        },
+        "voidIndicator": {
+          "type": "boolean",
+          "description": "Indicates whether to void the Plan Benefit Package"
+        },
+        "ssbciIndicator": {
+          "type": "boolean",
+          "description": "Indicates whether the member is eligible for SSBCI (Special Supplemental Benefits for the Chronically Ill)"
+        },
+        "ssbciEffectiveDate": {
+          "type": "string",
+          "description": "Effective date of SSBCI benefit eligibility"
+        }
+      },
+      "required": [
+        "effectiveDate",
+        "expirationDate",
+        "name"
+      ]
+    },
+    "MemberProductDoc": {
+      "type": "object",
+      "properties": {
+        "product": {
+          "$ref": "#/$defs/ProductDoc"
+        },
+        "relatedProductName": {
+          "type": "string",
+          "description": "Indicates the linked product name"
+        },
+        "managementType": {
+          "type": "string",
+          "enum": [
+            "Self-Directed Lineup",
+            "Self-Directed Robo",
+            "Self-Directed Brokerage"
+          ]
+        },
+        "riskPortfolio": {
+          "type": "string"
+        },
+        "effectiveDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the product becomes effective for the member"
+        },
+        "memberAccounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MemberAccount"
+          }
+        }
+      },
+      "required": [
+        "effectiveDate",
+        "product"
+      ]
+    },
+    "MemberProfileDto": {
+      "type": "object",
+      "properties": {
+        "annualIncomeMin": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Lower bound of the member's approximate annual income range. Number must be USD."
+        },
+        "annualIncomeMax": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Upper bound of the member's approximate annual income range. Number must be USD."
+        },
+        "totalNetWorthMin": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Lower bound of the member's total net worth range (assets minus liabilities). Assets include figures from checking, savings, and liquid securities, plus all liquid assets like a home and pension assets. Liabilities include money owed like mortgage payments, car loans, student loans, taxes, etc."
+        },
+        "totalNetWorthMax": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Upper bound of the member's total net worth range (assets minus liabilities)."
+        },
+        "investmentExperience": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The member's current investment expertise"
+        },
+        "riskTolerance": {
+          "type": "string",
+          "description": "The member's risk ceiling",
+          "enum": [
+            "LOW",
+            "MODERATE",
+            "HIGH"
+          ]
+        },
+        "investmentObjective": {
+          "type": "string",
+          "description": "The member's current investment objectives",
+          "enum": [
+            "GENERATE_INCOME",
+            "PRESERVE_WEALTH",
+            "MARKET_SPECULATION",
+            "GROWTH",
+            "BALANCE_PRESERVE_WEALTH_WITH_GROWTH"
+          ]
+        },
+        "netWorthLiquidMin": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Lower bound of the member's liquid net worth range (in USD). Liquid net worth is the amount of cash or near cash equivalents that can be easily converted into cash and reinvested. Examples include money market holdings, exchange listed stocks, exchange-traded funds, mutual funds, etc."
+        },
+        "netWorthLiquidMax": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Upper bound of the member's liquid net worth range (in USD)."
+        },
+        "employmentStatus": {
+          "type": "string",
+          "description": "Employment status",
+          "enum": [
+            "EMPLOYED",
+            "RETIRED",
+            "STUDENT",
+            "UNEMPLOYED",
+            "SELF_EMPLOYED"
+          ]
+        },
+        "employerName": {
+          "type": "string",
+          "description": "Employer name"
+        },
+        "employmentPosition": {
+          "type": "string",
+          "description": "Employment job type",
+          "enum": [
+            "ACCOUNTANT",
+            "ACTUARY",
+            "ADJUSTER",
+            "ADMINISTRATOR",
+            "ADVERTISER",
+            "AGENT",
+            "ATC",
+            "AMBASSADOR",
+            "ANALYST",
+            "APPRAISER",
+            "ARCHITECT",
+            "ARTIST",
+            "ASSISTANT",
+            "ATHLETE",
+            "ATTENDANT",
+            "ATTORNEY",
+            "AUCTIONEER",
+            "AUDITOR",
+            "BARBER",
+            "BROKER",
+            "BUSINESS_EXEC",
+            "BUSINESS_OWNER",
+            "CAREGIVER",
+            "CARPENTER",
+            "CASHIER",
+            "CHEF",
+            "CHIROPRACTOR",
+            "CIVIL",
+            "CLERGY",
+            "CLERK",
+            "COMPLIANCE",
+            "CONSULTANT",
+            "CONTRACTOR",
+            "COUNSELOR",
+            "CUSTOMER_SERVICE",
+            "DEALER",
+            "DEVELOPER",
+            "DISTRIBUTOR",
+            "DOCTOR",
+            "DRIVER",
+            "ENGINEER",
+            "EXAMINER",
+            "EXTERMINATOR",
+            "FACTORY",
+            "FARMER",
+            "FINANCIAL",
+            "FISHERMAN",
+            "FLIGHT",
+            "HR",
+            "IMPEX",
+            "INSPECTOR",
+            "INTERN",
+            "INVESTMENT",
+            "INVESTOR",
+            "IT",
+            "JANITOR",
+            "JEWELER",
+            "LABORER",
+            "LANDSCAPER",
+            "LENDING",
+            "MANAGER",
+            "MECHANIC",
+            "MILITARY",
+            "MORTICIAN",
+            "NURSE",
+            "NUTRITIONIST",
+            "OFFICE",
+            "PHARMACIST",
+            "PHYSICAL",
+            "PILOT",
+            "POLICE",
+            "POLITICIAN",
+            "PM",
+            "REP",
+            "RESEARCHER",
+            "SAILOR",
+            "SALES",
+            "SCIENTIST",
+            "SEAMSTRESS",
+            "SECURITY",
+            "SOCIAL",
+            "TEACHER",
+            "TECHNICIAN",
+            "TELLER",
+            "TRADESPERSON",
+            "TRAINER",
+            "TRANSPORTER",
+            "UNDERWRITER",
+            "WRITER"
+          ]
+        },
+        "employerAddress": {
+          "type": "string",
+          "description": "Employer type"
+        },
+        "isControlPerson": {
+          "type": "boolean",
+          "description": "Indicates whether the member is a Director, Officer, or 10% stock owner of a publicly traded company"
+        },
+        "isPoliticallyExposed": {
+          "type": "boolean",
+          "description": "Indicates whether the member is a current or former politically exposed person or public official (includes US and Foreign). A politically exposed person is someone who has been entrusted with a prominent public function, or who is closely related to such a person."
+        },
+        "isImmediateFamilyExposed": {
+          "type": "boolean",
+          "description": "Indicates whether anyone in the member's immediate family is a current or former politically exposed person or public official (includes US and Foreign). A politically exposed person is someone who has been entrusted with a prominent public function, or who is closely related to such a person."
+        },
+        "isBrokerDealerAffiliated": {
+          "type": "boolean",
+          "description": "Indicates whether the member’s current employer is a broker/dealer"
+        }
+      }
+    },
+    "PatchMemberDoc": {
+      "type": "object",
+      "properties": {
+        "clientMemberId": {
+          "type": "string",
+          "description": "Unique client-side identifier for the member"
+        },
+        "clientOrg": {
+          "$ref": "#/$defs/ClientOrgDto"
+        },
+        "healthPlanCoverageType": {
+          "type": "string",
+          "description": "Type of coverage (Family, Individual)",
+          "enum": [
+            "Individual",
+            "Family"
+          ]
+        },
+        "language": {
+          "type": "string",
+          "description": "Language of the member. Possible values are:  en_US = English, zh_CN = Chinese, es_ES = Spanish, pt_BR = Portuguese, ru_RU = Russian",
+          "enum": [
+            "en_US",
+            "zh_CN",
+            "pt_BR",
+            "es_ES",
+            "ru_RU"
+          ]
+        },
+        "countryOfCitizenship": {
+          "type": "string",
+          "description": "Country of citizenship"
+        },
+        "memberProfile": {
+          "$ref": "#/$defs/MemberProfileDto"
+        },
+        "associatedDirectorships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DirectorDoc"
+          }
+        },
+        "politicallyExposedNames": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PoliticalExposedNameDTO"
+          }
+        },
+        "addGoodFaithFundedProductsIndicator": {
+          "type": "boolean"
+        },
+        "memberProducts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MemberProductDoc"
+          }
+        },
+        "memberPlanBenefitPackage": {
+          "$ref": "#/$defs/MemberPlanBenefitPackage"
+        },
+        "memberCardPreferences": {
+          "$ref": "#/$defs/MemberCardPreferences"
+        },
+        "memberConsents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MemberConsentDoc"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TagDto"
+          }
+        }
+      },
+      "required": [
+        "clientMemberId",
+        "clientOrg"
+      ]
+    },
+    "PatchMemberEnrollmentDoc": {
+      "type": "object",
+      "properties": {
+        "member": {
+          "$ref": "#/$defs/PatchMemberDoc"
+        }
+      }
+    },
+    "PoliticalExposedNameDTO": {
+      "type": "object",
+      "properties": {
+        "fullName": {
+          "type": "string",
+          "description": "Full name of the politically exposed person"
+        }
+      },
+      "required": [
+        "fullName"
+      ]
+    },
+    "ProductDoc": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the product"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "TagDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Constant used to define the metadata within a key-value pair"
+        },
+        "value": {
+          "type": "string",
+          "description": "Variable belonging to the metadata within a key-value pair"
+        },
+        "type": {
+          "type": "string",
+          "description": "Additional client-defined qualifier that may be used to further classify the key-value pair"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ]
+    }
+  }
+}

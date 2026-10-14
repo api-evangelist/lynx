@@ -1,0 +1,459 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-client-org-request-schema.json",
+  "title": "ClientOrgRequest",
+  "description": "Request model for business enrollment",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-enrollment-api-openapi.yml#/components/schemas/ClientOrgRequest",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/ClientOrgData",
+      "description": "Business enrollment data"
+    },
+    "idempotency": {
+      "$ref": "#/$defs/Idempotency"
+    }
+  },
+  "required": [
+    "data",
+    "idempotency"
+  ],
+  "$defs": {
+    "ClientDto": {
+      "type": "object",
+      "description": "Client details",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Client name"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ClientOrgAddressDto": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "Address city"
+        },
+        "country": {
+          "type": "string",
+          "description": "Address country"
+        },
+        "line1": {
+          "type": "string",
+          "description": "The first line of the address"
+        },
+        "line2": {
+          "type": "string",
+          "description": "The (optional) second line of the address"
+        },
+        "line3": {
+          "type": "string",
+          "description": "The (optional) third line of the address"
+        },
+        "line4": {
+          "type": "string",
+          "description": "The (optional) fourth line of the address"
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "Address zip code"
+        },
+        "postalCodeExtension": {
+          "type": "string",
+          "description": "Address zip code extension"
+        },
+        "stateProvince": {
+          "type": "string",
+          "description": "2-Character address state or province"
+        },
+        "typeDescription": {
+          "type": "string",
+          "description": "Client-defined description for the address"
+        },
+        "primaryIndicator": {
+          "type": "boolean",
+          "description": "Determines whether this is a primary address"
+        }
+      },
+      "required": [
+        "city",
+        "country",
+        "line1",
+        "postalCode",
+        "primaryIndicator",
+        "stateProvince"
+      ]
+    },
+    "ClientOrgCardProgramDto": {
+      "type": "object",
+      "description": "Card program settings for the client organization",
+      "properties": {
+        "createCardProgram": {
+          "type": "boolean",
+          "description": "If a new FIS ACC Client and Program should not be created, set to false. Defaults to true if not provided."
+        }
+      }
+    },
+    "ClientOrgContactDocDto": {
+      "type": "object",
+      "description": "Contact details",
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "description": "Contact first name"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Contact last name"
+        },
+        "namePrefix": {
+          "type": "string",
+          "description": "Contact name prefix"
+        },
+        "nameSuffix": {
+          "type": "string",
+          "description": "Contact name suffix"
+        },
+        "relationshipType": {
+          "type": "string",
+          "description": "Relationship type to client organization"
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "description": "Date of birth"
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the client org contact"
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of the client org contact"
+        },
+        "ssn": {
+          "type": "string",
+          "description": "Social Security Number"
+        },
+        "passport": {
+          "type": "string",
+          "description": "Passport number"
+        },
+        "primaryIndicator": {
+          "type": "boolean",
+          "description": "Determines whether this is a primary contact"
+        },
+        "addresses": {
+          "type": "array",
+          "description": "List of addresses",
+          "items": {
+            "$ref": "#/$defs/ClientOrgAddressDto"
+          }
+        },
+        "phones": {
+          "type": "array",
+          "description": "List of phone numbers",
+          "items": {
+            "$ref": "#/$defs/ClientOrgPhoneDto"
+          }
+        },
+        "emails": {
+          "type": "array",
+          "description": "List of email addresses",
+          "items": {
+            "$ref": "#/$defs/EmailRequest"
+          }
+        }
+      },
+      "required": [
+        "addresses",
+        "dateOfBirth",
+        "emails",
+        "firstName",
+        "lastName",
+        "phones",
+        "primaryIndicator",
+        "relationshipType",
+        "ssn",
+        "title",
+        "type"
+      ]
+    },
+    "ClientOrgData": {
+      "type": "object",
+      "description": "Business enrollment data",
+      "properties": {
+        "clientOrg": {
+          "$ref": "#/$defs/ClientOrgDocDto",
+          "description": "Client organization details"
+        },
+        "cardProgram": {
+          "$ref": "#/$defs/ClientOrgCardProgramDto",
+          "description": "By default, if the cardProgram object is not passed, we will automatically proceed with creating the FIS ACC Client and Program. If a new FIS ACC Client and Program should not be created, then the cardProgram object should be passed and createCardProgram should be false."
+        }
+      },
+      "required": [
+        "clientOrg"
+      ]
+    },
+    "ClientOrgDocDto": {
+      "type": "object",
+      "description": "Client organization details",
+      "properties": {
+        "client": {
+          "$ref": "#/$defs/ClientDto",
+          "description": "Client details"
+        },
+        "name": {
+          "type": "string",
+          "description": "Unique identifier for the client organization"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Display name of the client organization"
+        },
+        "parentName": {
+          "type": "string",
+          "description": "Parent organization name"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the client organization"
+        },
+        "ein": {
+          "type": "string",
+          "description": "Employer Identification Number"
+        },
+        "einType": {
+          "type": "string",
+          "description": "Employer Identification Number Type",
+          "enum": [
+            "LLC",
+            "Partnership",
+            "Corporation"
+          ]
+        },
+        "stateIncorporated": {
+          "type": "string",
+          "description": "State of Incorporation",
+          "enum": [
+            "AL",
+            "AK",
+            "AZ",
+            "AR",
+            "CA",
+            "CO",
+            "CT",
+            "DC",
+            "DE",
+            "FL",
+            "GA",
+            "HI",
+            "ID",
+            "IL",
+            "IN",
+            "IA",
+            "KS",
+            "KY",
+            "LA",
+            "ME",
+            "MD",
+            "MA",
+            "MI",
+            "MN",
+            "MS",
+            "MO",
+            "MT",
+            "NE",
+            "NV",
+            "NH",
+            "NJ",
+            "NM",
+            "NY",
+            "NC",
+            "ND",
+            "OH",
+            "OK",
+            "OR",
+            "PA",
+            "RI",
+            "SC",
+            "SD",
+            "TN",
+            "TX",
+            "UT",
+            "VT",
+            "VA",
+            "WA",
+            "WV",
+            "WI",
+            "WY"
+          ]
+        },
+        "businessYears": {
+          "type": "string",
+          "description": "Years in business"
+        },
+        "websiteUrl": {
+          "type": "string",
+          "description": "The website of the client organization"
+        },
+        "allowEnrollmentIndicator": {
+          "type": "boolean",
+          "description": "Member enrollments allowed"
+        },
+        "kybRequiredIndicator": {
+          "type": "boolean",
+          "description": "Know Your Business verification required"
+        },
+        "addresses": {
+          "type": "array",
+          "description": "List of addresses",
+          "items": {
+            "$ref": "#/$defs/ClientOrgAddressDto"
+          }
+        },
+        "emails": {
+          "type": "array",
+          "description": "List of email addresses",
+          "items": {
+            "$ref": "#/$defs/EmailRequest"
+          }
+        },
+        "phones": {
+          "type": "array",
+          "description": "List of phone numbers",
+          "items": {
+            "$ref": "#/$defs/ClientOrgPhoneDto"
+          }
+        },
+        "clientOrgContacts": {
+          "type": "array",
+          "description": "List of organization contacts",
+          "items": {
+            "$ref": "#/$defs/ClientOrgContactDocDto"
+          }
+        },
+        "clientOrgProducts": {
+          "type": "array",
+          "description": "List of organization products",
+          "items": {
+            "$ref": "#/$defs/ClientOrgProductDocDto"
+          }
+        }
+      },
+      "required": [
+        "addresses",
+        "allowEnrollmentIndicator",
+        "businessYears",
+        "client",
+        "clientOrgContacts",
+        "clientOrgProducts",
+        "displayName",
+        "ein",
+        "einType",
+        "emails",
+        "kybRequiredIndicator",
+        "name",
+        "parentName",
+        "phones",
+        "stateIncorporated",
+        "type",
+        "websiteUrl"
+      ]
+    },
+    "ClientOrgPhoneDto": {
+      "type": "object",
+      "properties": {
+        "phoneNumber": {
+          "type": "string",
+          "description": "10-Digit phone number"
+        },
+        "countryCode": {
+          "type": "string",
+          "description": "Phone country code"
+        },
+        "phoneExtension": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Optional extension"
+        },
+        "typeDescription": {
+          "type": "string",
+          "description": "Client-defined description for the phone number"
+        },
+        "primaryIndicator": {
+          "type": "boolean",
+          "description": "Determines whether this is a primary phone"
+        }
+      },
+      "required": [
+        "countryCode",
+        "phoneNumber",
+        "primaryIndicator"
+      ]
+    },
+    "ClientOrgProductDocDto": {
+      "type": "object",
+      "properties": {
+        "product": {
+          "$ref": "#/$defs/ProductDto",
+          "description": "Product details"
+        }
+      },
+      "required": [
+        "product"
+      ]
+    },
+    "EmailRequest": {
+      "type": "object",
+      "properties": {
+        "typeDescription": {
+          "type": "string",
+          "description": "Client-defined description for the email address"
+        },
+        "emailAddress": {
+          "type": "string",
+          "description": "Email address - any notifications will be sent to this email address"
+        },
+        "primaryIndicator": {
+          "type": "boolean",
+          "description": "Determines whether this is a primary email address"
+        }
+      },
+      "required": [
+        "emailAddress",
+        "primaryIndicator"
+      ]
+    },
+    "Idempotency": {
+      "type": "object",
+      "properties": {
+        "idempotencyKey": {
+          "type": "string",
+          "description": "Unique identifier that represents the operation"
+        }
+      }
+    },
+    "ProductDto": {
+      "type": "object",
+      "description": "Product details",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the product"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  }
+}

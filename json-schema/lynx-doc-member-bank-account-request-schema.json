@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-doc-member-bank-account-request-schema.json",
+  "title": "DocMemberBankAccountRequest",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-external-account-api-openapi.yml#/components/schemas/DocMemberBankAccountRequest",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/DocMemberBankAccountRequestData"
+    },
+    "idempotency": {
+      "$ref": "#/$defs/Idempotency",
+      "description": "Unique identifier that represents the operation"
+    }
+  },
+  "required": [
+    "data",
+    "idempotency"
+  ],
+  "$defs": {
+    "BaseMember": {
+      "type": "object",
+      "properties": {
+        "clientMemberId": {
+          "type": "string",
+          "description": "Unique client-side identifier for the member"
+        }
+      },
+      "required": [
+        "clientMemberId"
+      ]
+    },
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "DocMemberBankAccountExternalDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "A name for this account"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of account",
+          "enum": [
+            "CHECKING",
+            "Checking",
+            "SAVINGS",
+            "Savings"
+          ]
+        },
+        "routingNumber": {
+          "type": "string",
+          "description": "The account routing number (9 Digits, numeric)"
+        },
+        "accountNumber": {
+          "type": "string",
+          "description": "The bank account number"
+        },
+        "verifiedIndicator": {
+          "type": "boolean",
+          "description": "Flag that represents the state of verification of an account"
+        },
+        "verifiedDate": {
+          "type": "string",
+          "description": "Date when the account was verified"
+        }
+      },
+      "required": [
+        "accountNumber",
+        "name",
+        "routingNumber",
+        "verifiedIndicator"
+      ]
+    },
+    "DocMemberBankAccountRequestData": {
+      "type": "object",
+      "properties": {
+        "member": {
+          "$ref": "#/$defs/BaseMember"
+        },
+        "clientOrg": {
+          "$ref": "#/$defs/ClientOrgDto"
+        },
+        "memberBankAccount": {
+          "$ref": "#/$defs/DocMemberBankAccountExternalDto"
+        }
+      },
+      "required": [
+        "clientOrg",
+        "member",
+        "memberBankAccount"
+      ]
+    },
+    "Idempotency": {
+      "type": "object",
+      "properties": {
+        "idempotencyKey": {
+          "type": "string",
+          "description": "Unique identifier that represents the operation"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-get-account-positions-response-schema.json",
+  "title": "GetAccountPositionsResponse",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-investments-api-openapi.yml#/components/schemas/GetAccountPositionsResponse",
+  "type": "object",
+  "properties": {
+    "clientOrg": {
+      "$ref": "#/$defs/ClientOrgDto"
+    },
+    "member": {
+      "$ref": "#/$defs/BaseMember"
+    },
+    "tradingType": {
+      "type": "string",
+      "description": "The type of trading the account will participate in",
+      "enum": [
+        "CASH",
+        "MARGIN"
+      ]
+    },
+    "updated": {
+      "type": "string",
+      "description": "Date and time of last update"
+    },
+    "equityValue": {
+      "type": "number",
+      "description": "Current total market value of the account's open positions"
+    },
+    "equityPositions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/EquityPosition"
+      }
+    }
+  },
+  "$defs": {
+    "BaseMember": {
+      "type": "object",
+      "properties": {
+        "clientMemberId": {
+          "type": "string",
+          "description": "Unique client-side identifier for the member"
+        }
+      },
+      "required": [
+        "clientMemberId"
+      ]
+    },
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "EquityPosition": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "The ticker symbol of the instrument"
+        },
+        "symbolName": {
+          "type": "string",
+          "description": "The official name of the company associated to the Instrument"
+        },
+        "assetClass": {
+          "type": "string",
+          "description": "A group of financial instruments that have similar financial characteristics"
+        },
+        "subAssetClass": {
+          "type": "string",
+          "description": "A sub-asset class is a group of assets that share similar characteristics with each other, and also with the broader asset class it is part of"
+        },
+        "category": {
+          "type": "string",
+          "description": "The classification of the sector related to the Instrument"
+        },
+        "instrumentID": {
+          "type": "string",
+          "format": "uuid",
+          "description": "A unique identifier for a specific instrument"
+        },
+        "openQty": {
+          "type": "number",
+          "description": "Quantity of shares owned by the account"
+        },
+        "costBasis": {
+          "type": "number",
+          "description": "Cost basis of the position"
+        },
+        "marketValue": {
+          "type": "number",
+          "description": "Current market value of the position"
+        },
+        "side": {
+          "type": "string",
+          "description": "The side of the order: B - Buy or S - Sell",
+          "enum": [
+            "B",
+            "S"
+          ]
+        },
+        "priorClose": {
+          "type": "number",
+          "description": "The closing price of the current symbol for the prior trading day"
+        },
+        "availableForTradingQty": {
+          "type": "number",
+          "description": "The quantity of the security available for sale"
+        },
+        "availableQty": {
+          "type": "number"
+        },
+        "avgPrice": {
+          "type": "number",
+          "description": "The average price of the position"
+        },
+        "mktPrice": {
+          "type": "number",
+          "description": "The current market price of the position"
+        },
+        "unrealizedPL": {
+          "type": "number",
+          "description": "Unrealized profit and loss for the position"
+        },
+        "unrealizedDayPLPercent": {
+          "type": "number",
+          "description": "Unrealized day profit and loss for the position in percent"
+        },
+        "unrealizedDayPL": {
+          "type": "number",
+          "description": "Unrealized day profit and loss for the position"
+        },
+        "changeToday": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

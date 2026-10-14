@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-persist-claims-response-schema.json",
+  "title": "PersistClaimsResponse",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-claims-service-api-openapi.yml#/components/schemas/PersistClaimsResponse",
+  "type": "object",
+  "properties": {
+    "claimNumber": {
+      "type": "string",
+      "description": "The claim number"
+    },
+    "clientMemberId": {
+      "type": "string",
+      "description": "Unique client-side identifier for the member"
+    }
+  },
+  "required": [
+    "claimNumber",
+    "clientMemberId"
+  ]
+}

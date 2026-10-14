@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-copay-group-get-detail-schema.json",
+  "title": "CopayGroupGetDetail",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-copay-management-service-api-openapi.yml#/components/schemas/CopayGroupGetDetail",
+  "type": "object",
+  "properties": {
+    "copayGroup": {
+      "$ref": "#/$defs/CopayGroupData"
+    },
+    "clientOrg": {
+      "$ref": "#/$defs/ClientOrgDto",
+      "description": "The name of the client organization"
+    }
+  },
+  "required": [
+    "clientOrg"
+  ],
+  "$defs": {
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "CopayAmountItem": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Type of covered health care service, such as Doctor Office Visit, Urgent Care Visit, Prescription, Physical Therapy, Mental Health Therapy, Hospital Visit, Emergency Room Visit, Dental, Hearing, Vision, and Lab Services"
+        },
+        "amount": {
+          "type": "number",
+          "description": "A fixed amount (for example, $15) you pay for a covered health care service, usually when you receive the service. The amount can vary by the type of covered health care service."
+        }
+      }
+    },
+    "CopayGroupData": {
+      "type": "object",
+      "properties": {
+        "copayGroupId": {
+          "type": "string",
+          "format": "uuid",
+          "description": "UUID of the client organization copay group"
+        },
+        "effectiveDate": {
+          "type": "string",
+          "description": "Beginning effective date of the copay group"
+        },
+        "expirationDate": {
+          "type": "string",
+          "description": "Ending effective date of the copay group"
+        },
+        "copayList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CopayAmountItem"
+          }
+        }
+      },
+      "required": [
+        "copayList"
+      ]
+    }
+  }
+}

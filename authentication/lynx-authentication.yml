@@ -1,0 +1,34 @@
+generated: '2026-10-14'
+method: derived
+source: openapi/lynx-account-api-openapi.yml, openapi/lynx-card-management-api-openapi.yml,
+  openapi/lynx-claims-service-api-openapi.yml, openapi/lynx-client-org-management-api-openapi.yml,
+  openapi/lynx-commerce-order-api-openapi.yml, openapi/lynx-commodity-api-openapi.yml, openapi/lynx-copay-management-service-api-openapi.yml,
+  openapi/lynx-enrollment-api-openapi.yml, openapi/lynx-external-account-api-openapi.yml, openapi/lynx-external-notification-api-openapi.yml,
+  openapi/lynx-investments-api-openapi.yml, openapi/lynx-member-management-api-openapi.yml ...
+summary:
+  types:
+  - http
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  sources:
+  - openapi/lynx-account-api-openapi.yml
+  - openapi/lynx-card-management-api-openapi.yml
+  - openapi/lynx-claims-service-api-openapi.yml
+  - openapi/lynx-client-org-management-api-openapi.yml
+  - openapi/lynx-commerce-order-api-openapi.yml
+  - openapi/lynx-commodity-api-openapi.yml
+  - openapi/lynx-copay-management-service-api-openapi.yml
+  - openapi/lynx-enrollment-api-openapi.yml
+  - openapi/lynx-external-account-api-openapi.yml
+  - openapi/lynx-external-notification-api-openapi.yml
+  - openapi/lynx-investments-api-openapi.yml
+  - openapi/lynx-member-management-api-openapi.yml
+  - openapi/lynx-payment-api-openapi.yml
+  - openapi/lynx-related-person-api-openapi.yml
+  - openapi/lynx-substantiation-service-api-openapi.yml
+  - openapi/lynx-tags-api-openapi.yml
+  - openapi/lynx-transaction-api-openapi.yml
+  - openapi/lynx-upload-api-openapi.yml

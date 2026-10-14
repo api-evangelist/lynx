@@ -1,0 +1,430 @@
+openapi: 3.1.0
+info:
+  title: TAGS API
+  description: These API's are used to manage tags
+  termsOfService: http://lynx-fh.com
+  license:
+    name: LynxFH
+    url: http://lynx-fh.com
+  version: '"1.0"'
+servers:
+- url: https://sandbox.lynx-fh.co
+security:
+- bearerAuth: []
+paths:
+  /tags:
+    post:
+      tags:
+      - ''
+      summary: Add Tags
+      description: This API will add tags, which are optional meta data values, for a type of resource, such as member or transaction.
+      operationId: addTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTagResponseDoc'
+        '400':
+          description: 'Bad request.
+
+            - GBL-137: A tag already exists with the same name in the database
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    delete:
+      tags:
+      - ''
+      summary: Delete a Tag
+      description: This API will allow you to delete a tag. Returns an empty data container when successful or exceptions when the request failed.
+      operationId: deleteTag
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: resourceType
+        in: query
+        description: 'Indicates the type of resource for which the tags will be deleted. Possible values are: MEMBER, CLIENT_ORG, MEMBER_TRANSACTION'
+        required: true
+        schema:
+          type: string
+          enum:
+          - MEMBER
+          - CLIENT_ORG
+          - MEMBER_TRANSACTION
+          - MEMBER_DVH_SERVICE
+        example: MEMBER
+      - name: resourceId
+        in: query
+        description: Indicates the key based on the type of resource.  For a member, this will be client member ID.  For a transaction, this will be transaction reference ID.  For a client org, this will be client org name.
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: tagName
+        in: query
+        description: Indicates the name of the tag to be deleted
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-174: Member is in Inactive state
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    patch:
+      tags:
+      - ''
+      summary: Update Tags API
+      description: Update Existing Tags on a Resource.
+      operationId: patchTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchTagRequestDoc'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-137: A tag already exists with the same name in the database
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /tags/list:
+    get:
+      tags:
+      - ''
+      summary: Get Tags
+      description: Returns a list of tags for a type of resource, such as member or transaction.
+      operationId: getTags
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: resourceType
+        in: query
+        description: 'Indicates the type of resource for which to retrieve the tags. Possible values are:  MEMBER, CLIENT_ORG, MEMBER_TRANSACTION'
+        required: true
+        schema:
+          type: string
+          enum:
+          - MEMBER
+          - CLIENT_ORG
+          - MEMBER_TRANSACTION
+          - MEMBER_DVH_SERVICE
+        example: MEMBER
+      - name: resourceId
+        in: query
+        description: Indicates the key based on the type of resource.  For a member, this will be client member ID.  For a transaction, this will be transaction reference ID.  For a client org, this will be client org name.
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTagsResponseDoc'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+components:
+  schemas:
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    TagDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Constant used to define the metadata within a key-value pair
+        value:
+          type: string
+          description: Variable belonging to the metadata within a key-value pair
+        type:
+          type: string
+          description: Additional client-defined qualifier that may be used to further classify the key-value pair
+      required:
+      - name
+      - value
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetTagsResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        resourceType:
+          type: string
+          description: 'Indicates the type of resource for which to retrieve the tags. Possible values are:  MEMBER, CLIENT_ORG, MEMBER_TRANSACTION'
+          example: MEMBER
+        resourceId:
+          type: string
+          description: Indicates the key based on the type of resource.  For a member, this will be client member ID.  For a transaction, this will be transaction reference ID.  For a client org, this will be client org name.
+          example: 3f50436491
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagDto'
+      required:
+      - resourceId
+      - resourceType
+    GetTagsResponseDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetTagsResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+    TagRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/TagRequestDto'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    TagRequestDto:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        resourceType:
+          type: string
+          description: 'Indicates the type of resource for which the tags will be added. Possible values are: MEMBER, CLIENT_ORG, MEMBER_TRANSACTION'
+          example: MEMBER
+        resourceId:
+          type: string
+          description: Indicates the key based on the type of resource.  For a member, this will be client member ID.  For a transaction, this will be transaction reference ID.  For a client org, this will be client org name.
+          example: 3f50436491
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagDto'
+      required:
+      - resourceId
+      - resourceType
+    PostTagResponse:
+      type: object
+      properties:
+        tag:
+          $ref: '#/components/schemas/PostTagResponseDto'
+    PostTagResponseDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PostTagResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    PostTagResponseDto:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          description: 'Indicates the type of resource for which the tags will be added. Possible values are: MEMBER, CLIENT_ORG, MEMBER_TRANSACTION'
+          example: MEMBER
+        resourceId:
+          type: string
+          description: Indicates the key based on the type of resource.  For a member, this will be client member ID.  For a transaction, this will be transaction reference ID.  For a client org, this will be client org name.
+          example: 3f50436491
+      required:
+      - resourceId
+      - resourceType
+    BaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    PatchTagRequestDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PatchTagRequestDtoDoc'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    PatchTagRequestDtoDoc:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        resourceType:
+          type: string
+          description: 'Indicates the type of resource for which the tags will be added. Possible values are: MEMBER, CLIENT_ORG, MEMBER_TRANSACTION'
+          example: MEMBER
+        resourceId:
+          type: string
+          description: Indicates the key based on the type of resource.  For a member, this will be client member ID.  For a transaction, this will be transaction reference ID.  For a client org, this will be client org name.
+          example: 3f50436491
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagDtoDoc'
+      required:
+      - resourceId
+      - resourceType
+    TagDtoDoc:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Constant used to define the metadata within a key-value pair
+          example: Chronic Condition
+        value:
+          type: string
+          description: Variable belonging to the metadata within a key-value pair
+          example: Diabetes
+        type:
+          type: string
+          description: Additional client-defined qualifier that may be used to further classify the key-value pair
+          example: Health Condition
+      required:
+      - name
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-provenance:
+  method: searched
+  source: https://docs.lynx-fh.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.lynx-fh.com/reference/addtag.md
+  - https://docs.lynx-fh.com/reference/deletetag.md
+  - https://docs.lynx-fh.com/reference/gettags.md
+  - https://docs.lynx-fh.com/reference/patchtag.md
+  merge:
+    pages: 4
+    deduped: 14
+    conflicts_kept_first: 0

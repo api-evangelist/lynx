@@ -1,0 +1,6152 @@
+[
+ {
+  "page": "https://docs.lynx-fh.com/reference/getstatus.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/status": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Member Statuses",
+      "description": "Retrieves all statuses that are associated to the member. A member has various statuses; for e.g. Application Status, Account Status, Card Status. This API returns all of these statuses for the incoming clientMemberId and clientOrgName.",
+      "operationId": "getStatus",
+      "parameters": [
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberStatusResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "DocumentDto": {
+      "type": "object",
+      "properties": {
+       "type": {
+        "type": "string",
+        "description": "Type of document requested.",
+        "example": "ID verification"
+       },
+       "documentId": {
+        "type": "string",
+        "description": "Unique identifier (UUID) for the uploaded business document.",
+        "example": "e5fa0a77-27f5-4df3-9f14-a3d8d19ec264"
+       },
+       "description": {
+        "type": "string",
+        "description": "Any document that confirms identity.",
+        "example": "Drivers license"
+       },
+       "status": {
+        "type": "string",
+        "description": "Status of document.",
+        "example": "Awaiting_Documents"
+       }
+      }
+     },
+     "MemberAccountStatusDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "description": "UUID of the member account",
+        "example": "597bf428-3ee0-4a69-a303-dbacfaca5b37"
+       },
+       "type": {
+        "type": "string",
+        "description": "Type of account",
+        "example": "HSA"
+       },
+       "status": {
+        "type": "string",
+        "description": "The status of this account",
+        "example": "Account_Active"
+       },
+       "name": {
+        "type": "string",
+        "description": "A name for this account",
+        "example": "John's Bank of America XX-0435"
+       }
+      }
+     },
+     "MemberProductStatusDto": {
+      "type": "object",
+      "properties": {
+       "memberApplicationId": {
+        "type": "string",
+        "description": "Member Application Identifier",
+        "example": "Member Application Identifier"
+       },
+       "productName": {
+        "type": "string",
+        "description": "The name of the product",
+        "example": "HSA_01"
+       },
+       "status": {
+        "type": "string",
+        "description": "Status of member enrollment for the product",
+        "example": "Account_Active"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "The reason for a particular status",
+        "example": "HSA rejected due to lack of documentation"
+       },
+       "siteConnectionActive": {
+        "type": "boolean",
+        "description": "This field indicates if the account is registered AND can actively login to the external website. If not, then this value is false.",
+        "example": false
+       },
+       "memberDocuments": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/DocumentDto"
+        }
+       },
+       "memberAccounts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberAccountStatusDto"
+        }
+       }
+      },
+      "required": [
+       "productName",
+       "status"
+      ]
+     },
+     "MemberStatusDto": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       },
+       "status": {
+        "type": "string",
+        "description": "The overall status of the member",
+        "example": "Account_Active"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "The reason for a particular status",
+        "example": "HSA rejected due to lack of documentation"
+       },
+       "memberProducts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberProductStatusDto"
+        }
+       }
+      },
+      "required": [
+       "clientMemberId",
+       "memberProducts",
+       "status"
+      ]
+     },
+     "MemberStatusResponse": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/MemberStatusDto"
+       }
+      },
+      "required": [
+       "member"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/accountdetails.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/account": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Member Account Details",
+      "description": "Retrieves account details for the member identified by the incoming clientMemberId and clientOrgName. Note that the member could have more than one account; therefore, an array of account objects is returned. Possible account statuses: Account_Active, Closed, Frozen, New.",
+      "operationId": "accountDetails",
+      "parameters": [
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberAccountResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "AccountDto": {
+      "type": "object",
+      "properties": {
+       "description": {
+        "type": "string",
+        "description": "Description of the account",
+        "example": "XYZ Bank HSA account"
+       },
+       "name": {
+        "type": "string",
+        "description": "A name for this account",
+        "example": "John's Bank of America XX-0435"
+       },
+       "lastFourAccountNumber": {
+        "type": "string",
+        "description": "The last four digits of the bank account number",
+        "example": 9118
+       },
+       "routingNumber": {
+        "type": "string",
+        "description": "The account routing number (9 Digits, numeric)",
+        "example": 211070178
+       },
+       "accountQualifierType": {
+        "type": "string",
+        "description": "The purpose for this account",
+        "example": "John Smith's tax-free health spend"
+       },
+       "status": {
+        "type": "string",
+        "description": "The status of this account",
+        "example": "Account_Active"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "The reason for a particular status",
+        "example": "HSA rejected due to lack of documentation"
+       },
+       "type": {
+        "type": "string",
+        "description": "Type of account",
+        "example": "HSA"
+       },
+       "creationDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the record was created"
+       },
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account",
+        "example": "Unique identifier of the bank account"
+       },
+       "incentiveRatio": {
+        "type": "number",
+        "description": "The number that is multiplied by the cash deposit value to determine the incentive value"
+       },
+       "closeDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account was closed",
+        "example": "2024-10-10"
+       },
+       "memberAuthorized": {
+        "type": "boolean",
+        "description": "Indicates the member authorized closure of the account, if the account was member-owned",
+        "example": "False"
+       },
+       "memberAuthorizedDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the member authorized closure of the account",
+        "example": "2024-10-10"
+       },
+       "effectiveDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account becomes effective for the member",
+        "example": "2024-10-10"
+       },
+       "expirationDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account expires for the member",
+        "example": "2024-10-10"
+       },
+       "nextScheduledFundsLoadDate": {
+        "type": "string",
+        "format": "date",
+        "description": "Date when the next scheduled funding will occur for the account",
+        "example": "2024-10-10"
+       }
+      }
+     },
+     "MemberAccountResponse": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberAccounts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/AccountDto"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getmemberdetails.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/details": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Member Details",
+      "description": "Retrieves detailed information for the member identified by the incoming clientMemberId and clientOrgName.",
+      "operationId": "getMemberDetails",
+      "parameters": [
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "memberPlanBenefitPackageStatus",
+        "in": "query",
+        "description": "If set to ACTIVE_ONLY, only the current member plan benefit package will be returned; if left null, all member plan benefit packages will be returned",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "enum": [
+          "ACTIVE_ONLY"
+         ]
+        }
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberDetailsResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "PhoneDto": {
+      "type": "object",
+      "properties": {
+       "type": {
+        "type": "string",
+        "description": "Auto-generated type for the phone number",
+        "example": "Phone1"
+       },
+       "typeDescription": {
+        "type": "string",
+        "description": "Client-defined description for the phone number",
+        "example": "Cell"
+       },
+       "countryCode": {
+        "type": "string",
+        "default": "1",
+        "description": "Phone country code",
+        "example": 1
+       },
+       "phoneNumber": {
+        "type": "string",
+        "description": "10-Digit phone number",
+        "example": 5089188736
+       },
+       "phoneExtension": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Optional extension",
+        "example": 344
+       },
+       "primaryIndicator": {
+        "type": "boolean",
+        "description": "Determines whether this is a primary phone",
+        "example": true
+       }
+      },
+      "required": [
+       "countryCode",
+       "phoneNumber"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "EmailDto": {
+      "type": "object",
+      "properties": {
+       "type": {
+        "type": "string",
+        "description": "Auto-generated type for the email address",
+        "example": "Email1"
+       },
+       "typeDescription": {
+        "type": "string",
+        "description": "Client-defined description for the email address",
+        "example": "Personal"
+       },
+       "emailAddress": {
+        "type": "string",
+        "description": "Email address - any notifications will be sent to this email address",
+        "example": "john@doe.com"
+       },
+       "primaryIndicator": {
+        "type": "boolean",
+        "description": "Determines whether this is a primary email address",
+        "example": true
+       }
+      },
+      "required": [
+       "emailAddress"
+      ]
+     },
+     "ProductNameDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the product",
+        "example": "HSA_01"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "DirectorDTO": {
+      "type": "object",
+      "properties": {
+       "companyName": {
+        "type": "string",
+        "description": "Company Name",
+        "example": "IBM"
+       },
+       "symbol": {
+        "type": "string",
+        "description": "Stock Symbol",
+        "example": "ACER"
+       }
+      }
+     },
+     "MemberProfileDto": {
+      "type": "object",
+      "properties": {
+       "annualIncomeMin": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Lower bound of the member's approximate annual income range. Number must be USD.",
+        "example": 75000
+       },
+       "annualIncomeMax": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Upper bound of the member's approximate annual income range. Number must be USD.",
+        "example": 100000
+       },
+       "totalNetWorthMin": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Lower bound of the member's total net worth range (assets minus liabilities). Assets include figures from checking, savings, and liquid securities, plus all liquid assets like a home and pension assets. Liabilities include money owed like mortgage payments, car loans, student loans, taxes, etc.",
+        "example": 100000
+       },
+       "totalNetWorthMax": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Upper bound of the member's total net worth range (assets minus liabilities).",
+        "example": 130000
+       },
+       "investmentExperience": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The member's current investment expertise",
+        "example": 1
+       },
+       "riskTolerance": {
+        "type": "string",
+        "description": "The member's risk ceiling",
+        "enum": [
+         "LOW",
+         "MODERATE",
+         "HIGH"
+        ],
+        "example": "MODERATE"
+       },
+       "investmentObjective": {
+        "type": "string",
+        "description": "The member's current investment objectives",
+        "enum": [
+         "GENERATE_INCOME",
+         "PRESERVE_WEALTH",
+         "MARKET_SPECULATION",
+         "GROWTH",
+         "BALANCE_PRESERVE_WEALTH_WITH_GROWTH"
+        ],
+        "example": "GROWTH"
+       },
+       "netWorthLiquidMin": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Lower bound of the member's liquid net worth range (in USD). Liquid net worth is the amount of cash or near cash equivalents that can be easily converted into cash and reinvested. Examples include money market holdings, exchange listed stocks, exchange-traded funds, mutual funds, etc.",
+        "example": 10000
+       },
+       "netWorthLiquidMax": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Upper bound of the member's liquid net worth range (in USD).",
+        "example": 12000
+       },
+       "employmentStatus": {
+        "type": "string",
+        "description": "Employment status",
+        "enum": [
+         "EMPLOYED",
+         "RETIRED",
+         "STUDENT",
+         "UNEMPLOYED",
+         "SELF_EMPLOYED"
+        ],
+        "example": "EMPLOYED"
+       },
+       "employerName": {
+        "type": "string",
+        "description": "Employer name",
+        "example": "Apple Inc."
+       },
+       "employmentPosition": {
+        "type": "string",
+        "description": "Employment job type",
+        "enum": [
+         "ACCOUNTANT",
+         "ACTUARY",
+         "ADJUSTER",
+         "ADMINISTRATOR",
+         "ADVERTISER",
+         "AGENT",
+         "ATC",
+         "AMBASSADOR",
+         "ANALYST",
+         "APPRAISER",
+         "ARCHITECT",
+         "ARTIST",
+         "ASSISTANT",
+         "ATHLETE",
+         "ATTENDANT",
+         "ATTORNEY",
+         "AUCTIONEER",
+         "AUDITOR",
+         "BARBER",
+         "BROKER",
+         "BUSINESS_EXEC",
+         "BUSINESS_OWNER",
+         "CAREGIVER",
+         "CARPENTER",
+         "CASHIER",
+         "CHEF",
+         "CHIROPRACTOR",
+         "CIVIL",
+         "CLERGY",
+         "CLERK",
+         "COMPLIANCE",
+         "CONSULTANT",
+         "CONTRACTOR",
+         "COUNSELOR",
+         "CUSTOMER_SERVICE",
+         "DEALER",
+         "DEVELOPER",
+         "DISTRIBUTOR",
+         "DOCTOR",
+         "DRIVER",
+         "ENGINEER",
+         "EXAMINER",
+         "EXTERMINATOR",
+         "FACTORY",
+         "FARMER",
+         "FINANCIAL",
+         "FISHERMAN",
+         "FLIGHT",
+         "HR",
+         "IMPEX",
+         "INSPECTOR",
+         "INTERN",
+         "INVESTMENT",
+         "INVESTOR",
+         "IT",
+         "JANITOR",
+         "JEWELER",
+         "LABORER",
+         "LANDSCAPER",
+         "LENDING",
+         "MANAGER",
+         "MECHANIC",
+         "MILITARY",
+         "MORTICIAN",
+         "NURSE",
+         "NUTRITIONIST",
+         "OFFICE",
+         "PHARMACIST",
+         "PHYSICAL",
+         "PILOT",
+         "POLICE",
+         "POLITICIAN",
+         "PM",
+         "REP",
+         "RESEARCHER",
+         "SAILOR",
+         "SALES",
+         "SCIENTIST",
+         "SEAMSTRESS",
+         "SECURITY",
+         "SOCIAL",
+         "TEACHER",
+         "TECHNICIAN",
+         "TELLER",
+         "TRADESPERSON",
+         "TRAINER",
+         "TRANSPORTER",
+         "UNDERWRITER",
+         "WRITER"
+        ],
+        "example": "DOCTOR"
+       },
+       "employerAddress": {
+        "type": "string",
+        "description": "Employer type",
+        "example": "INFORMATION"
+       },
+       "isControlPerson": {
+        "type": "boolean",
+        "description": "Indicates whether the member is a Director, Officer, or 10% stock owner of a publicly traded company",
+        "example": true
+       },
+       "isPoliticallyExposed": {
+        "type": "boolean",
+        "description": "Indicates whether the member is a current or former politically exposed person or public official (includes US and Foreign). A politically exposed person is someone who has been entrusted with a prominent public function, or who is closely related to such a person.",
+        "example": true
+       },
+       "isImmediateFamilyExposed": {
+        "type": "boolean",
+        "description": "Indicates whether anyone in the member's immediate family is a current or former politically exposed person or public official (includes US and Foreign). A politically exposed person is someone who has been entrusted with a prominent public function, or who is closely related to such a person.",
+        "example": true
+       },
+       "isBrokerDealerAffiliated": {
+        "type": "boolean",
+        "description": "Indicates whether the member’s current employer is a broker/dealer",
+        "example": true
+       }
+      }
+     },
+     "PoliticalExposedNameDTO": {
+      "type": "object",
+      "properties": {
+       "fullName": {
+        "type": "string",
+        "description": "Full name of the politically exposed person"
+       }
+      },
+      "required": [
+       "fullName"
+      ]
+     },
+     "AddressDto": {
+      "type": "object",
+      "properties": {
+       "line1": {
+        "type": "string",
+        "description": "The first line of the address",
+        "example": 10
+       },
+       "line2": {
+        "type": "string",
+        "description": "The (optional) second line of the address",
+        "example": "address line2"
+       },
+       "city": {
+        "type": "string",
+        "description": "Address city",
+        "example": "Boston"
+       },
+       "stateProvince": {
+        "type": "string",
+        "description": "2-Character address state or province",
+        "example": "MA"
+       },
+       "country": {
+        "type": "string",
+        "description": "Address country",
+        "example": "US"
+       },
+       "postalCode": {
+        "type": "string",
+        "description": "Address zip code",
+        "example": "02119"
+       },
+       "postalCodeExtension": {
+        "type": "string",
+        "description": "Address zip code extension",
+        "example": "0123"
+       },
+       "type": {
+        "type": "string",
+        "description": "Auto-generated type for the address",
+        "example": "Address1"
+       },
+       "typeDescription": {
+        "type": "string",
+        "description": "Client-defined description for the address",
+        "example": "Home"
+       },
+       "name": {
+        "type": "string",
+        "description": "Name of person",
+        "example": "John Smith"
+       },
+       "attentionCareOf": {
+        "type": "string",
+        "description": "If the address is 'in-care-of' someone else",
+        "example": "Care/of John Smith"
+       },
+       "line3": {
+        "type": "string",
+        "description": "The (optional) third line of the address",
+        "example": "address line3"
+       },
+       "line4": {
+        "type": "string",
+        "description": "The (optional) fourth line of the address",
+        "example": "address line4"
+       },
+       "pobox": {
+        "type": "string",
+        "description": "P.O. Box number",
+        "example": "P.O. box 21345"
+       },
+       "county": {
+        "type": "string",
+        "description": "Address county",
+        "example": "Norfolk"
+       },
+       "primaryIndicator": {
+        "type": "boolean",
+        "description": "Determines whether this is a primary address",
+        "example": true
+       },
+       "returnMailIndicator": {
+        "type": "boolean",
+        "description": "Indicated whether the member’s address has had mail returned",
+        "example": false
+       },
+       "returnMailDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date returned mail was received",
+        "example": "2024-01-01"
+       },
+       "returnMailReason": {
+        "type": "string",
+        "description": "Reason for mail being returned",
+        "example": "Invalid Address"
+       }
+      },
+      "required": [
+       "city",
+       "country",
+       "line1",
+       "postalCode",
+       "stateProvince"
+      ]
+     },
+     "ConsentDTO": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "Name of the consent to be accepted",
+        "enum": [
+         "INVESTMENT_TERMS_OF_USE",
+         "INVESTMENT_CUSTOMER_AGREEMENT",
+         "INVESTMENT_MARKET_DATA_AGREEMENT",
+         "INVESTMENT_RULE_14B_AGREEMENT",
+         "INVESTMENT_FINDERS_FEE",
+         "INVESTMENT_PRIVACY_POLICY",
+         "INVESTMENT_DATA_SHARING_AGREEMENT",
+         "INVESTMENT_MARGIN_AGREEMENT",
+         "PH_TERMS_AND_CONDITIONS",
+         "PH_ELECTRONIC_CONSENT",
+         "PH_PRIVACY_POLICY",
+         "FIS_DIGITAL_WALLET_TERMS",
+         "FIS_ESIGN_CONSENT",
+         "FIS_TERMS_AND_CONDITIONS",
+         "FIS_PRIVACY_POLICY",
+         "BENACCT_PRIVACY_POLICY",
+         "BENACCT_TERMS_OF_USE"
+        ],
+        "example": "INVESTMENT_PRIVACY_POLICY"
+       },
+       "description": {
+        "type": "string"
+       },
+       "productName": {
+        "type": "string"
+       }
+      }
+     },
+     "MemberConsentDTO": {
+      "type": "object",
+      "properties": {
+       "acceptedIndicator": {
+        "type": "boolean",
+        "description": "Indicates the member accepted the consent",
+        "enum": [
+         "true"
+        ],
+        "example": true
+       },
+       "electronicSignature": {
+        "type": "string",
+        "description": "The member’s digital signature (full name)",
+        "example": "John Smith"
+       },
+       "consentDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date the consent was accepted",
+        "example": "2023-08-23"
+       },
+       "consent": {
+        "$ref": "#/components/schemas/ConsentDTO"
+       }
+      }
+     },
+     "MemberDetailsAccountDto": {
+      "type": "object",
+      "properties": {
+       "description": {
+        "type": "string",
+        "description": "Description of the account",
+        "example": "XYZ Bank HSA account"
+       },
+       "name": {
+        "type": "string",
+        "description": "A name for this account",
+        "example": "John's Bank of America XX-0435"
+       },
+       "lastFourAccountNumber": {
+        "type": "string",
+        "description": "The last four digits of the bank account number",
+        "example": 9118
+       },
+       "routingNumber": {
+        "type": "string",
+        "description": "The account routing number (9 Digits, numeric)",
+        "example": 211070178
+       },
+       "accountQualifierType": {
+        "type": "string",
+        "description": "The purpose for this account",
+        "example": "John Smith's tax-free health spend"
+       },
+       "status": {
+        "type": "string",
+        "description": "The status of this account",
+        "example": "Account_Active"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "The reason for a particular status",
+        "example": "HSA rejected due to lack of documentation"
+       },
+       "type": {
+        "type": "string",
+        "description": "Type of account",
+        "example": "HSA"
+       },
+       "creationDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the record was created"
+       },
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account"
+       },
+       "accountManagementType": {
+        "type": "string"
+       },
+       "riskPortfolio": {
+        "type": "string"
+       },
+       "patternDayTrades": {
+        "type": "number"
+       },
+       "effectiveDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account becomes effective for the member",
+        "example": "2023-02-25"
+       },
+       "incentiveRatio": {
+        "type": "number",
+        "description": "The number that is multiplied by the cash deposit value to determine the incentive value",
+        "example": 1.2
+       },
+       "expirationDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account expires for the member",
+        "example": "2024-10-10"
+       },
+       "memberOwned": {
+        "type": "boolean",
+        "description": "Indicates if the account is owned by member",
+        "example": true
+       }
+      }
+     },
+     "MemberDetailsDto": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       },
+       "healthPlanCoverageType": {
+        "type": "string",
+        "description": "Type of coverage (Family, Individual)",
+        "example": "Family"
+       },
+       "namePrefix": {
+        "type": "string",
+        "description": "Prefix for the name",
+        "example": "Doctor"
+       },
+       "nameSuffix": {
+        "type": "string",
+        "description": "Suffix for the name",
+        "example": "Jr."
+       },
+       "firstName": {
+        "type": "string",
+        "description": "First name",
+        "example": "John"
+       },
+       "middleName": {
+        "type": "string",
+        "description": "Middle name",
+        "example": "Paul"
+       },
+       "lastName": {
+        "type": "string",
+        "description": "Last name",
+        "example": "Smith"
+       },
+       "race": {
+        "type": "string",
+        "description": "Member race",
+        "example": "Asian"
+       },
+       "gender": {
+        "type": "string",
+        "description": "Member gender",
+        "example": "Female"
+       },
+       "maritalStatus": {
+        "type": "string",
+        "description": "Marital status (Married, Never Married, Widowed, etc.)",
+        "example": "Never Married"
+       },
+       "preferredGenderPronoun": {
+        "type": "string",
+        "description": "Member preferred gender pronoun",
+        "example": "She/Her"
+       },
+       "religion": {
+        "type": "string",
+        "description": "Member religion",
+        "example": "Christianity"
+       },
+       "ssnLastFour": {
+        "type": "string",
+        "description": "Last four digits of SSN",
+        "example": 4347
+       },
+       "kycCompletedIndicator": {
+        "type": "boolean",
+        "description": "Indicates whether Know Your Customer (KYC) has been completed for the member",
+        "example": true
+       },
+       "countryOfCitizenship": {
+        "type": "string",
+        "description": "Country of citizenship",
+        "example": "US"
+       },
+       "dateOfBirth": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date of birth",
+        "example": "1969-03-02"
+       },
+       "status": {
+        "type": "string",
+        "description": "The overall status of the member",
+        "example": "Active"
+       },
+       "creationDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the member was created",
+        "example": "Date when the member was created"
+       },
+       "addresses": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/AddressDto"
+        }
+       },
+       "phones": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/PhoneDto"
+        }
+       },
+       "emails": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/EmailDto"
+        }
+       },
+       "language": {
+        "type": "string",
+        "description": "Language of the member",
+        "example": "English"
+       },
+       "politicallyExposedNames": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/PoliticalExposedNameDTO"
+        }
+       },
+       "memberProducts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberDetailsProductDto"
+        }
+       },
+       "tags": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/TagDto"
+        }
+       },
+       "associatedDirectorships": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/DirectorDTO"
+        }
+       },
+       "memberConsents": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberConsentDTO"
+        }
+       },
+       "memberPlanBenefitPackages": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberPlanBenefitPackageDto"
+        }
+       },
+       "memberProfile": {
+        "$ref": "#/components/schemas/MemberProfileDto"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "MemberDetailsProductDto": {
+      "type": "object",
+      "properties": {
+       "effectiveDate": {
+        "type": "string",
+        "format": "date",
+        "description": "Date when the product becomes effective for the member",
+        "example": "2023-02-25"
+       },
+       "creationDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the record was created",
+        "example": "Date when the record was created"
+       },
+       "status": {
+        "type": "string",
+        "description": "Status of member enrollment for the product",
+        "example": "Account_Active"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "The reason for a particular status",
+        "example": "HSA rejected due to lack of documentation"
+       },
+       "product": {
+        "$ref": "#/components/schemas/ProductNameDto"
+       },
+       "memberAccounts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberDetailsAccountDto"
+        }
+       }
+      },
+      "required": [
+       "creationDate",
+       "effectiveDate",
+       "status",
+       "statusReason"
+      ]
+     },
+     "MemberDetailsResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/MemberDetailsDto"
+       }
+      }
+     },
+     "MemberPlanBenefitPackageDto": {
+      "type": "object",
+      "properties": {
+       "clientOrgPlanBenefitPackageId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique internal identifier of the Plan Benefit Package"
+       },
+       "name": {
+        "type": "string",
+        "description": "A unique identifier assigned by CMS (Centers for Medicare & Medicaid Services) to each plan benefit package (PBP) within a contract that a plan sponsor has with CMS.  This number is used to link the plan sponsor's contract and plan identifiers"
+       },
+       "status": {
+        "type": "string",
+        "description": "Status of the Plan Benefit Package"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "Status reason of the Plan Benefit Package"
+       },
+       "effectiveDate": {
+        "type": "string",
+        "format": "date",
+        "description": "Effective date of the Plan Benefit Package"
+       },
+       "expirationDate": {
+        "type": "string",
+        "format": "date",
+        "description": "Expiration date of the Plan Benefit Package"
+       },
+       "ssbciIndicator": {
+        "type": "boolean",
+        "description": "Indicates whether the member is eligible for SSBCI (Special Supplemental Benefits for the Chronically Ill)"
+       },
+       "ssbciEffectiveDate": {
+        "type": "string",
+        "format": "date",
+        "description": "Effective date of SSBCI benefit eligibility"
+       },
+       "otcEligible": {
+        "type": "boolean",
+        "description": " Indicates whether the member is eligible for otc benefits"
+       },
+       "fitnessEligible": {
+        "type": "boolean",
+        "description": "Indicates whether the member is eligible for fitness benefits"
+       },
+       "rewardsEligible": {
+        "type": "boolean",
+        "description": "Indicates whether the member is eligible for rewards benefits"
+       },
+       "dentalEligible": {
+        "type": "boolean",
+        "description": "Indicates whether the member is eligible for dental benefits"
+       },
+       "dentalPackage": {
+        "type": "string",
+        "description": "Name of the dental benefit package"
+       },
+       "visionEligible": {
+        "type": "boolean",
+        "description": "Indicates whether the member is eligible for vision benefits"
+       },
+       "visionPackage": {
+        "type": "string",
+        "description": "Name of the vision benefit package"
+       },
+       "hearingEligible": {
+        "type": "boolean",
+        "description": "Indicates whether the member is eligible for hearing benefits"
+       },
+       "hearingPackage": {
+        "type": "string",
+        "description": "Name of the hearing benefit package"
+       },
+       "riskIndicator": {
+        "type": "boolean",
+        "description": "Indicates whether the member is eligible for the In-home/telehealth assessment and PCP follow up activities"
+       }
+      }
+     },
+     "TagDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "Constant used to define the metadata within a key-value pair"
+       },
+       "value": {
+        "type": "string",
+        "description": "Variable belonging to the metadata within a key-value pair"
+       },
+       "type": {
+        "type": "string",
+        "description": "Additional client-defined qualifier that may be used to further classify the key-value pair"
+       }
+      },
+      "required": [
+       "name",
+       "value"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getmembersummariesbyclientorg.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/list": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get All Member Summary",
+      "description": "Retrieves the summary list of members for a given client organization",
+      "operationId": "getMemberSummariesByClientOrg",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "page",
+        "in": "query",
+        "description": "Page number to be returned. If not specified, default is 1.",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "default": 1
+        },
+        "example": 1
+       },
+       {
+        "name": "pageSize",
+        "in": "query",
+        "description": "Maximum number of items to be returned per page. If not specified, default is 25.",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "default": 25
+        },
+        "example": 25
+       },
+       {
+        "name": "sortValue",
+        "in": "query",
+        "description": "The property by which the response is sorted",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "default": "creationDate",
+         "enum": [
+          "firstName",
+          "lastName",
+          "creationDate",
+          "updateDate"
+         ]
+        }
+       },
+       {
+        "name": "sortOrder",
+        "in": "query",
+        "description": "The sort direction",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "default": "Descending",
+         "enum": [
+          "Ascending",
+          "Descending"
+         ]
+        }
+       },
+       {
+        "name": "searchText",
+        "in": "query",
+        "description": "Search by Member Name or Client Member Id",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "default": ""
+        },
+        "example": "lastName or firstName or clientMemberId"
+       },
+       {
+        "name": "status",
+        "in": "query",
+        "description": "The overall status of the member",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "enum": [
+          "NEW",
+          "Active"
+         ]
+        }
+       },
+       {
+        "name": "startDate",
+        "in": "query",
+        "description": "Start date of date range",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "2022-03-20"
+       },
+       {
+        "name": "firstName",
+        "in": "query",
+        "description": "First name",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "default": ""
+        },
+        "example": "John"
+       },
+       {
+        "name": "lastName",
+        "in": "query",
+        "description": "Last name",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "default": ""
+        },
+        "example": "Smith"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "default": ""
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "endDate",
+        "in": "query",
+        "description": "End date of date range",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "2022-03-25"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetMemberSummariesByClientResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "GetMemberSummariesByClientResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       },
+       "memberSummaries": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberSummaryDto"
+        }
+       }
+      },
+      "required": [
+       "clientOrg"
+      ]
+     },
+     "MemberSummaryDto": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       },
+       "firstName": {
+        "type": "string",
+        "description": "First name",
+        "example": "John"
+       },
+       "lastName": {
+        "type": "string",
+        "description": "Last name",
+        "example": "Smith"
+       },
+       "status": {
+        "type": "string",
+        "description": "The overall status of the member",
+        "example": "Active"
+       },
+       "creationDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the member was created",
+        "example": "2018-03-22"
+       },
+       "updateDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the record was last updated",
+        "example": "2018-03-22"
+       }
+      },
+      "required": [
+       "clientMemberId",
+       "updateDate"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/updatememberphones.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/phones": {
+     "put": {
+      "tags": [
+       ""
+      ],
+      "summary": "Update Member Phones",
+      "description": "Updates the phone numbers for a member (identified by clientMemberId). Attributes that are supplied in the request body are saved for the member.",
+      "operationId": "updateMemberPhones",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/UpdateMemberPhonesRequestDoc"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/UpdateMemberResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-103: One phone number must be designated as primary\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "PhoneDto": {
+      "type": "object",
+      "properties": {
+       "type": {
+        "type": "string",
+        "description": "Auto-generated type for the phone number",
+        "example": "Phone1"
+       },
+       "typeDescription": {
+        "type": "string",
+        "description": "Client-defined description for the phone number",
+        "example": "Cell"
+       },
+       "countryCode": {
+        "type": "string",
+        "default": "1",
+        "description": "Phone country code",
+        "example": 1
+       },
+       "phoneNumber": {
+        "type": "string",
+        "description": "10-Digit phone number",
+        "example": 5089188736
+       },
+       "phoneExtension": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Optional extension",
+        "example": 344
+       },
+       "primaryIndicator": {
+        "type": "boolean",
+        "description": "Determines whether this is a primary phone",
+        "example": true
+       }
+      },
+      "required": [
+       "countryCode",
+       "phoneNumber"
+      ]
+     },
+     "UpdateMemberPhoneDto": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       },
+       "phones": {
+        "type": "array",
+        "example": [
+         {
+          "countryCode": "1",
+          "phoneNumber": "5089188736",
+          "type": "Phone1",
+          "phoneExtension": 344,
+          "typeDescription": "Mobile",
+          "primaryIndicator": true
+         }
+        ],
+        "items": {
+         "$ref": "#/components/schemas/PhoneDto"
+        }
+       }
+      },
+      "required": [
+       "clientMemberId",
+       "phones"
+      ]
+     },
+     "UpdateMemberPhonesRequest": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/UpdateMemberPhoneDto"
+       }
+      },
+      "required": [
+       "clientOrg"
+      ]
+     },
+     "UpdateMemberPhonesRequestDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/UpdateMemberPhonesRequest"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "UpdateMemberResponse": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/updatememberemails.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/emails": {
+     "put": {
+      "tags": [
+       ""
+      ],
+      "summary": "Update Member Emails",
+      "description": "Updates the email address(es) for a member (identified by clientMemberId). Attributes that are supplied in the request body are saved for the member.",
+      "operationId": "updateMemberEmails",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/UpdateMemberEmailsRequestDoc"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/UpdateMemberResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-104: One email must be designated as primary\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "UpdateMemberResponse": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "EmailDto": {
+      "type": "object",
+      "properties": {
+       "type": {
+        "type": "string",
+        "description": "Auto-generated type for the email address",
+        "example": "Email1"
+       },
+       "typeDescription": {
+        "type": "string",
+        "description": "Client-defined description for the email address",
+        "example": "Personal"
+       },
+       "emailAddress": {
+        "type": "string",
+        "description": "Email address - any notifications will be sent to this email address",
+        "example": "john@doe.com"
+       },
+       "primaryIndicator": {
+        "type": "boolean",
+        "description": "Determines whether this is a primary email address",
+        "example": true
+       }
+      },
+      "required": [
+       "emailAddress"
+      ]
+     },
+     "UpdateMemberEmailDto": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       },
+       "emails": {
+        "type": "array",
+        "example": [
+         {
+          "emailAddress": "john@doe.com",
+          "type": "Email1",
+          "typeDescription": "Work",
+          "primaryIndicator": true
+         }
+        ],
+        "items": {
+         "$ref": "#/components/schemas/EmailDto"
+        }
+       }
+      },
+      "required": [
+       "clientMemberId",
+       "emails"
+      ]
+     },
+     "UpdateMemberEmailsRequest": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/UpdateMemberEmailDto"
+       }
+      },
+      "required": [
+       "clientOrg"
+      ]
+     },
+     "UpdateMemberEmailsRequestDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/UpdateMemberEmailsRequest"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/updatememberaddresses.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/addresses": {
+     "put": {
+      "tags": [
+       ""
+      ],
+      "summary": "Update Member Addresses",
+      "description": "Updates addresses for a member (identified by clientMemberId). Attributes that are supplied in the request body are saved for the member.",
+      "operationId": "updateMemberAddresses",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/UpdateMemberAddressesRequestDoc"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/UpdateMemberResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-105: One address must be designated as primary\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "UpdateMemberResponse": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "UpdateAddressDto": {
+      "type": "object",
+      "properties": {
+       "line1": {
+        "type": "string",
+        "description": "The first line of the address",
+        "example": 10
+       },
+       "line2": {
+        "type": "string",
+        "description": "The (optional) second line of the address",
+        "example": "address line2"
+       },
+       "city": {
+        "type": "string",
+        "description": "Address city",
+        "example": "Boston"
+       },
+       "stateProvince": {
+        "type": "string",
+        "description": "2-Character address state or province",
+        "example": "MA"
+       },
+       "country": {
+        "type": "string",
+        "description": "Address country",
+        "example": "US"
+       },
+       "postalCode": {
+        "type": "string",
+        "description": "Address zip code",
+        "example": "02119"
+       },
+       "postalCodeExtension": {
+        "type": "string",
+        "description": "Address zip code extension",
+        "example": "0123"
+       },
+       "type": {
+        "type": "string",
+        "description": "Auto-generated type for the address",
+        "example": "Address1"
+       },
+       "typeDescription": {
+        "type": "string",
+        "description": "Client-defined description for the address",
+        "example": "Home"
+       },
+       "name": {
+        "type": "string",
+        "description": "Name of person",
+        "example": "John Smith"
+       },
+       "attentionCareOf": {
+        "type": "string",
+        "description": "If the address is 'in-care-of' someone else",
+        "example": "Care/of John Smith"
+       },
+       "line3": {
+        "type": "string",
+        "description": "The (optional) third line of the address",
+        "example": "address line3"
+       },
+       "line4": {
+        "type": "string",
+        "description": "The (optional) fourth line of the address",
+        "example": "address line4"
+       },
+       "pobox": {
+        "type": "string",
+        "description": "P.O. Box number",
+        "example": "P.O. box 21345"
+       },
+       "county": {
+        "type": "string",
+        "description": "Address county",
+        "example": "Norfolk"
+       },
+       "primaryIndicator": {
+        "type": "boolean",
+        "description": "Determines whether this is a primary address",
+        "example": true
+       },
+       "returnMailIndicator": {
+        "type": "boolean",
+        "description": "Indicated whether the member’s address has had mail returned",
+        "example": false
+       }
+      },
+      "required": [
+       "city",
+       "country",
+       "line1",
+       "postalCode",
+       "stateProvince"
+      ]
+     },
+     "UpdateMemberAddressDto": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       },
+       "addresses": {
+        "type": "array",
+        "example": [
+         {
+          "city": "Boston",
+          "country": "US",
+          "line1": "10 Miller Street",
+          "postalCode": "02119",
+          "stateProvince": "MA",
+          "type": "Address1",
+          "attentionCareOf": "Care/of John Smith",
+          "county": "Norfolk",
+          "line2": "line2",
+          "line3": "line3",
+          "line4": "line4",
+          "name": "John Smith",
+          "pobox": "P.O. box 21345",
+          "postalCodeExtension": "0123",
+          "typeDescription": "Home",
+          "primaryIndicator": true
+         }
+        ],
+        "items": {
+         "$ref": "#/components/schemas/UpdateAddressDto"
+        }
+       }
+      },
+      "required": [
+       "addresses",
+       "clientMemberId"
+      ]
+     },
+     "UpdateMemberAddressesRequest": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/UpdateMemberAddressDto"
+       },
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       }
+      },
+      "required": [
+       "clientOrg"
+      ]
+     },
+     "UpdateMemberAddressesRequestDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/UpdateMemberAddressesRequest"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/membertransfer.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/transfer": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Transfer Member",
+      "description": "This API will allow you to move a member’s account from one client organization to another, provided the source and destination client organizations are below the same parent client organization.",
+      "operationId": "memberTransfer",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/MemberTransferRequestDoc"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/BaseMemberResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-106: Unsupported product type for transfer\n- GBL-107: Client org name must be a parent node to both source and destination client orgs\n- GBL-108: Destination client org does not have a parent client org\n- GBL-109: ClientMemberId already exists on the destination client org\n- GBL-110: Product type not found on destination client org\n- GBL-134: ClientOrg is in Inactive state\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "MemberTransferDto": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       },
+       "sourceClientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "destinationClientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "products": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ProductNameDto"
+        }
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "MemberTransferRequestDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/PostMemberTransferRequest"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "PostMemberTransferRequest": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/MemberTransferDto"
+       }
+      }
+     },
+     "ProductNameDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the product",
+        "example": "HSA_01"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "BaseMemberResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/updatememberdetails.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/details": {
+     "patch": {
+      "tags": [
+       ""
+      ],
+      "summary": "Update Member Details",
+      "description": "Updates details for a member (identified by clientMemberId). The attributes passed in the request body are saved for the member.",
+      "operationId": "updateMemberDetails",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/UpdateMemberDetailsRequestDoc"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/UpdateMemberResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-140: Field cannot be updated due to KYC completion\n- GBL-144: ClientOrg is not configured to use incentive ratio for the product\n- GBL-152: Consent has already been accepted\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "UpdateMemberResponse": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "ProductNameDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the product",
+        "example": "HSA_01"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ConsentNameDTO": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "Name of the consent to be accepted",
+        "enum": [
+         "INVESTMENT_TERMS_OF_USE",
+         "INVESTMENT_CUSTOMER_AGREEMENT",
+         "INVESTMENT_MARKET_DATA_AGREEMENT",
+         "INVESTMENT_RULE_14B_AGREEMENT",
+         "INVESTMENT_FINDERS_FEE",
+         "INVESTMENT_PRIVACY_POLICY",
+         "INVESTMENT_DATA_SHARING_AGREEMENT",
+         "INVESTMENT_MARGIN_AGREEMENT",
+         "PH_TERMS_AND_CONDITIONS",
+         "PH_ELECTRONIC_CONSENT",
+         "PH_PRIVACY_POLICY",
+         "FIS_DIGITAL_WALLET_TERMS",
+         "FIS_ESIGN_CONSENT",
+         "FIS_TERMS_AND_CONDITIONS",
+         "FIS_PRIVACY_POLICY",
+         "BENACCT_PRIVACY_POLICY",
+         "BENACCT_TERMS_OF_USE"
+        ],
+        "example": "INVESTMENT_PRIVACY_POLICY"
+       }
+      }
+     },
+     "DirectorDTO": {
+      "type": "object",
+      "properties": {
+       "companyName": {
+        "type": "string",
+        "description": "Company Name",
+        "example": "IBM"
+       },
+       "symbol": {
+        "type": "string",
+        "description": "Stock Symbol",
+        "example": "ACER"
+       }
+      }
+     },
+     "MemberProfileDto": {
+      "type": "object",
+      "properties": {
+       "annualIncomeMin": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Lower bound of the member's approximate annual income range. Number must be USD.",
+        "example": 75000
+       },
+       "annualIncomeMax": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Upper bound of the member's approximate annual income range. Number must be USD.",
+        "example": 100000
+       },
+       "totalNetWorthMin": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Lower bound of the member's total net worth range (assets minus liabilities). Assets include figures from checking, savings, and liquid securities, plus all liquid assets like a home and pension assets. Liabilities include money owed like mortgage payments, car loans, student loans, taxes, etc.",
+        "example": 100000
+       },
+       "totalNetWorthMax": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Upper bound of the member's total net worth range (assets minus liabilities).",
+        "example": 130000
+       },
+       "investmentExperience": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The member's current investment expertise",
+        "example": 1
+       },
+       "riskTolerance": {
+        "type": "string",
+        "description": "The member's risk ceiling",
+        "enum": [
+         "LOW",
+         "MODERATE",
+         "HIGH"
+        ],
+        "example": "MODERATE"
+       },
+       "investmentObjective": {
+        "type": "string",
+        "description": "The member's current investment objectives",
+        "enum": [
+         "GENERATE_INCOME",
+         "PRESERVE_WEALTH",
+         "MARKET_SPECULATION",
+         "GROWTH",
+         "BALANCE_PRESERVE_WEALTH_WITH_GROWTH"
+        ],
+        "example": "GROWTH"
+       },
+       "netWorthLiquidMin": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Lower bound of the member's liquid net worth range (in USD). Liquid net worth is the amount of cash or near cash equivalents that can be easily converted into cash and reinvested. Examples include money market holdings, exchange listed stocks, exchange-traded funds, mutual funds, etc.",
+        "example": 10000
+       },
+       "netWorthLiquidMax": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Upper bound of the member's liquid net worth range (in USD).",
+        "example": 12000
+       },
+       "employmentStatus": {
+        "type": "string",
+        "description": "Employment status",
+        "enum": [
+         "EMPLOYED",
+         "RETIRED",
+         "STUDENT",
+         "UNEMPLOYED",
+         "SELF_EMPLOYED"
+        ],
+        "example": "EMPLOYED"
+       },
+       "employerName": {
+        "type": "string",
+        "description": "Employer name",
+        "example": "Apple Inc."
+       },
+       "employmentPosition": {
+        "type": "string",
+        "description": "Employment job type",
+        "enum": [
+         "ACCOUNTANT",
+         "ACTUARY",
+         "ADJUSTER",
+         "ADMINISTRATOR",
+         "ADVERTISER",
+         "AGENT",
+         "ATC",
+         "AMBASSADOR",
+         "ANALYST",
+         "APPRAISER",
+         "ARCHITECT",
+         "ARTIST",
+         "ASSISTANT",
+         "ATHLETE",
+         "ATTENDANT",
+         "ATTORNEY",
+         "AUCTIONEER",
+         "AUDITOR",
+         "BARBER",
+         "BROKER",
+         "BUSINESS_EXEC",
+         "BUSINESS_OWNER",
+         "CAREGIVER",
+         "CARPENTER",
+         "CASHIER",
+         "CHEF",
+         "CHIROPRACTOR",
+         "CIVIL",
+         "CLERGY",
+         "CLERK",
+         "COMPLIANCE",
+         "CONSULTANT",
+         "CONTRACTOR",
+         "COUNSELOR",
+         "CUSTOMER_SERVICE",
+         "DEALER",
+         "DEVELOPER",
+         "DISTRIBUTOR",
+         "DOCTOR",
+         "DRIVER",
+         "ENGINEER",
+         "EXAMINER",
+         "EXTERMINATOR",
+         "FACTORY",
+         "FARMER",
+         "FINANCIAL",
+         "FISHERMAN",
+         "FLIGHT",
+         "HR",
+         "IMPEX",
+         "INSPECTOR",
+         "INTERN",
+         "INVESTMENT",
+         "INVESTOR",
+         "IT",
+         "JANITOR",
+         "JEWELER",
+         "LABORER",
+         "LANDSCAPER",
+         "LENDING",
+         "MANAGER",
+         "MECHANIC",
+         "MILITARY",
+         "MORTICIAN",
+         "NURSE",
+         "NUTRITIONIST",
+         "OFFICE",
+         "PHARMACIST",
+         "PHYSICAL",
+         "PILOT",
+         "POLICE",
+         "POLITICIAN",
+         "PM",
+         "REP",
+         "RESEARCHER",
+         "SAILOR",
+         "SALES",
+         "SCIENTIST",
+         "SEAMSTRESS",
+         "SECURITY",
+         "SOCIAL",
+         "TEACHER",
+         "TECHNICIAN",
+         "TELLER",
+         "TRADESPERSON",
+         "TRAINER",
+         "TRANSPORTER",
+         "UNDERWRITER",
+         "WRITER"
+        ],
+        "example": "DOCTOR"
+       },
+       "employerAddress": {
+        "type": "string",
+        "description": "Employer type",
+        "example": "INFORMATION"
+       },
+       "isControlPerson": {
+        "type": "boolean",
+        "description": "Indicates whether the member is a Director, Officer, or 10% stock owner of a publicly traded company",
+        "example": true
+       },
+       "isPoliticallyExposed": {
+        "type": "boolean",
+        "description": "Indicates whether the member is a current or former politically exposed person or public official (includes US and Foreign). A politically exposed person is someone who has been entrusted with a prominent public function, or who is closely related to such a person.",
+        "example": true
+       },
+       "isImmediateFamilyExposed": {
+        "type": "boolean",
+        "description": "Indicates whether anyone in the member's immediate family is a current or former politically exposed person or public official (includes US and Foreign). A politically exposed person is someone who has been entrusted with a prominent public function, or who is closely related to such a person.",
+        "example": true
+       },
+       "isBrokerDealerAffiliated": {
+        "type": "boolean",
+        "description": "Indicates whether the member’s current employer is a broker/dealer",
+        "example": true
+       }
+      }
+     },
+     "PoliticalExposedNameDTO": {
+      "type": "object",
+      "properties": {
+       "fullName": {
+        "type": "string",
+        "description": "Full name of the politically exposed person"
+       }
+      },
+      "required": [
+       "fullName"
+      ]
+     },
+     "UpdateMemberConsentDto": {
+      "type": "object",
+      "properties": {
+       "acceptedIndicator": {
+        "type": "boolean",
+        "description": "Indicates the member accepted the consent",
+        "enum": [
+         "true"
+        ],
+        "example": true
+       },
+       "electronicSignature": {
+        "type": "string",
+        "description": "The member’s digital signature (full name)",
+        "example": "John Smith"
+       },
+       "consentDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date the consent was accepted",
+        "example": "2023-08-23"
+       },
+       "consent": {
+        "$ref": "#/components/schemas/ConsentNameDTO"
+       }
+      }
+     },
+     "UpdateMemberDetailsAccountDto": {
+      "type": "object",
+      "properties": {
+       "type": {
+        "type": "string",
+        "description": "HSA",
+        "example": "Type of account"
+       },
+       "incentiveRatio": {
+        "type": "number",
+        "description": "The number that is multiplied by the cash deposit value to determine the incentive value",
+        "example": 1.2
+       }
+      },
+      "required": [
+       "incentiveRatio",
+       "type"
+      ]
+     },
+     "UpdateMemberDetailsDto": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       },
+       "firstName": {
+        "type": "string",
+        "description": "First name",
+        "example": "John"
+       },
+       "lastName": {
+        "type": "string",
+        "description": "Last name",
+        "example": "Smith"
+       },
+       "middleName": {
+        "type": "string",
+        "description": "Middle name",
+        "example": "Paul"
+       },
+       "namePrefix": {
+        "type": "string",
+        "description": "Prefix for the name",
+        "example": "Doctor"
+       },
+       "nameSuffix": {
+        "type": "string",
+        "description": "Suffix for the name",
+        "example": "Jr."
+       },
+       "preferredGenderPronoun": {
+        "type": "string",
+        "description": "Member preferred gender pronoun",
+        "enum": [
+         "She/Her",
+         "He/Him",
+         "They/Them"
+        ],
+        "example": " - Please Select - "
+       },
+       "countryOfCitizenship": {
+        "type": "string",
+        "description": "Country of citizenship",
+        "enum": [
+         "AF",
+         "AX",
+         "AL",
+         "DZ",
+         "AS",
+         "AD",
+         "AO",
+         "AI",
+         "AQ",
+         "AG",
+         "AR",
+         "AM",
+         "AW",
+         "AU",
+         "AT",
+         "AZ",
+         "BS",
+         "BH",
+         "BD",
+         "BB",
+         "BY",
+         "BE",
+         "BZ",
+         "BJ",
+         "BM",
+         "BT",
+         "BO",
+         "BQ",
+         "BA",
+         "BW",
+         "BV",
+         "BR",
+         "IO",
+         "BN",
+         "BG",
+         "BF",
+         "BI",
+         "CV",
+         "KH",
+         "CM",
+         "CA",
+         "KY",
+         "CF",
+         "TD",
+         "CL",
+         "CN",
+         "CX",
+         "CC",
+         "CO",
+         "KM",
+         "CG",
+         "CD",
+         "CK",
+         "CR",
+         "CI",
+         "HR",
+         "CU",
+         "CW",
+         "CY",
+         "CZ",
+         "DK",
+         "DJ",
+         "DM",
+         "DO",
+         "EC",
+         "EG",
+         "SV",
+         "GQ",
+         "ER",
+         "EE",
+         "SZ",
+         "ET",
+         "FK",
+         "FO",
+         "FJ",
+         "FI",
+         "FR",
+         "GF",
+         "PF",
+         "TF",
+         "GA",
+         "GM",
+         "GE",
+         "DE",
+         "GH",
+         "GI",
+         "GR",
+         "GL",
+         "GD",
+         "GP",
+         "GU",
+         "GT",
+         "GG",
+         "GN",
+         "GW",
+         "GY",
+         "HT",
+         "HM",
+         "VA",
+         "HN",
+         "HK",
+         "HU",
+         "IS",
+         "IN",
+         "ID",
+         "IR",
+         "IQ",
+         "IE",
+         "IM",
+         "IL",
+         "IT",
+         "JM",
+         "JP",
+         "JE",
+         "JO",
+         "KZ",
+         "KE",
+         "KI",
+         "KP",
+         "KR",
+         "KW",
+         "KG",
+         "LA",
+         "LV",
+         "LB",
+         "LS",
+         "LR",
+         "LY",
+         "LI",
+         "LT",
+         "LU",
+         "MO",
+         "MG",
+         "MW",
+         "MY",
+         "MV",
+         "ML",
+         "MT",
+         "MH",
+         "MQ",
+         "MR",
+         "MU",
+         "YT",
+         "MX",
+         "FM",
+         "MD",
+         "MC",
+         "MN",
+         "ME",
+         "MS",
+         "MA",
+         "MZ",
+         "MM",
+         "NA",
+         "NR",
+         "NP",
+         "NL",
+         "NC",
+         "NZ",
+         "NI",
+         "NE",
+         "NG",
+         "NU",
+         "NF",
+         "MK",
+         "MP",
+         "NO",
+         "OM",
+         "PK",
+         "PW",
+         "PS",
+         "PA",
+         "PG",
+         "PY",
+         "PE",
+         "PH",
+         "PN",
+         "PL",
+         "PT",
+         "PR",
+         "QA",
+         "RE",
+         "RO",
+         "RU",
+         "RW",
+         "BL",
+         "SH",
+         "KN",
+         "LC",
+         "MF",
+         "PM",
+         "VC",
+         "WS",
+         "SM",
+         "ST",
+         "SA",
+         "SN",
+         "RS",
+         "SC",
+         "SL",
+         "SG",
+         "SX",
+         "SK",
+         "SI",
+         "SB",
+         "SO",
+         "ZA",
+         "GS",
+         "SS",
+         "ES",
+         "LK",
+         "SD",
+         "SR",
+         "SJ",
+         "SE",
+         "CH",
+         "SY",
+         "TW",
+         "TJ",
+         "TZ",
+         "TH",
+         "TL",
+         "TG",
+         "TK",
+         "TO",
+         "TT",
+         "TN",
+         "TR",
+         "TM",
+         "TC",
+         "TV",
+         "UG",
+         "UA",
+         "AE",
+         "GB",
+         "US",
+         "UM",
+         "UY",
+         "UZ",
+         "VU",
+         "VE",
+         "VN",
+         "VG",
+         "VI",
+         "WF",
+         "EH",
+         "YE",
+         "ZM",
+         "ZW"
+        ],
+        "example": "US"
+       },
+       "dateOfBirth": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date of birth",
+        "example": "1969-03-02"
+       },
+       "maritalStatus": {
+        "type": "string",
+        "description": "Marital status (Married, Never Married, Widowed, etc.)",
+        "enum": [
+         "Unknown",
+         "Annulled",
+         "Divorced",
+         "Interlocutory",
+         "Legally Separated",
+         "Married",
+         "Polygamous",
+         "Never Married",
+         "Domestic Partner",
+         "Widowed"
+        ],
+        "example": " - Please Select - "
+       },
+       "gender": {
+        "type": "string",
+        "description": "Member gender",
+        "enum": [
+         "Male",
+         "Female",
+         "Other",
+         "Non-Disclosed",
+         "Non-binary"
+        ],
+        "example": "Female"
+       },
+       "race": {
+        "type": "string",
+        "description": "Member race",
+        "enum": [
+         "American Indian or Alaska Native",
+         "Asian",
+         "Native Hawaiian or Other Pacific Islander",
+         "White",
+         "Other Race"
+        ],
+        "example": "Asian"
+       },
+       "religion": {
+        "type": "string",
+        "description": "Member religion",
+        "enum": [
+         "Christianity",
+         "Islam",
+         "Hinduism",
+         "Judaism",
+         "Buddhism",
+         "Folk Religions",
+         "Other Religions",
+         "Unaffiliated",
+         "Non-Disclosed"
+        ],
+        "example": " - Please Select - "
+       },
+       "passport": {
+        "type": "string",
+        "description": "Passport number",
+        "example": 584673234
+       },
+       "ssn": {
+        "type": "string",
+        "description": "Social Security Number - either SSN or passport are required",
+        "example": "033764347"
+       },
+       "healthPlanCoverageType": {
+        "type": "string",
+        "description": "Type of coverage (Family, Individual)",
+        "enum": [
+         "Individual",
+         "Family"
+        ],
+        "example": "Family"
+       },
+       "language": {
+        "type": "string",
+        "description": "Language of the member. Possible values are:  en_US = English, zh_CN = Chinese, es_ES = Spanish, pt_BR = Portuguese, ru_RU = Russian",
+        "enum": [
+         "en_US",
+         "zh_CN",
+         "es_ES",
+         "pt_BR",
+         "ru_RU"
+        ],
+        "example": "en_US"
+       },
+       "memberProducts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/UpdateMemberDetailsProductDto"
+        }
+       },
+       "memberConsents": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/UpdateMemberConsentDto"
+        }
+       },
+       "politicallyExposedNames": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/PoliticalExposedNameDTO"
+        }
+       },
+       "associatedDirectorships": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/DirectorDTO"
+        }
+       },
+       "memberProfile": {
+        "$ref": "#/components/schemas/MemberProfileDto"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "UpdateMemberDetailsProductDto": {
+      "type": "object",
+      "properties": {
+       "product": {
+        "$ref": "#/components/schemas/ProductNameDto"
+       },
+       "memberAccounts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/UpdateMemberDetailsAccountDto"
+        }
+       }
+      }
+     },
+     "UpdateMemberDetailsRequestDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/UpdateMemberRequest"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "UpdateMemberRequest": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/UpdateMemberDetailsDto"
+       },
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       }
+      },
+      "required": [
+       "clientOrg"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/deletememberphone.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/phones": {
+     "delete": {
+      "tags": [
+       ""
+      ],
+      "summary": "Delete Member Phone",
+      "description": "This API will allow you to delete a member phone.",
+      "operationId": "deleteMemberPhone",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "phoneId",
+        "in": "query",
+        "description": "Auto-generated type for the phone number",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Phone1"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/DeleteMemberResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-115: Cannot delete a primary phone number\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "DeleteMemberResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/deletememberemail.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/emails": {
+     "delete": {
+      "tags": [
+       ""
+      ],
+      "summary": "Delete Member Email",
+      "description": "This API will allow you to delete a member email address.",
+      "operationId": "deleteMemberEmail",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "emailId",
+        "in": "query",
+        "description": "Auto-generated type for the email address",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Email1"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/DeleteMemberResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-116: Cannot delete a primary email address\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "DeleteMemberResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/deletememberaddress.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/addresses": {
+     "delete": {
+      "tags": [
+       ""
+      ],
+      "summary": "Delete Member Address",
+      "description": "This API will allow you to delete a member address.",
+      "operationId": "deleteMemberAddress",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "addressId",
+        "in": "query",
+        "description": "Auto-generated type for the address",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Address1"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/UpdateMemberResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-114: Cannot delete a primary address\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "UpdateMemberResponse": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/deletemember.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/status": {
+     "delete": {
+      "tags": [
+       ""
+      ],
+      "summary": "Delete Member",
+      "description": "This API will allow you to delete a member. This API applies to only those members that are enrolled in the INCENTIVE product.",
+      "operationId": "deleteMember",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberStatusUpdateResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-117: Member cannot be deleted if not enrolled in the INCENTIVE product\n- GBL-118: Member cannot be deleted if balance is not zero\n- GBL-119: Member cannot be deleted if enrolled in multiple products\n- GBL-174: Member is in Inactive state\n- GBL-604: Member cannot be deleted if they have multiple accounts for the same account type\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "MemberStatusUpdateResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/updatememberstatus.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/status": {
+     "patch": {
+      "tags": [
+       ""
+      ],
+      "summary": "Update Member Statuses",
+      "description": "Updates the status for a member, identified by clientMemberId, in order to activate or deactivate a member.",
+      "operationId": "updateMemberStatus",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/MemberStatusRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberStatusUpdateResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-120: Member status is already Inactive\n- GBL-121: Member status is already Active\n- GBL-122: Cannot change status of member from current status\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "MemberStatusRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberStatusUpdateDto"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "MemberStatusRequestDto": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       },
+       "status": {
+        "type": "string",
+        "description": "Status of the member. Possible values are: Inactive, Active.",
+        "example": "Active"
+       }
+      },
+      "required": [
+       "clientMemberId",
+       "status"
+      ]
+     },
+     "MemberStatusUpdateDto": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       },
+       "member": {
+        "$ref": "#/components/schemas/MemberStatusRequestDto"
+       }
+      },
+      "required": [
+       "clientOrg"
+      ]
+     },
+     "MemberStatusUpdateResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/creatememberexpense.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/expense": {
+     "post": {
+      "tags": [
+       "Expense"
+      ],
+      "summary": "Create Expense",
+      "description": "Allow members to log expenses for tracking purposes.",
+      "operationId": "createMemberExpense",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/PostMemberExpenseDataDoc"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberExpenseResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-278: Expense date cannot be a future date\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "MemberAccountIdDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account",
+        "example": "6ae73974-2bd1-0f0d-7316-bbfff8cdc91b"
+       }
+      },
+      "required": [
+       "id"
+      ]
+     },
+     "PostExpenseData": {
+      "type": "object",
+      "properties": {
+       "merchantName": {
+        "type": "string",
+        "description": "Name of merchant accepting the original transaction",
+        "example": "MTA VENDING MACHINES"
+       },
+       "expenseDate": {
+        "type": "string",
+        "description": "Date of Expense",
+        "example": "2024-01-01"
+       },
+       "amount": {
+        "type": "number",
+        "description": "Expense Amout",
+        "example": 12.3
+       },
+       "expenseCategory": {
+        "type": "string",
+        "description": "Expense Category",
+        "enum": [
+         "Medical",
+         "Rx",
+         "Dental",
+         "Vision",
+         "Other"
+        ],
+        "example": "Rx"
+       },
+       "description": {
+        "type": "string",
+        "description": "Expense Description",
+        "example": "General checkup"
+       }
+      },
+      "required": [
+       "amount",
+       "expenseDate"
+      ]
+     },
+     "PostMemberExpenseData": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberAccount": {
+        "$ref": "#/components/schemas/MemberAccountIdDto"
+       },
+       "expense": {
+        "$ref": "#/components/schemas/PostExpenseData"
+       }
+      },
+      "required": [
+       "clientOrg",
+       "expense",
+       "member",
+       "memberAccount"
+      ]
+     },
+     "PostMemberExpenseDataDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/PostMemberExpenseData"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "MemberExpenseResponse": {
+      "type": "object",
+      "properties": {
+       "expenseNumber": {
+        "type": "string",
+        "description": "Expense Number",
+        "example": "EXPEN00000001"
+       },
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId",
+       "expenseNumber"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/updatememberexpense.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/expense": {
+     "patch": {
+      "tags": [
+       "member-expense-controller"
+      ],
+      "summary": "Update Expense",
+      "description": "Allow members to edit expenses for tracking purposes.",
+      "operationId": "updateMemberExpense",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/PatchMemberExpenseDataDoc"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberExpenseResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-278: Expense date cannot be a future date\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "MemberExpenseResponse": {
+      "type": "object",
+      "properties": {
+       "expenseNumber": {
+        "type": "string",
+        "description": "Expense Number",
+        "example": "EXPEN00000001"
+       },
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId",
+       "expenseNumber"
+      ]
+     },
+     "PatchExpenseData": {
+      "type": "object",
+      "properties": {
+       "merchantName": {
+        "type": "string",
+        "description": "Name of merchant accepting the original transaction",
+        "example": "MTA VENDING MACHINES"
+       },
+       "expenseDate": {
+        "type": "string",
+        "description": "Date of Expense",
+        "example": "2024-01-01"
+       },
+       "amount": {
+        "type": "number",
+        "description": "Expense Amout",
+        "example": 12.3
+       },
+       "expenseCategory": {
+        "type": "string",
+        "description": "Expense Category",
+        "enum": [
+         "Medical",
+         "Rx",
+         "Dental",
+         "Vision",
+         "Other"
+        ],
+        "example": "Rx"
+       },
+       "description": {
+        "type": "string",
+        "description": "Expense Description",
+        "example": "General checkup"
+       },
+       "expenseNumber": {
+        "type": "string",
+        "description": "Expense Number",
+        "example": "EXPEN00000001"
+       }
+      },
+      "required": [
+       "expenseNumber"
+      ]
+     },
+     "PatchMemberExpenseData": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "expense": {
+        "$ref": "#/components/schemas/PatchExpenseData"
+       }
+      },
+      "required": [
+       "clientOrg",
+       "expense",
+       "member"
+      ]
+     },
+     "PatchMemberExpenseDataDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/PatchMemberExpenseData"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/addexpensereceipts.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/expense/receipts": {
+     "post": {
+      "tags": [
+       "member-expense-controller"
+      ],
+      "summary": "Upload Receipts to Expense",
+      "description": "Allow members to upload receipts to expense",
+      "operationId": "addExpenseReceipts",
+      "requestBody": {
+       "content": {
+        "multipart/form-data": {
+         "schema": {
+          "type": "object",
+          "properties": {
+           "data": {
+            "$ref": "#/components/schemas/MemberExpenseReceiptDoc"
+           },
+           "files": {
+            "type": "array",
+            "items": {
+             "type": "string",
+             "format": "binary"
+            }
+           }
+          },
+          "required": [
+           "data",
+           "files"
+          ]
+         }
+        }
+       }
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/AddReceiptResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "MemberExpenseReceiptData": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "expenseNumber": {
+        "type": "string",
+        "description": "Expense Number",
+        "example": "EXPEN00000001"
+       }
+      },
+      "required": [
+       "clientOrg",
+       "expenseNumber",
+       "member"
+      ]
+     },
+     "MemberExpenseReceiptDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberExpenseReceiptData"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "AddReceiptResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "expenseNumber": {
+        "type": "string"
+       },
+       "receipts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ReceiptData"
+        }
+       }
+      },
+      "required": [
+       "clientOrg",
+       "expenseNumber",
+       "member",
+       "receipts"
+      ]
+     },
+     "ReceiptData": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Id",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       },
+       "s3Path": {
+        "type": "string",
+        "description": "s3 path to the file",
+        "example": "/client/clientOrgName/Member/Client_Member_id/Receipt/id"
+       }
+      },
+      "required": [
+       "id",
+       "s3Path"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getmemberexpenses.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/expenses": {
+     "get": {
+      "tags": [
+       "member-expense-controller"
+      ],
+      "summary": "Get Member Expenses",
+      "description": "Retrieves a paginated list of expenses for a member. Supports filtering and sorting by expense date.",
+      "operationId": "getMemberExpenses",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "memberAccountId",
+        "in": "query",
+        "description": "MemberAccount Id",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "format": "uuid"
+        },
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       },
+       {
+        "name": "sortValue",
+        "in": "query",
+        "description": "The property by which the response is sorted",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "default": "expenseDate",
+         "enum": [
+          "expenseDate",
+          "amount"
+         ]
+        }
+       },
+       {
+        "name": "sortOrder",
+        "in": "query",
+        "description": "The sort direction",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "default": "Descending",
+         "enum": [
+          "Ascending",
+          "Descending"
+         ]
+        }
+       },
+       {
+        "name": "pageNumber",
+        "in": "query",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "format": "int32",
+         "default": 1
+        }
+       },
+       {
+        "name": "pageSize",
+        "in": "query",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "format": "int32",
+         "default": 25
+        }
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetMemberExpenseResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ReceiptData": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Id",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       },
+       "s3Path": {
+        "type": "string",
+        "description": "s3 path to the file",
+        "example": "/client/clientOrgName/Member/Client_Member_id/Receipt/id"
+       }
+      },
+      "required": [
+       "id",
+       "s3Path"
+      ]
+     },
+     "ExpenseItemResponse": {
+      "type": "object",
+      "properties": {
+       "expenseNumber": {
+        "type": "string"
+       },
+       "expenseDate": {
+        "type": "string",
+        "format": "date-time"
+       },
+       "amount": {
+        "type": "number"
+       },
+       "description": {
+        "type": "string"
+       },
+       "merchantName": {
+        "type": "string"
+       },
+       "expenseCategory": {
+        "type": "string"
+       },
+       "receipts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ReceiptData"
+        }
+       },
+       "transactions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/TransactionData"
+        }
+       }
+      }
+     },
+     "GetMemberExpenseResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "expenses": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ExpenseItemResponse"
+        }
+       }
+      },
+      "required": [
+       "clientOrg",
+       "member"
+      ]
+     },
+     "TransactionData": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Id",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       },
+       "referenceIdentifier": {
+        "type": "string",
+        "description": "Transaction Reference Identifier",
+        "example": "T12345678"
+       }
+      },
+      "required": [
+       "id",
+       "referenceIdentifier"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/deletememberexpensereceipt.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "MEMBER MANAGEMENT API",
+    "description": "These API's are used to manage member informations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/members/expense/receipt": {
+     "delete": {
+      "tags": [
+       "member-expense-controller"
+      ],
+      "summary": "Delete Expense Receipt",
+      "description": "Delete Expense Receipt.",
+      "operationId": "deleteMemberExpenseReceipt",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "expenseNumber",
+        "in": "query",
+        "description": "Expense Number",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "EXPEN00000001"
+       },
+       {
+        "name": "receiptId",
+        "in": "query",
+        "description": "Id",
+        "required": true,
+        "schema": {
+         "type": "string",
+         "format": "uuid"
+        },
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberExpenseResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "MemberExpenseResponse": {
+      "type": "object",
+      "properties": {
+       "expenseNumber": {
+        "type": "string",
+        "description": "Expense Number",
+        "example": "EXPEN00000001"
+       },
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId",
+       "expenseNumber"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ }
+]

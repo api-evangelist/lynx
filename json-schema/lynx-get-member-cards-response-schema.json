@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-get-member-cards-response-schema.json",
+  "title": "GetMemberCardsResponse",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-card-management-api-openapi.yml#/components/schemas/GetMemberCardsResponse",
+  "type": "object",
+  "properties": {
+    "member": {
+      "$ref": "#/$defs/BaseMember",
+      "description": "Object describing the member"
+    },
+    "clientOrg": {
+      "$ref": "#/$defs/ClientOrgDto"
+    },
+    "memberAccountCards": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/MemberAccountCardDto"
+      }
+    }
+  },
+  "$defs": {
+    "BaseMember": {
+      "type": "object",
+      "properties": {
+        "clientMemberId": {
+          "type": "string",
+          "description": "Unique client-side identifier for the member"
+        }
+      },
+      "required": [
+        "clientMemberId"
+      ]
+    },
+    "BaseMemberCard": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of card"
+        },
+        "cardDesign": {
+          "$ref": "#/$defs/CardDesignDto"
+        },
+        "status": {
+          "type": "string",
+          "description": "The card status. At the time of creation, the status is always 'Inactive'"
+        },
+        "statusReason": {
+          "type": "string",
+          "description": "More details about the status"
+        },
+        "expirationMonth": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The expiration month for the card"
+        },
+        "expirationYear": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The expiration year for the card"
+        },
+        "cvv": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The card CVV code"
+        },
+        "brand": {
+          "type": "string",
+          "description": "The card brand"
+        },
+        "deliveryMethod": {
+          "type": "string",
+          "description": "The card delivery method"
+        },
+        "nameOnCard": {
+          "type": "string",
+          "description": "Name on card"
+        },
+        "motherMaidenName": {
+          "type": "string",
+          "description": "Mother maiden name"
+        },
+        "issuingAgency": {
+          "type": "string",
+          "description": "Issuing agency"
+        },
+        "fulfillingAgency": {
+          "type": "string",
+          "description": "Fulfilling agency"
+        },
+        "cardLastFour": {
+          "type": "string",
+          "description": "Last four digits"
+        },
+        "cardProxy": {
+          "type": "string",
+          "description": "Proxy id of the card"
+        },
+        "issueDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Card issue date"
+        },
+        "activationDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Card activation date"
+        },
+        "secondaryCardIssuedIndicator": {
+          "type": "boolean",
+          "description": "Whether a secondary card was issued"
+        },
+        "effectiveDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Card creation date"
+        },
+        "relatedPersonId": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for the related person"
+        },
+        "addDatetime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date and time of add"
+        }
+      },
+      "required": [
+        "activationDate",
+        "addDatetime",
+        "brand",
+        "cardDesign",
+        "cardLastFour",
+        "cvv",
+        "deliveryMethod",
+        "effectiveDate",
+        "expirationMonth",
+        "expirationYear",
+        "fulfillingAgency",
+        "issueDate",
+        "issuingAgency",
+        "motherMaidenName",
+        "nameOnCard",
+        "secondaryCardIssuedIndicator",
+        "status",
+        "statusReason",
+        "type"
+      ]
+    },
+    "CardDesignDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of design used for the card"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "MemberAccountCardDto": {
+      "type": "object",
+      "properties": {
+        "memberAccounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MemberAccountDto"
+          }
+        },
+        "memberCard": {
+          "$ref": "#/$defs/BaseMemberCard"
+        }
+      }
+    },
+    "MemberAccountDto": {
+      "type": "object",
+      "properties": {
+        "accountType": {
+          "type": "string",
+          "description": "Type of account"
+        },
+        "lastFourAccountNumber": {
+          "type": "string",
+          "description": "The last four digits of the bank account number"
+        },
+        "name": {
+          "type": "string",
+          "description": "A name for this account"
+        },
+        "effectiveDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the account becomes effective for the member"
+        },
+        "expirationDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the account expires for the member"
+        }
+      }
+    }
+  }
+}

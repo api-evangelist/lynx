@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-put-commerce-sales-tax-request-schema.json",
+  "title": "PutCommerceSalesTaxRequest",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-commerce-order-api-openapi.yml#/components/schemas/PutCommerceSalesTaxRequest",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/CalculateSalesTaxRequestDto"
+    },
+    "idempotency": {
+      "$ref": "#/$defs/Idempotency",
+      "description": "Unique identifier that represents the operation"
+    }
+  },
+  "required": [
+    "data",
+    "idempotency"
+  ],
+  "$defs": {
+    "BaseAddress": {
+      "type": "object",
+      "properties": {
+        "line1": {
+          "type": "string",
+          "description": "The first line of the address"
+        },
+        "line2": {
+          "type": "string",
+          "description": "The (optional) second line of the address"
+        },
+        "city": {
+          "type": "string",
+          "description": "Address city"
+        },
+        "stateProvince": {
+          "type": "string",
+          "description": "2-Character address state or province"
+        },
+        "country": {
+          "type": "string",
+          "description": "Address country"
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "Address zip code"
+        },
+        "postalCodeExtension": {
+          "type": "string",
+          "description": "Address zip code extension"
+        }
+      },
+      "required": [
+        "city",
+        "country",
+        "line1",
+        "postalCode",
+        "stateProvince"
+      ]
+    },
+    "BaseMember": {
+      "type": "object",
+      "properties": {
+        "clientMemberId": {
+          "type": "string",
+          "description": "Unique client-side identifier for the member"
+        }
+      },
+      "required": [
+        "clientMemberId"
+      ]
+    },
+    "CalculateSalesTaxRequestDto": {
+      "type": "object",
+      "properties": {
+        "clientOrg": {
+          "$ref": "#/$defs/ClientOrgDto"
+        },
+        "member": {
+          "$ref": "#/$defs/BaseMember"
+        },
+        "shipToAddress": {
+          "$ref": "#/$defs/BaseAddress"
+        }
+      }
+    },
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Idempotency": {
+      "type": "object",
+      "properties": {
+        "idempotencyKey": {
+          "type": "string",
+          "description": "Unique identifier that represents the operation"
+        }
+      }
+    }
+  }
+}

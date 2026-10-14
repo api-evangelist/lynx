@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-get-claim-detail-response-schema.json",
+  "title": "GetClaimDetailResponse",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-claims-service-api-openapi.yml#/components/schemas/GetClaimDetailResponse",
+  "type": "object",
+  "properties": {
+    "memberClaim": {
+      "$ref": "#/$defs/MemberClaimDetailDto"
+    }
+  },
+  "$defs": {
+    "AiAdjudicationResultDTO": {
+      "type": "object",
+      "properties": {
+        "aiValidAmount": {
+          "type": "number",
+          "description": "Amount that the AI partner validated for the submitted claimdence."
+        },
+        "aiDenyReason": {
+          "type": "string",
+          "description": "Reason for the denial. Null if not denied."
+        },
+        "aiRecommendation": {
+          "type": "string",
+          "description": "The AI'd recommendation for the claim."
+        },
+        "confidence": {
+          "type": "number"
+        },
+        "suggestion": {
+          "type": "string"
+        },
+        "flags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "merchant": {
+          "type": "string"
+        },
+        "expenseDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "claimAmount": {
+          "type": "number"
+        },
+        "receiptTotal": {
+          "type": "number"
+        },
+        "receiptMerchant": {
+          "type": "string"
+        },
+        "receiptDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "ClaimDetailItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier of the claim detail record"
+        },
+        "itemDescription": {
+          "type": "string",
+          "description": "Text description of the item or service"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount for the individual item"
+        }
+      }
+    },
+    "MemberAccountDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier of the bank account"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of account"
+        },
+        "availableAmount": {
+          "type": "number",
+          "description": "Available balance to spend for the account"
+        }
+      },
+      "required": [
+        "availableAmount",
+        "id",
+        "type"
+      ]
+    },
+    "MemberBankAccountDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "UUID of the Member's external bank account"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "MemberClaimDetailDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The unique identifier of the claim"
+        },
+        "claimNumber": {
+          "type": "string",
+          "description": "The claim number"
+        },
+        "memberAccount": {
+          "$ref": "#/$defs/MemberAccountDto"
+        },
+        "memberBankAccount": {
+          "$ref": "#/$defs/MemberBankAccountDto"
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the claim"
+        },
+        "claimAmount": {
+          "type": "number",
+          "description": "Total amount of the claim"
+        },
+        "approvedAmount": {
+          "type": "number",
+          "description": "The Approved Claim Amount"
+        },
+        "expenseDate": {
+          "type": "string",
+          "description": "Date of Expense"
+        },
+        "statusReason": {
+          "type": "string",
+          "description": "Reason for the current status of the claim"
+        },
+        "reimbursementType": {
+          "type": "string",
+          "description": " Method of reimbursement (ACH or CHECK)."
+        },
+        "merchantName": {
+          "type": "string",
+          "description": "Name of the merchant related to the claim"
+        },
+        "addDateTime": {
+          "type": "string",
+          "description": "Date and time of add"
+        },
+        "category": {
+          "type": "string",
+          "description": "The category for the Claim",
+          "enum": [
+            "OverTheCounter",
+            "Wellness",
+            "HealthyFood",
+            "RentPayment",
+            "UtilityPayment",
+            "MortgagePayment",
+            "Other",
+            "FitnessFacility",
+            "FitnessClass"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "The short description for the claim"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ClaimDetailItem"
+          }
+        },
+        "receipt": {
+          "$ref": "#/$defs/ReceiptDto"
+        },
+        "member": {
+          "$ref": "#/$defs/MemberDto"
+        },
+        "aiAdjudicationResult": {
+          "$ref": "#/$defs/AiAdjudicationResultDTO"
+        }
+      },
+      "required": [
+        "addDateTime",
+        "approvedAmount",
+        "claimAmount",
+        "claimNumber",
+        "expenseDate",
+        "id",
+        "memberAccount",
+        "reimbursementType",
+        "status",
+        "statusReason"
+      ]
+    },
+    "MemberDto": {
+      "type": "object",
+      "properties": {
+        "clientMemberId": {
+          "type": "string",
+          "description": "Unique client-side identifier for the member"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "First name"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name"
+        }
+      },
+      "required": [
+        "clientMemberId"
+      ]
+    },
+    "ReceiptDto": {
+      "type": "object",
+      "properties": {
+        "receiptId": {
+          "type": "string",
+          "description": "The ID of the receipt"
+        },
+        "receiptUrl": {
+          "type": "string",
+          "description": "The ID of the receipt"
+        }
+      },
+      "required": [
+        "receiptId",
+        "receiptUrl"
+      ]
+    }
+  }
+}

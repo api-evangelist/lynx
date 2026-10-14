@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-client-org-substantiation-model-dto-schema.json",
+  "title": "ClientOrgSubstantiationModelDto",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-client-org-management-api-openapi.yml#/components/schemas/ClientOrgSubstantiationModelDto",
+  "type": "object",
+  "properties": {
+    "clientOrgName": {
+      "type": "string",
+      "description": "The name of the client organization"
+    },
+    "copayIndicator": {
+      "type": "boolean",
+      "description": "Indicates whether the copay auto-substantiation method should be utilized; default is false"
+    },
+    "recurringExpenseIndicator": {
+      "type": "boolean",
+      "description": "Indicates whether the recurring expense auto-substantiation method should be utilized; default is false"
+    },
+    "carrierClaimsIndicator": {
+      "type": "boolean",
+      "description": "Indicates whether a carrier claims file will be transmitted to be used for the substantiation of medical and dental claims; default is false"
+    },
+    "pbmIndicator": {
+      "type": "boolean",
+      "description": "Indicates whether a PBM file will be transmitted to be used for the substantiation of prescription transactions; default is false"
+    },
+    "deMinimisIndicator": {
+      "type": "boolean",
+      "description": "Indicates whether a de minimis amount should be enabled where if a transaction is equal to or less than that dollar amount, it will automatically be substantiated; default is false"
+    },
+    "deMinimisAmount": {
+      "type": "number",
+      "description": "Dollar amount to automatically substantiate if de minimis functionality is enabled; default is $25"
+    },
+    "useDefaultConfigurationIndicator": {
+      "type": "boolean",
+      "description": "Indicates whether the parent client organization substantiation model should be utilized instead of defining a custom configuration for a child client organization.  If this is the root level client organization, this should be set to false and Stage Detail is required, else substantiation will not be utilized and no substantiation actions will occur.  If this is a child client organization and a custom configuration is needed, this should be set to false and Stage Detail is required"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Indicates whether the client organization substantiation model is enabled.  If the substantiation model is not enabled, no substantiation will be performed and no notifications will be generated"
+    },
+    "stages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ClientOrgSubstantiationModelStageDto"
+      }
+    },
+    "deMinimasAmount": {
+      "type": "number",
+      "writeOnly": true
+    }
+  },
+  "required": [
+    "carrierClaimsIndicator",
+    "clientOrgName",
+    "copayIndicator",
+    "deMinimisAmount",
+    "deMinimisIndicator",
+    "enabled",
+    "pbmIndicator",
+    "recurringExpenseIndicator",
+    "useDefaultConfigurationIndicator"
+  ],
+  "$defs": {
+    "ClientOrgSubstantiationModelStageDto": {
+      "type": "object",
+      "properties": {
+        "stageCode": {
+          "type": "string",
+          "description": "Abbreviation for the substantiation stage; PNDS1=Pending - Stage 1, PNDS2=Pending - Stage 2, PNDS3=Pending - Stage 3, PNDS4=Pending - Stage 4, PMIS1=Pending More Info - Stage 1, PMIS2=Pending More Info - Stage 2, PMIS3=Pending More Info - Stage 3, PMIS4=Pending More Info - Stage 4, IELS1=Ineligible - Stage 1, IELS2=Ineligible - Stage 2, IELS3=Ineligible - Stage 3, IELS4=Ineligible - Stage 4",
+          "enum": [
+            "PNDS1",
+            "PNDS2",
+            "PNDS3",
+            "PNDS4",
+            "PMIS1",
+            "PMIS2",
+            "PMIS3",
+            "PMIS4",
+            "IELS1",
+            "IELS2",
+            "IELS3",
+            "IELS4",
+            "PNDAR",
+            "PMIAR",
+            "IELPR",
+            "AUTO"
+          ]
+        },
+        "stageName": {
+          "type": "string",
+          "description": "Substantiation stage name"
+        },
+        "daysInStage": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of days a transaction will remain in the substantiation stage before moving to the next stage; a substantiation notification is generated when a transaction is moved into a new stage and not at the end of a stage.  If the Block Account Indicator is true for the stage, then Days in Stage must be 0."
+        },
+        "blockAccountIndicator": {
+          "type": "boolean",
+          "description": "Indicates whether the account/purse associated to the transaction should be blocked when a transaction is moved into this stage; standard configuration default is false, except for all end stages, PNDS4, PMIS4, and IELS4, which are a default of true"
+        },
+        "sendEmailIndicator": {
+          "type": "boolean",
+          "description": "Indicates whether an email notification is sent, provided the member has an email address on file, when a transaction is moved into this stage; standard configuration default is false"
+        },
+        "sendEventIndicator": {
+          "type": "boolean",
+          "description": "Indicates whether a webhook is sent when a transaction is moved into this stage; standard configuration default is true"
+        }
+      },
+      "required": [
+        "blockAccountIndicator",
+        "daysInStage",
+        "sendEmailIndicator",
+        "sendEventIndicator",
+        "stageCode",
+        "stageName"
+      ]
+    }
+  }
+}

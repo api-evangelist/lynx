@@ -1,4 +1,5 @@
 aid: lynx
+
 deliveryModel:
   model: saas
   open_source: false
@@ -10,6 +11,7 @@ deliveryModel:
   - pricing
   generated: '2026-08-28'
   method: derived
+
 accessModel:
   pricing: unknown
   onboarding: unknown
@@ -21,35 +23,44 @@ accessModel:
   source: []
   generated: '2026-07-22'
   method: derived
+
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/lynx.png
+
 name: Lynx
-description: >-
-  Lynx (Lynx FinHealth) is a healthcare fintech platform that provides embedded
-  banking, payments, benefits, and e-commerce infrastructure for health plans,
-  providers, and digital health companies. Its API-first and white-label
-  platform powers consumer-directed health accounts (HSA/FSA), ICHRA
-  administration, directed and filtered spend accounts, instant physical and
-  virtual card issuance with merchant and SKU-level controls, supplemental
-  benefits, pharmacy access, rewards and incentive programs, and a qualified
-  medical expense (QME) e-commerce marketplace with end-to-end fulfillment. Lynx
-  is SOC 2 and HITRUST certified and exposes a developer hub, dated changelog,
-  hosted sandbox, and Atlassian status page. Surfaced as a portfolio company of
-  Obvious Ventures and enriched from the public Lynx surface (the full API
-  reference, authentication model, and test data are gated behind developer
-  login).
+
+description: Lynx (Lynx FinHealth) is a healthcare fintech platform that provides embedded banking, payments, benefits, and e-commerce infrastructure
+  for health plans, providers, and digital health companies. Its API-first and white-label platform powers consumer-directed health accounts (HSA/FSA),
+  ICHRA administration, directed and filtered spend accounts, instant physical and virtual card issuance with merchant and SKU-level controls,
+  supplemental benefits, pharmacy access, rewards and incentive programs, and a qualified medical expense (QME) e-commerce marketplace with end-to-end
+  fulfillment. Lynx is SOC 2 and HITRUST certified and exposes a developer hub, dated changelog, hosted sandbox, and Atlassian status page. Surfaced
+  as a portfolio company of Obvious Ventures and enriched from the public Lynx surface (the full API reference, authentication model, and test
+  data are gated behind developer login).
+
 url: https://raw.githubusercontent.com/api-evangelist/lynx/refs/heads/main/apis.yml
+
 x-type: company
+
 x-source: vc-portfolio
+
 x-backed-by:
 - obvious-ventures
+
 x-tier: stub
+
 x-tier-reason: portfolio-lead
+
 specificationVersion: '0.23'
+
 created: '2026-07-17'
+
 modified: '2026-10-06'
+
 x-docs-platform: readme
+
 x-docs-platform-confidence: high
+
 x-docs-platform-checked: 2026-10-03
+
 tags:
 - Company
 - Healthcare
@@ -60,27 +71,36 @@ tags:
 - Embedded Finance
 - Card Issuing
 - Insurance
-apis:
-- name: Lynx API
-  description: >-
-    Lynx FinHealth API for embedded health accounts, enrollment, contributions,
-    payments and distributions, transactions, and card issuance/management.
-    Reference is gated behind developer login; a hosted sandbox is available.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  properties:
-  - type: Documentation
-    url: https://docs.lynx-fh.com/
-  - type: APIReference
-    url: https://docs.lynx-fh.com/api-reference
-  - type: GettingStarted
-    url: https://docs.lynx-fh.com/
+
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+
 common:
+- type: AgenticAccess
+  url: agentic-access/lynx-agentic-access.yml
+- type: Spectral
+  url: rules/lynx-rules.yml
+- type: JSONLD
+  url: json-ld/lynx-context.jsonld
+- type: Vocabulary
+  url: vocabulary/lynx-vocabulary.yml
+- type: DataModel
+  url: data-model/lynx-data-model.yml
+- type: Deprecation
+  url: lifecycle/lynx-lifecycle.yml
+- type: ErrorCatalog
+  url: errors/lynx-problem-types.yml
+- type: Hosts
+  url: hosts/lynx-hosts.yml
+- type: Vendors
+  url: vendors/lynx-vendors.yml
+- type: Newsroom
+  url: https://www.lynx-fh.com/news
+- type: Authentication
+  url: authentication/lynx-authentication.yml
 - url: https://www.lynx-fh.com/blog/rss.xml
   type: BlogRSS
 - type: Website
@@ -121,10 +141,330 @@ common:
   url: sandbox/lynx-sandbox.yml
 - type: DomainSecurity
   url: security/lynx-domain-security.yml
-- type: LLMsTxt
-  url: llms/lynx-llms.txt
+
+apis:
+- name: Lynx API
+  description: Lynx FinHealth API for embedded health accounts, enrollment, contributions, payments and distributions, transactions, and card
+    issuance/management. Reference is gated behind developer login; a hosted sandbox is available.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  properties:
+  - type: Documentation
+    url: https://docs.lynx-fh.com/
+  - type: APIReference
+    url: https://docs.lynx-fh.com/api-reference
+  - type: GettingStarted
+    url: https://docs.lynx-fh.com/
+  aid: lynx:lynx-api
+- aid: lynx:lynx-account-api
+  name: Lynx Account API
+  description: The Account API from Lynx — 9 operation(s) for account.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Account
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-account-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+- aid: lynx:lynx-card-management-api
+  name: Lynx Card Management API
+  description: The Card Management API from Lynx — 14 operation(s) for card management.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Card Management
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-card-management-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+- aid: lynx:lynx-claims-service-api
+  name: Lynx Claims Service API
+  description: The Claims Service API from Lynx — 3 operation(s) for claims service.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Claims Service
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-claims-service-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+- aid: lynx:lynx-client-org-management-api
+  name: Lynx Client Org Management API
+  description: The Client Org Management API from Lynx — 6 operation(s) for client org management.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Client Org Management
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-client-org-management-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+- aid: lynx:lynx-commerce-order-api
+  name: Lynx Commerce Order API
+  description: The Commerce Order API from Lynx — 15 operation(s) for commerce order.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Commerce Order
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-commerce-order-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+- aid: lynx:lynx-commodity-api
+  name: Lynx Commodity API
+  description: The Commodity API from Lynx — 8 operation(s) for commodity.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Commodity
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-commodity-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+- aid: lynx:lynx-copay-management-service-api
+  name: Lynx Copay Management Service API
+  description: The Copay Management Service API from Lynx — 2 operation(s) for copay management service.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Copay Management Service
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-copay-management-service-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+- aid: lynx:lynx-enrollment-api
+  name: Lynx Enrollment API
+  description: The Enrollment API from Lynx — 3 operation(s) for enrollment.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Enrollment
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-enrollment-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+- aid: lynx:lynx-external-account-api
+  name: Lynx External Account API
+  description: The External Account API from Lynx — 6 operation(s) for external account.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - External Account
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-external-account-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+- aid: lynx:lynx-external-notification-api
+  name: Lynx External Notification API
+  description: The External Notification API from Lynx — 7 operation(s) for external notification.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - External Notification
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-external-notification-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-investments-api
+  name: Lynx Investments API
+  description: The Investments API from Lynx — 20 operation(s) for investments.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Investments
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-investments-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-account-performance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-account-positions-response-schema.json
+- aid: lynx:lynx-member-management-api
+  name: Lynx Member Management API
+  description: The Member Management API from Lynx — 12 operation(s) for member management.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Member Management
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-member-management-api-openapi.yml
+- aid: lynx:lynx-payment-api
+  name: Lynx Payment API
+  description: The Payment API from Lynx — 11 operation(s) for payment.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Payment
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-payment-api-openapi.yml
+- aid: lynx:lynx-related-person-api
+  name: Lynx Related Person API
+  description: The Related Person API from Lynx — 7 operation(s) for related person.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Related Person
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-related-person-api-openapi.yml
+- aid: lynx:lynx-substantiation-service-api
+  name: Lynx Substantiation Service API
+  description: The Substantiation Service API from Lynx — 5 operation(s) for substantiation service.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Substantiation Service
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-substantiation-service-api-openapi.yml
+- aid: lynx:lynx-tags-api
+  name: Lynx Tags API
+  description: The Tags API from Lynx — 2 operation(s) for tags.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Tags
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-tags-api-openapi.yml
+- aid: lynx:lynx-transaction-api
+  name: Lynx Transaction API
+  description: The Transaction API from Lynx — 13 operation(s) for transaction.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Transaction
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-transaction-api-openapi.yml
+- aid: lynx:lynx-upload-api
+  name: Lynx Upload API
+  description: The Upload API from Lynx — 2 operation(s) for upload.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Upload
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-upload-api-openapi.yml
+
 x-enrichment:
   date: '2026-07-20'
   status: enriched
   artifacts_added: 7
   pass: local-v1
+
+x-readme-harvest:
+  date: '2026-10-14'
+  ops: 180
+  tool: harvest-readme-openapi.py
+  portal: https://docs.lynx-fh.com

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-patch-client-org-substantiation-model-response-schema.json",
+  "title": "PatchClientOrgSubstantiationModelResponse",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-client-org-management-api-openapi.yml#/components/schemas/PatchClientOrgSubstantiationModelResponse",
+  "type": "object",
+  "properties": {
+    "clientOrgName": {
+      "type": "string",
+      "description": "The name of the client organization"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "Indicates whether the client organization substantiation model is enabled.  If the substantiation model is not enabled, no substantiation will be performed and no notifications will be generated"
+    }
+  },
+  "required": [
+    "clientOrgName",
+    "enabled"
+  ]
+}

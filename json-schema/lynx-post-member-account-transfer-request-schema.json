@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-post-member-account-transfer-request-schema.json",
+  "title": "PostMemberAccountTransferRequest",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-account-api-openapi.yml#/components/schemas/PostMemberAccountTransferRequest",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/MemberAccountTransferRequestData"
+    },
+    "idempotency": {
+      "$ref": "#/$defs/Idempotency",
+      "description": "Unique identifier that represents the operation"
+    }
+  },
+  "required": [
+    "data",
+    "idempotency"
+  ],
+  "$defs": {
+    "AccountDto": {
+      "type": "object",
+      "properties": {
+        "accountType": {
+          "type": "string",
+          "description": "Type of account"
+        }
+      },
+      "required": [
+        "accountType"
+      ]
+    },
+    "AccountTransferData": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "Amount to Transfer"
+        },
+        "dateOfTransfer": {
+          "type": "string",
+          "description": "Date of Transfer"
+        },
+        "transferType": {
+          "type": "string",
+          "description": "Transfer Type",
+          "enum": [
+            "INDIRECT_ROLLOVER",
+            "DIRECT_ROLLOVER",
+            "TRANSFER"
+          ]
+        },
+        "transferScope": {
+          "type": "string",
+          "description": "Transfer Scope",
+          "enum": [
+            "FULL_ACCOUNT",
+            "PARTIAL"
+          ]
+        },
+        "priorCustodianName": {
+          "type": "string",
+          "description": "Custodian Name"
+        },
+        "priorCustodianAccountNumber": {
+          "type": "string",
+          "description": "Custodian Account Number"
+        },
+        "attestEligibleAccount": {
+          "type": "boolean",
+          "description": "Attest Eligible Account"
+        },
+        "attestWithin60Days": {
+          "type": "boolean",
+          "description": "Attest within 60 days"
+        },
+        "attestNoPriorRollover": {
+          "type": "boolean",
+          "description": "Attest Prior Rollover"
+        },
+        "priorCustodianAttention": {
+          "type": "string",
+          "description": "priorCustodianAttention"
+        },
+        "priorCustodianAddressLine1": {
+          "type": "string",
+          "description": "Address Line 1"
+        },
+        "priorCustodianAddressLine2": {
+          "type": "string",
+          "description": "Address Line 2"
+        },
+        "priorCustodianCity": {
+          "type": "string",
+          "description": "City"
+        },
+        "priorCustodianState": {
+          "type": "string",
+          "description": "State"
+        },
+        "priorCustodianZip": {
+          "type": "string",
+          "description": "Postal Code"
+        },
+        "priorCustodianPhone": {
+          "type": "string",
+          "description": "Phone Number"
+        },
+        "investmentsLiquidated": {
+          "type": "boolean",
+          "description": "investmentsLiquidated"
+        }
+      },
+      "required": [
+        "amount",
+        "dateOfTransfer",
+        "priorCustodianName",
+        "transferScope",
+        "transferType"
+      ]
+    },
+    "BaseMember": {
+      "type": "object",
+      "properties": {
+        "clientMemberId": {
+          "type": "string",
+          "description": "Unique client-side identifier for the member"
+        }
+      },
+      "required": [
+        "clientMemberId"
+      ]
+    },
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Idempotency": {
+      "type": "object",
+      "properties": {
+        "idempotencyKey": {
+          "type": "string",
+          "description": "Unique identifier that represents the operation"
+        }
+      }
+    },
+    "MemberAccountTransferRequestData": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "$ref": "#/$defs/AccountDto"
+        },
+        "clientOrg": {
+          "$ref": "#/$defs/ClientOrgDto"
+        },
+        "member": {
+          "$ref": "#/$defs/BaseMember"
+        },
+        "product": {
+          "$ref": "#/$defs/ProductDto"
+        },
+        "memberBankAccount": {
+          "$ref": "#/$defs/MemberBankAccount"
+        },
+        "accountTransfer": {
+          "$ref": "#/$defs/AccountTransferData"
+        }
+      },
+      "required": [
+        "account",
+        "accountTransfer",
+        "clientOrg",
+        "member",
+        "product"
+      ]
+    },
+    "MemberBankAccount": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "External bank account"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "ProductDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the product"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  }
+}

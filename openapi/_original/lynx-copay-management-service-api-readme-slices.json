@@ -1,0 +1,1381 @@
+[
+ {
+  "page": "https://docs.lynx-fh.com/reference/getcopaygroupsbyclientorg.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COPAY MANAGEMENT SERVICE API",
+    "description": "\"Copay Management API\"",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "1.0"
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/copay/groups": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get All Client Org Copay Groups",
+      "description": "This API is used to view a list of copay groups that have been configured for a client organization.",
+      "operationId": "getCopayGroupsByClientOrg",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/DocCopayGroupGetRequest"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CopayGetItem": {
+      "type": "object",
+      "properties": {
+       "copayGroupId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the client organization copay group"
+       },
+       "effectiveDate": {
+        "type": "string",
+        "description": "Beginning effective date of the copay group"
+       },
+       "expirationDate": {
+        "type": "string",
+        "description": "A fixed amount (for example, $15) you pay for a covered health care service, usually when you receive the service. The amount can vary by the type of covered health care service."
+       }
+      }
+     },
+     "CopayGroupGetData": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "copayGroups": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/CopayGetItem"
+        }
+       }
+      },
+      "required": [
+       "clientOrg",
+       "copayGroups"
+      ]
+     },
+     "DocCopayGroupGetRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/CopayGroupGetData"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getcopaygroupdetail.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COPAY MANAGEMENT SERVICE API",
+    "description": "\"Copay Management API\"",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "1.0"
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/copay/groups/detail": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Client Org Copay Group Detail",
+      "description": "This API is used to view details of a copay group that has been configured for a client organization.",
+      "operationId": "getCopayGroupDetail",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "copayGroupId",
+        "in": "query",
+        "description": "UUID of the client organization copay group",
+        "required": true,
+        "schema": {
+         "type": "string",
+         "format": "uuid"
+        },
+        "example": "3d3bdad9-21e0-47bc-becd-b4872c0e8bf9"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/CopayGroupGetDetail"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CopayAmountItem": {
+      "type": "object",
+      "properties": {
+       "category": {
+        "type": "string",
+        "description": "Type of covered health care service, such as Doctor Office Visit, Urgent Care Visit, Prescription, Physical Therapy, Mental Health Therapy, Hospital Visit, Emergency Room Visit, Dental, Hearing, Vision, and Lab Services",
+        "example": "Prescription"
+       },
+       "amount": {
+        "type": "number",
+        "description": "A fixed amount (for example, $15) you pay for a covered health care service, usually when you receive the service. The amount can vary by the type of covered health care service.",
+        "example": 15
+       }
+      }
+     },
+     "CopayGroupData": {
+      "type": "object",
+      "properties": {
+       "copayGroupId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the client organization copay group"
+       },
+       "effectiveDate": {
+        "type": "string",
+        "description": "Beginning effective date of the copay group"
+       },
+       "expirationDate": {
+        "type": "string",
+        "description": "Ending effective date of the copay group"
+       },
+       "copayList": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/CopayAmountItem"
+        }
+       }
+      },
+      "required": [
+       "copayList"
+      ]
+     },
+     "CopayGroupGetDetail": {
+      "type": "object",
+      "properties": {
+       "copayGroup": {
+        "$ref": "#/components/schemas/CopayGroupData"
+       },
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "clientOrg"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/create.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COPAY MANAGEMENT SERVICE API",
+    "description": "\"Copay Management API\"",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "1.0"
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/copay/groups": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Client Org Copay Group",
+      "description": "This API is used to set up one or more copay amounts that when a transaction associated with a set of MCCs aligns with that dollar amount it will automatically set the transaction to substantiated.",
+      "operationId": "create",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/DocClientOrgCopayGroupCreateRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/CopayCreateResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-319: Expiration Date must be greater than Effective Date and today's date\n- GBL-320: Copay group effective dates cannot overlap\n- GBL-321: Duplicate copay amount in category\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "CopayItem": {
+      "type": "object",
+      "properties": {
+       "category": {
+        "type": "string",
+        "description": "Type of covered health care service, such as Doctor Office Visit, Urgent Care Visit, Prescription, Physical Therapy, Mental Health Therapy, Hospital Visit, Emergency Room Visit, Dental, Hearing, Vision, and Lab Services",
+        "enum": [
+         "Dental",
+         "Doctor Office Visit",
+         "Emergency Room Visit",
+         "Hearing",
+         "Hospital Visit",
+         "Lab Services",
+         "Mental Health Therapy",
+         "Physical Therapy",
+         "Prescription",
+         "Urgent Care Visit",
+         "Vision"
+        ],
+        "example": "Prescription"
+       },
+       "amount": {
+        "type": "number",
+        "description": "A fixed amount (for example, $15) you pay for a covered health care service, usually when you receive the service. The amount can vary by the type of covered health care service.",
+        "example": 15
+       }
+      },
+      "required": [
+       "amount",
+       "category"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CopayCreateResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "copayGroup": {
+        "$ref": "#/components/schemas/CopayGroup"
+       }
+      }
+     },
+     "CopayGroup": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the client organization copay group",
+        "example": "3d3bdad9-21e0-47bc-becd-b4872c0e8bf9"
+       }
+      }
+     },
+     "ClientOrgCopayGroupCreateData": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "effectiveDate": {
+        "type": "string",
+        "description": "Beginning effective date of the copay group",
+        "example": "2025-01-01"
+       },
+       "expirationDate": {
+        "type": "string",
+        "description": "Ending effective date of the copay group",
+        "example": "2025-12-31"
+       },
+       "copayList": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/CopayItem"
+        }
+       }
+      },
+      "required": [
+       "clientOrg",
+       "copayList",
+       "effectiveDate",
+       "expirationDate"
+      ]
+     },
+     "DocClientOrgCopayGroupCreateRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/ClientOrgCopayGroupCreateData"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/replace.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COPAY MANAGEMENT SERVICE API",
+    "description": "\"Copay Management API\"",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "1.0"
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/copay/groups": {
+     "put": {
+      "tags": [
+       ""
+      ],
+      "summary": "Client Org Copay Group",
+      "description": "This API is used to update a copay group.",
+      "operationId": "replace",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/DocClientOrgCopayGroupEditRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/CopayCreateResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-319: Expiration Date must be greater than Effective Date and today's date\n- GBL-320: Copay group effective dates cannot overlap\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgCopayGroupPatchData": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "copayGroupId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the client organization copay group",
+        "example": "3d3bdad9-21e0-47bc-becd-b4872c0e8bf9"
+       },
+       "effectiveDate": {
+        "type": "string",
+        "description": "Beginning effective date of the copay group",
+        "example": "2025-01-01"
+       },
+       "expirationDate": {
+        "type": "string",
+        "description": "Ending effective date of the copay group",
+        "example": "2025-12-31"
+       },
+       "copayList": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/CopayItem"
+        }
+       }
+      },
+      "required": [
+       "clientOrg",
+       "copayGroupId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "CopayItem": {
+      "type": "object",
+      "properties": {
+       "category": {
+        "type": "string",
+        "description": "Type of covered health care service, such as Doctor Office Visit, Urgent Care Visit, Prescription, Physical Therapy, Mental Health Therapy, Hospital Visit, Emergency Room Visit, Dental, Hearing, Vision, and Lab Services",
+        "enum": [
+         "Dental",
+         "Doctor Office Visit",
+         "Emergency Room Visit",
+         "Hearing",
+         "Hospital Visit",
+         "Lab Services",
+         "Mental Health Therapy",
+         "Physical Therapy",
+         "Prescription",
+         "Urgent Care Visit",
+         "Vision"
+        ],
+        "example": "Prescription"
+       },
+       "amount": {
+        "type": "number",
+        "description": "A fixed amount (for example, $15) you pay for a covered health care service, usually when you receive the service. The amount can vary by the type of covered health care service.",
+        "example": 15
+       }
+      },
+      "required": [
+       "amount",
+       "category"
+      ]
+     },
+     "DocClientOrgCopayGroupEditRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/ClientOrgCopayGroupPatchData"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CopayCreateResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "copayGroup": {
+        "$ref": "#/components/schemas/CopayGroup"
+       }
+      }
+     },
+     "CopayGroup": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the client organization copay group",
+        "example": "3d3bdad9-21e0-47bc-becd-b4872c0e8bf9"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/edit.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COPAY MANAGEMENT SERVICE API",
+    "description": "\"Copay Management API\"",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "1.0"
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/copay/groups": {
+     "patch": {
+      "tags": [
+       ""
+      ],
+      "summary": "Client Org Copay Group",
+      "description": "This API is used to update the effective and expiration dates of a copay group or add one or more copay amounts to a copay group category.",
+      "operationId": "edit",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/DocClientOrgCopayGroupEditRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/CopayCreateResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-319: Expiration Date must be greater than Effective Date and today's date\n- GBL-320: Copay group effective dates cannot overlap\n- GBL-321: Duplicate copay amount in category\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgCopayGroupPatchData": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "copayGroupId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the client organization copay group",
+        "example": "3d3bdad9-21e0-47bc-becd-b4872c0e8bf9"
+       },
+       "effectiveDate": {
+        "type": "string",
+        "description": "Beginning effective date of the copay group",
+        "example": "2025-01-01"
+       },
+       "expirationDate": {
+        "type": "string",
+        "description": "Ending effective date of the copay group",
+        "example": "2025-12-31"
+       },
+       "copayList": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/CopayItem"
+        }
+       }
+      },
+      "required": [
+       "clientOrg",
+       "copayGroupId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "CopayItem": {
+      "type": "object",
+      "properties": {
+       "category": {
+        "type": "string",
+        "description": "Type of covered health care service, such as Doctor Office Visit, Urgent Care Visit, Prescription, Physical Therapy, Mental Health Therapy, Hospital Visit, Emergency Room Visit, Dental, Hearing, Vision, and Lab Services",
+        "enum": [
+         "Dental",
+         "Doctor Office Visit",
+         "Emergency Room Visit",
+         "Hearing",
+         "Hospital Visit",
+         "Lab Services",
+         "Mental Health Therapy",
+         "Physical Therapy",
+         "Prescription",
+         "Urgent Care Visit",
+         "Vision"
+        ],
+        "example": "Prescription"
+       },
+       "amount": {
+        "type": "number",
+        "description": "A fixed amount (for example, $15) you pay for a covered health care service, usually when you receive the service. The amount can vary by the type of covered health care service.",
+        "example": 15
+       }
+      },
+      "required": [
+       "amount",
+       "category"
+      ]
+     },
+     "DocClientOrgCopayGroupEditRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/ClientOrgCopayGroupPatchData"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CopayCreateResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "copayGroup": {
+        "$ref": "#/components/schemas/CopayGroup"
+       }
+      }
+     },
+     "CopayGroup": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the client organization copay group",
+        "example": "3d3bdad9-21e0-47bc-becd-b4872c0e8bf9"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/deletecopaygroupamount.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COPAY MANAGEMENT SERVICE API",
+    "description": "\"Copay Management API\"",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "1.0"
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/copay/groups": {
+     "delete": {
+      "tags": [
+       ""
+      ],
+      "summary": "Delete Client Org Copay Group Amount",
+      "description": "This API is used to delete a copay amount from a client organization copay group category.",
+      "operationId": "deleteCopayGroupAmount",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientOrgCopayGroupId",
+        "in": "query",
+        "description": "UUID of the client organization copay group",
+        "required": true,
+        "schema": {
+         "type": "string",
+         "format": "uuid"
+        },
+        "example": "3d3bdad9-21e0-47bc-becd-b4872c0e8bf9"
+       },
+       {
+        "name": "category",
+        "in": "query",
+        "description": "Prescription",
+        "required": true,
+        "schema": {
+         "type": "string",
+         "enum": [
+          "Dental",
+          "Doctor Office Visit",
+          "Emergency Room Visit",
+          "Hearing",
+          "Hospital Visit",
+          "Lab Services",
+          "Mental Health Therapy",
+          "Physical Therapy",
+          "Prescription",
+          "Urgent Care Visit",
+          "Vision"
+         ]
+        },
+        "example": "Address1"
+       },
+       {
+        "name": "amount",
+        "in": "query",
+        "description": "A fixed amount (for example, $15) you pay for a covered health care service, usually when you receive the service. The amount can vary by the type of covered health care service.",
+        "required": true,
+        "schema": {
+         "type": "integer"
+        },
+        "example": 15
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/CopayCreateResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CopayCreateResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "copayGroup": {
+        "$ref": "#/components/schemas/CopayGroup"
+       }
+      }
+     },
+     "CopayGroup": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the client organization copay group",
+        "example": "3d3bdad9-21e0-47bc-becd-b4872c0e8bf9"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ }
+]

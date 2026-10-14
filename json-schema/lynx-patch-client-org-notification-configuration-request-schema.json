@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-patch-client-org-notification-configuration-request-schema.json",
+  "title": "PatchClientOrgNotificationConfigurationRequest",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-external-notification-api-openapi.yml#/components/schemas/PatchClientOrgNotificationConfigurationRequest",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/ClientOrgNotificationConfigurationData"
+    },
+    "idempotency": {
+      "$ref": "#/$defs/Idempotency",
+      "description": "Unique identifier that represents the operation"
+    }
+  },
+  "required": [
+    "data",
+    "idempotency"
+  ],
+  "$defs": {
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ClientOrgNotificationConfigurationData": {
+      "type": "object",
+      "properties": {
+        "clientOrg": {
+          "$ref": "#/$defs/ClientOrgDto"
+        },
+        "notificationId": {
+          "type": "string",
+          "description": "Unique id for the notification."
+        },
+        "name": {
+          "type": "string",
+          "description": "Unique name within a client org that identifies the notification"
+        },
+        "subject": {
+          "type": "string",
+          "description": "The subject line seen by the member before clicking into the notification"
+        },
+        "body": {
+          "type": "string",
+          "description": "The body of the notification message seen by the member upon selection"
+        },
+        "trigger": {
+          "type": "string",
+          "description": "Indicates if the notification is triggered by a date or an event via webhook."
+        },
+        "triggerDate": {
+          "type": "string",
+          "description": "Setting the date that the notification will be triggered. Date must be a future date"
+        },
+        "recipientType": {
+          "type": "string",
+          "description": "Defines the population parameters for the notification"
+        },
+        "frequency": {
+          "type": "string",
+          "description": "Determines if the notification will only be sent one time, or if the notification can be sent each time the trigger occurs"
+        },
+        "accountType": {
+          "type": "string",
+          "description": "Specifies the account types receiving the notification when ‘Recipient Type’ is ‘Account Type’."
+        },
+        "eventName": {
+          "type": "string",
+          "description": "Specifies the Lynx event initiating the notification"
+        },
+        "channel": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "deepLinkUrl": {
+          "type": "string"
+        },
+        "ttlSeconds": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requiresApproval": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "clientOrg",
+        "notificationId"
+      ]
+    },
+    "Idempotency": {
+      "type": "object",
+      "properties": {
+        "idempotencyKey": {
+          "type": "string",
+          "description": "Unique identifier that represents the operation"
+        }
+      }
+    }
+  }
+}

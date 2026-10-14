@@ -1,0 +1,805 @@
+openapi: 3.1.0
+info:
+  title: EXTERNAL NOTIFICATION API
+  description: These API's are used to manage Member Alerts
+  termsOfService: http://lynx-fh.com
+  license:
+    name: LynxFH
+    url: http://lynx-fh.com
+  version: '"1.0"'
+servers:
+- url: https://sandbox.lynx-fh.co
+security:
+- bearerAuth: []
+paths:
+  /externalnotifications/notifications/clientOrgNotification:
+    get:
+      tags:
+      - ''
+      operationId: getClientOrgNotificationConfiguration
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: name
+        in: query
+        description: Unique name within a client org that identifies the notification
+        required: true
+        schema:
+          type: string
+        example: New Form
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseClientOrgNotificationConfigurationData'
+    post:
+      tags:
+      - ''
+      summary: Configure Member Notification
+      description: 'This API creates notifications triggered based on specified parameters,
+
+        providing message details, recipients, and triggers for the notification
+
+        '
+      operationId: createClientOrgNotificationConfig
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostClientOrgNotificationConfigurationRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientOrgNotificationConfigurationResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-267: ClientOrgNotificationConfiguration with name already exists in clientorg
+
+            - GBL-255: ClientOrgConfigurationNotification with name already exists for this clientOrg
+
+            - GBL-241: Date Trigger cannot be null when Trigger Type is Scheduled
+
+            - GBL-242: Event Name cannot be null when Trigger Type is Event
+
+            - GBL-243: Date must be in future
+
+            - GBL-244: Recipient Type Account cannot be null when Recipient Type is Account Type
+
+            - GBL-256: Frequency of type OneTime, Weekly, Monthly can only be set for ClientOrgConfigurationNotification with Trigger Scheduled
+
+            - GBL-263: Frequency is required for trigger type Scheduled or Event
+
+            - GBL-264: Frequency of type EachTrigger is only supported for Trigger type Event
+
+            - GBL-265: Event Type is not supported for notification
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    patch:
+      tags:
+      - ''
+      summary: Update Configured Member Notification
+      description: "   This API allows for elements of an existing notification to be updated\n   so future triggers of notifications are appropriate.\n   Patched notifications will not impact notifications that have already\n   been received by members. Only the elements passed will be updated for\n   the notification\n"
+      operationId: patchClientOrgNotificationConfig
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchClientOrgNotificationConfigurationRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientOrgNotificationConfigurationResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-267: ClientOrgNotificationConfiguration with name already exists in clientorg
+
+            - GBL-255: ClientOrgConfigurationNotification with name already exists for this clientOrg
+
+            - GBL-241: Date Trigger cannot be null when Trigger Type is Scheduled
+
+            - GBL-242: Event Name cannot be null when Trigger Type is Event
+
+            - GBL-243: Date must be in future
+
+            - GBL-244: Recipient Type Account cannot be null when Recipient Type is Account Type
+
+            - GBL-256: Frequency of type OneTime, Weekly, Monthly can only be set for ClientOrgConfigurationNotification with Trigger Scheduled
+
+            - GBL-263: Frequency is required for trigger type Scheduled or Event
+
+            - GBL-264: Frequency of type EachTrigger is only supported for Trigger type Event
+
+            - GBL-265: Event Type is not supported for notification
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    delete:
+      tags:
+      - ''
+      summary: Delete Configured Member Notification
+      description: This API is used to delete a notification that has been configured for my member population.
+      operationId: deleteClientOrgNotificationConfig
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: name
+        in: query
+        description: Unique name within a client org that identifies the notification
+        required: true
+        schema:
+          type: string
+        example: New Form
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientOrgNotificationConfigurationResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /externalnotifications/notifications/clientOrgNotification/detail:
+    get:
+      tags:
+      - ''
+      summary: Client Org Configured Notification Detail
+      description: This API allows you to retrieve detailed information on member notifications associated with your client organization
+      operationId: getClientOrgNotificationConfigurationById
+      parameters:
+      - name: id
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientOrgNotificationConfigurationData'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /externalnotifications/notifications/clientOrgNotification/list:
+    get:
+      tags:
+      - ''
+      summary: All Client Org Configured Notification
+      description: This API returns all Notification that have been configured for your client organization.
+      operationId: getAllClientOrgNotificationConfigs
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 25
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientOrgNotificationConfigurationsData'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /externalnotifications/notifications/memberNotification:
+    patch:
+      tags:
+      - ''
+      summary: Update Member Notification Status
+      description: This API is used to update the status of a member's notification.
+      operationId: updateMemberNotificationStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchMemberNotificationStatusRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatchMemberNotificationStatusResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /externalnotifications/notifications/memberNotification/count:
+    get:
+      tags:
+      - ''
+      summary: Unread Member Notification Count
+      description: 'This API returns a count of all Member Notifications that have not been read for a given member.
+
+        '
+      operationId: getUnreadMemberNotificationsCount
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberNotificationsData'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /externalnotifications/notifications/memberNotification/list:
+    get:
+      tags:
+      - ''
+      summary: All Member Notifications
+      description: 'This API returns all Member Notifications that have been delivered for a given member.
+
+        '
+      operationId: getAllMemberNotifications
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: status
+        in: query
+        description: If set to Unread the response will return only unread notifications, if set to read will return only read notifications, if left null will return all notifications
+        required: false
+        schema:
+          type: string
+          enum:
+          - Read
+          - Unread
+        example: Unread
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 25
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberNotificationsData'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /externalnotifications/notifications/sendNotification:
+    post:
+      tags:
+      - ''
+      summary: Trigger Adhoc Notification
+      description: This API will trigger a client configured notification to the requested members
+      operationId: sendNotification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdHocNotificationRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdHocNotificationResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-257: Adhoc Notification firing not supported for this notification trigger type
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+components:
+  schemas:
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    BaseMember:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+    MemberNotificationData:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique id for the notification.
+          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+        name:
+          type: string
+          description: Unique name within a client org that identifies the notification
+          example: New Form
+        subject:
+          type: string
+          description: The subject line seen by the member before clicking into the notification
+          example: A New Form Is Available
+        body:
+          type: string
+          description: The body of the notification message seen by the member upon selection
+          example: View your new form available in the documents section under my profile.
+        status:
+          type: string
+          description: If set to Unread the response will return only unread notifications, if set to read will return only read notifications, if left null will return all notifications
+          example: Unread
+        notificationDate:
+          type: string
+          description: Setting the date that the notification will be triggered. Date must be a future date
+          example: '2025-05-02'
+      required:
+      - id
+      - status
+    MemberNotificationsData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberNotifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberNotificationData'
+      required:
+      - clientOrg
+      - member
+    ClientOrgNotificationConfigurationData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        notificationId:
+          type: string
+          description: Unique id for the notification.
+          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+        name:
+          type: string
+          description: Unique name within a client org that identifies the notification
+          example: New Form
+        subject:
+          type: string
+          description: The subject line seen by the member before clicking into the notification
+          example: A New Form Is Available
+        body:
+          type: string
+          description: The body of the notification message seen by the member upon selection
+          example: View your new form available in the documents section under my profile.
+        trigger:
+          type: string
+          description: Indicates if the notification is triggered by a date or an event via webhook.
+          example: Scheduled
+        triggerDate:
+          type: string
+          description: Setting the date that the notification will be triggered. Date must be a future date
+          example: '2025-05-02'
+        recipientType:
+          type: string
+          description: Defines the population parameters for the notification
+          example: AccountType
+        frequency:
+          type: string
+          description: Determines if the notification will only be sent one time, or if the notification can be sent each time the trigger occurs
+          example: EachTrigger
+        accountType:
+          type: string
+          description: Specifies the account types receiving the notification when ‘Recipient Type’ is ‘Account Type’.
+          example: HSA
+        eventName:
+          type: string
+          description: Specifies the Lynx event initiating the notification
+          example: lynx.cardActivated
+        channel:
+          type: string
+        imageUrl:
+          type: string
+        deepLinkUrl:
+          type: string
+        ttlSeconds:
+          type: integer
+          format: int32
+        requiresApproval:
+          type: boolean
+      required:
+      - clientOrg
+      - notificationId
+    BaseResponseClientOrgNotificationConfigurationData:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ClientOrgNotificationConfigurationData'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    ClientOrgNotificationConfigurationsData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        notifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientOrgNotificationConfigurationData'
+      required:
+      - clientOrg
+    AdHocNotificationRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AdHocNotificationRequestData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    AdHocNotificationRequestData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        name:
+          type: string
+          description: Unique name within a client org that identifies the notification
+          example: New Form
+        clientMemberIds:
+          type: array
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+          items:
+            type: string
+      required:
+      - clientOrg
+      - name
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+    AdHocNotificationResponse:
+      type: object
+      properties:
+        response:
+          type: string
+      required:
+      - response
+    PostClientOrgNotificationConfigurationRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ClientOrgNotificationConfigurationData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    ClientOrgNotificationConfigurationResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ClientOrgNotificationConfigurationResponseData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    ClientOrgNotificationConfigurationResponseData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        name:
+          type: string
+          description: Unique name within a client org that identifies the notification
+          example: New Form
+        trigger:
+          type: string
+          description: Indicates if the notification is triggered by a date or an event via webhook.
+          example: Scheduled
+      required:
+      - clientOrg
+    PatchClientOrgNotificationConfigurationRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ClientOrgNotificationConfigurationData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    NotificationData:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique id for the notification.
+          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+        status:
+          type: string
+          description: If set to Unread the response will return only unread notifications, if set to read will return only read notifications, if left null will return all notifications
+          example: Unread
+      required:
+      - id
+      - status
+    PatchMemberNotificationStatusRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PatchMemberNotificationsData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    PatchMemberNotificationsData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        notification:
+          $ref: '#/components/schemas/NotificationData'
+      required:
+      - clientOrg
+      - member
+      - notification
+    PatchMemberNotificationStatusResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PatchMemberNotificationsData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-provenance:
+  method: searched
+  source: https://docs.lynx-fh.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.lynx-fh.com/reference/createclientorgnotificationconfig.md
+  - https://docs.lynx-fh.com/reference/deleteclientorgnotificationconfig.md
+  - https://docs.lynx-fh.com/reference/getallclientorgnotificationconfigs.md
+  - https://docs.lynx-fh.com/reference/getallmembernotifications.md
+  - https://docs.lynx-fh.com/reference/getclientorgnotificationconfiguration.md
+  - https://docs.lynx-fh.com/reference/getclientorgnotificationconfigurationbyid.md
+  - https://docs.lynx-fh.com/reference/getunreadmembernotificationscount.md
+  - https://docs.lynx-fh.com/reference/patchclientorgnotificationconfig.md
+  - https://docs.lynx-fh.com/reference/sendnotification.md
+  - https://docs.lynx-fh.com/reference/updatemembernotificationstatus.md
+  merge:
+    pages: 10
+    deduped: 51
+    conflicts_kept_first: 0

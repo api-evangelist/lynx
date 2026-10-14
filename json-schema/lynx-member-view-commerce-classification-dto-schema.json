@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-member-view-commerce-classification-dto-schema.json",
+  "title": "MemberViewCommerceClassificationDto",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-commodity-api-openapi.yml#/components/schemas/MemberViewCommerceClassificationDto",
+  "type": "object",
+  "properties": {
+    "classificationName": {
+      "type": "string"
+    },
+    "displayImage": {
+      "type": "string"
+    },
+    "displayName": {
+      "type": "string"
+    },
+    "effectiveDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expirationDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "defaultIndicator": {
+      "type": "boolean"
+    },
+    "category": {
+      "type": "string"
+    },
+    "classificationId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "productNames": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

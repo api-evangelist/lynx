@@ -1,0 +1,3726 @@
+[
+ {
+  "page": "https://docs.lynx-fh.com/reference/getcards.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CARD MANAGEMENT API",
+    "description": "These API's are used to manage card related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/cards/list": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get All Cards",
+      "description": "Retrieves details of all cards owned by the member, for the incoming clientMemberId, productName and clientOrgName",
+      "operationId": "getCards",
+      "parameters": [
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "productName",
+        "in": "query",
+        "description": "The name of the product",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "HSA_01"
+       },
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetMemberCardsResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMemberCard": {
+      "type": "object",
+      "properties": {
+       "type": {
+        "type": "string",
+        "description": "Type of card",
+        "example": "Virtual debit"
+       },
+       "cardDesign": {
+        "$ref": "#/components/schemas/CardDesignDto"
+       },
+       "status": {
+        "type": "string",
+        "description": "The card status. At the time of creation, the status is always 'Inactive'",
+        "example": "Active"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "More details about the status",
+        "example": "Card reported stolen"
+       },
+       "expirationMonth": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The expiration month for the card",
+        "example": 3
+       },
+       "expirationYear": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The expiration year for the card",
+        "example": 2028
+       },
+       "cvv": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The card CVV code",
+        "example": 233
+       },
+       "brand": {
+        "type": "string",
+        "description": "The card brand"
+       },
+       "deliveryMethod": {
+        "type": "string",
+        "description": "The card delivery method",
+        "example": "Physical shipment"
+       },
+       "nameOnCard": {
+        "type": "string",
+        "description": "Name on card",
+        "example": "John P. Smith"
+       },
+       "motherMaidenName": {
+        "type": "string",
+        "description": "Mother maiden name",
+        "example": "Uma"
+       },
+       "issuingAgency": {
+        "type": "string",
+        "description": "Issuing agency",
+        "example": "Citibank"
+       },
+       "fulfillingAgency": {
+        "type": "string",
+        "description": "Fulfilling agency",
+        "example": "Acme card fulfillments"
+       },
+       "cardLastFour": {
+        "type": "string",
+        "description": "Last four digits",
+        "example": 1342
+       },
+       "cardProxy": {
+        "type": "string",
+        "description": "Proxy id of the card",
+        "example": 5263218885395
+       },
+       "issueDate": {
+        "type": "string",
+        "format": "date",
+        "description": "Card issue date",
+        "example": "03/02/2021"
+       },
+       "activationDate": {
+        "type": "string",
+        "format": "date",
+        "description": "Card activation date",
+        "example": "03/28/2021"
+       },
+       "secondaryCardIssuedIndicator": {
+        "type": "boolean",
+        "description": "Whether a secondary card was issued",
+        "example": "False"
+       },
+       "effectiveDate": {
+        "type": "string",
+        "format": "date",
+        "description": "Card creation date",
+        "example": "03/22/2021"
+       },
+       "relatedPersonId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier for the related person",
+        "example": "3d3bdad9-21e0-47bc-becd-b4872c0e8bf9"
+       },
+       "addDatetime": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date and time of add",
+        "example": "2023-04-24 18:20:12.629221"
+       }
+      },
+      "required": [
+       "activationDate",
+       "addDatetime",
+       "brand",
+       "cardDesign",
+       "cardLastFour",
+       "cvv",
+       "deliveryMethod",
+       "effectiveDate",
+       "expirationMonth",
+       "expirationYear",
+       "fulfillingAgency",
+       "issueDate",
+       "issuingAgency",
+       "motherMaidenName",
+       "nameOnCard",
+       "secondaryCardIssuedIndicator",
+       "status",
+       "statusReason",
+       "type"
+      ]
+     },
+     "CardDesignDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of design used for the card",
+        "example": "Acme"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "GetMemberCardsResponse": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/BaseMember",
+        "description": "Object describing the member"
+       },
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "memberAccountCards": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberAccountCardDto"
+        }
+       }
+      }
+     },
+     "MemberAccountCardDto": {
+      "type": "object",
+      "properties": {
+       "memberAccounts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberAccountDto"
+        }
+       },
+       "memberCard": {
+        "$ref": "#/components/schemas/BaseMemberCard"
+       }
+      }
+     },
+     "MemberAccountDto": {
+      "type": "object",
+      "properties": {
+       "accountType": {
+        "type": "string",
+        "description": "Type of account",
+        "example": "HSA"
+       },
+       "lastFourAccountNumber": {
+        "type": "string",
+        "description": "The last four digits of the bank account number",
+        "example": 9118
+       },
+       "name": {
+        "type": "string",
+        "description": "A name for this account",
+        "example": "John's Bank of America XX-0435"
+       },
+       "effectiveDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account becomes effective for the member",
+        "example": "2024-10-10"
+       },
+       "expirationDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account expires for the member",
+        "example": "2024-10-10"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getcard.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CARD MANAGEMENT API",
+    "description": "These API's are used to manage card related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/cards/details": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Card Details",
+      "description": "Retrieves details of a specific card owned by the member, for the incoming cardProxy, clientMemberId and clientOrgName.",
+      "operationId": "getCard",
+      "parameters": [
+       {
+        "name": "cardProxy",
+        "in": "query",
+        "description": "Card identifier (this was returned when the card was created)",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": 5263218885395
+       },
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetCardDetailsResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMemberCard": {
+      "type": "object",
+      "properties": {
+       "type": {
+        "type": "string",
+        "description": "Type of card",
+        "example": "Virtual debit"
+       },
+       "cardDesign": {
+        "$ref": "#/components/schemas/CardDesignDto"
+       },
+       "status": {
+        "type": "string",
+        "description": "The card status. At the time of creation, the status is always 'Inactive'",
+        "example": "Active"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "More details about the status",
+        "example": "Card reported stolen"
+       },
+       "expirationMonth": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The expiration month for the card",
+        "example": 3
+       },
+       "expirationYear": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The expiration year for the card",
+        "example": 2028
+       },
+       "cvv": {
+        "type": "integer",
+        "format": "int32",
+        "description": "The card CVV code",
+        "example": 233
+       },
+       "brand": {
+        "type": "string",
+        "description": "The card brand"
+       },
+       "deliveryMethod": {
+        "type": "string",
+        "description": "The card delivery method",
+        "example": "Physical shipment"
+       },
+       "nameOnCard": {
+        "type": "string",
+        "description": "Name on card",
+        "example": "John P. Smith"
+       },
+       "motherMaidenName": {
+        "type": "string",
+        "description": "Mother maiden name",
+        "example": "Uma"
+       },
+       "issuingAgency": {
+        "type": "string",
+        "description": "Issuing agency",
+        "example": "Citibank"
+       },
+       "fulfillingAgency": {
+        "type": "string",
+        "description": "Fulfilling agency",
+        "example": "Acme card fulfillments"
+       },
+       "cardLastFour": {
+        "type": "string",
+        "description": "Last four digits",
+        "example": 1342
+       },
+       "cardProxy": {
+        "type": "string",
+        "description": "Proxy id of the card",
+        "example": 5263218885395
+       },
+       "issueDate": {
+        "type": "string",
+        "format": "date",
+        "description": "Card issue date",
+        "example": "03/02/2021"
+       },
+       "activationDate": {
+        "type": "string",
+        "format": "date",
+        "description": "Card activation date",
+        "example": "03/28/2021"
+       },
+       "secondaryCardIssuedIndicator": {
+        "type": "boolean",
+        "description": "Whether a secondary card was issued",
+        "example": "False"
+       },
+       "effectiveDate": {
+        "type": "string",
+        "format": "date",
+        "description": "Card creation date",
+        "example": "03/22/2021"
+       },
+       "relatedPersonId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier for the related person",
+        "example": "3d3bdad9-21e0-47bc-becd-b4872c0e8bf9"
+       },
+       "addDatetime": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date and time of add",
+        "example": "2023-04-24 18:20:12.629221"
+       }
+      },
+      "required": [
+       "activationDate",
+       "addDatetime",
+       "brand",
+       "cardDesign",
+       "cardLastFour",
+       "cvv",
+       "deliveryMethod",
+       "effectiveDate",
+       "expirationMonth",
+       "expirationYear",
+       "fulfillingAgency",
+       "issueDate",
+       "issuingAgency",
+       "motherMaidenName",
+       "nameOnCard",
+       "secondaryCardIssuedIndicator",
+       "status",
+       "statusReason",
+       "type"
+      ]
+     },
+     "CardDesignDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of design used for the card",
+        "example": "Acme"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "GetCardDetailsResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberAndMemberCardDto"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "MemberAndMemberCardDto": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberCard": {
+        "$ref": "#/components/schemas/BaseMemberCard"
+       }
+      },
+      "required": [
+       "member"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getcardrequests.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CARD MANAGEMENT API",
+    "description": "These API's are used to manage card related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/cards/card-requests": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Card Requests",
+      "description": "This API returns a list of card requests.",
+      "operationId": "getCardRequests",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "status",
+        "in": "query",
+        "description": "Status filter one of: Processing, Shipped, Delivered",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "enum": [
+          "Processing",
+          "Shipped",
+          "Delivered"
+         ]
+        },
+        "example": "Processing"
+       },
+       {
+        "name": "page",
+        "in": "query",
+        "description": "Page number to be returned. If not specified, default is 1.",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "default": 1
+        },
+        "example": 1
+       },
+       {
+        "name": "pageSize",
+        "in": "query",
+        "description": "Maximum number of items to be returned per page. If not specified, default is 25.",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "default": 25
+        },
+        "example": 25
+       },
+       {
+        "name": "sortValue",
+        "in": "query",
+        "description": "The property by which the response is sorted",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "default": "status",
+         "enum": [
+          "status"
+         ]
+        }
+       },
+       {
+        "name": "sortOrder",
+        "in": "query",
+        "description": "The sort direction",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "default": "Descending",
+         "enum": [
+          "Ascending",
+          "Descending"
+         ]
+        }
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetCardRequestsResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CardRequestDto": {
+      "type": "object",
+      "properties": {
+       "partnerCardId": {
+        "type": "string",
+        "description": "Internal identifier for the card",
+        "example": 321321
+       },
+       "cardDeliveryStatus": {
+        "type": "string",
+        "description": "Current status of card delivery",
+        "example": "Shipped"
+       },
+       "issueDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the card was issued",
+        "example": "2024-11-15"
+       },
+       "estimatedDeliveryDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Estimated date of delivery",
+        "example": "2024-11-20"
+       },
+       "deliveryDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Actual date of delivery",
+        "example": "2024-11-19"
+       },
+       "trackingNumber": {
+        "type": "string",
+        "description": "Tracking number of the shipment",
+        "example": "1Z9999W99999999999"
+       },
+       "trackingUrl": {
+        "type": "string",
+        "description": "Tracking URL for shipment",
+        "example": "https://tracking-url.com/1Z9999W99999999999"
+       },
+       "shippingMethod": {
+        "type": "string",
+        "description": "Shipping method used for delivery",
+        "example": "UPS Ground"
+       },
+       "nameOnCard": {
+        "type": "string",
+        "description": "Name on the card",
+        "example": "John Doe"
+       },
+       "shipToAddress1": {
+        "type": "string",
+        "description": "First line of shipping address",
+        "example": 123
+       },
+       "shipToAddress2": {
+        "type": "string",
+        "description": "Second line of shipping address",
+        "example": "Apt 4B"
+       },
+       "shipToCity": {
+        "type": "string",
+        "description": "City of the shipping address",
+        "example": "Austin"
+       },
+       "shipToState": {
+        "type": "string",
+        "description": "State of the shipping address",
+        "example": "TX"
+       },
+       "shipToPostal": {
+        "type": "string",
+        "description": "Postal code of the shipping address",
+        "example": 78701
+       },
+       "jobNumber": {
+        "type": "string",
+        "description": "Job number associated with the shipment",
+        "example": "JOB-2024-001"
+       },
+       "programDescription": {
+        "type": "string",
+        "description": "Description of the program",
+        "example": "OTC Card Program"
+       },
+       "pullType": {
+        "type": "string",
+        "description": "Pull type for processing",
+        "example": "Daily"
+       }
+      }
+     },
+     "GetCardRequestsResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "cardRequest": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/CardRequestDto"
+        }
+       }
+      }
+     },
+     "GetCardRequestsResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/GetCardRequestsResponse"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/closecard.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CARD MANAGEMENT API",
+    "description": "These API's are used to manage card related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/cards/close": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Close Card",
+      "description": "Closes a card which has the effect of shutting down a card",
+      "operationId": "closeCard",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "cardProxy",
+        "in": "query",
+        "description": "Card identifier (this was returned when the card was created)",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": 5263218885395
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberCardStatusResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-208: Card cannot be closed due to current status\n- GBL-185: Endpoint is not supported for member's card type\n- GBL-171: Upstream card provider rejected the request (controller catch)\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CardStatusDto": {
+      "type": "object",
+      "properties": {
+       "status": {
+        "type": "string",
+        "description": "Status of card"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "The reason for a particular status"
+       },
+       "cardLastFour": {
+        "type": "string",
+        "description": "Last four digits of the card number"
+       }
+      }
+     },
+     "MemberCardStatus": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberCardStatus": {
+        "$ref": "#/components/schemas/CardStatusDto"
+       }
+      }
+     },
+     "MemberCardStatusResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberCardStatus"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/createdependentcard.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CARD MANAGEMENT API",
+    "description": "These API's are used to manage card related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/cards/dependent": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Request Dependent Card",
+      "description": "This API is used to request a card for an existing dependent, such as a spouse or child, and associate to an existing member account.",
+      "operationId": "createDependentCard",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/DocPostDependentCardRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/PostDependentCardResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-185: Endpoint is not supported for member's card type\n- GBL-186: Cards may only be requested for dependents\n- GBL-180: A new card has already been created for the dependent\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "MemberCardIdDto": {
+      "type": "object",
+      "properties": {
+       "cardProxy": {
+        "type": "string",
+        "description": "Card identifier (this was returned when the card was created)",
+        "example": 5263218885395
+       }
+      },
+      "required": [
+       "cardProxy"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseAddress": {
+      "type": "object",
+      "properties": {
+       "line1": {
+        "type": "string",
+        "description": "The first line of the address",
+        "example": 10
+       },
+       "line2": {
+        "type": "string",
+        "description": "The (optional) second line of the address",
+        "example": "address line2"
+       },
+       "city": {
+        "type": "string",
+        "description": "Address city",
+        "example": "Boston"
+       },
+       "stateProvince": {
+        "type": "string",
+        "description": "2-Character address state or province",
+        "example": "MA"
+       },
+       "country": {
+        "type": "string",
+        "description": "Address country",
+        "example": "US"
+       },
+       "postalCode": {
+        "type": "string",
+        "description": "Address zip code",
+        "example": "02119"
+       },
+       "postalCodeExtension": {
+        "type": "string",
+        "description": "Address zip code extension",
+        "example": "0123"
+       }
+      },
+      "required": [
+       "city",
+       "country",
+       "line1",
+       "postalCode",
+       "stateProvince"
+      ]
+     },
+     "DependentCardRequest": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberCard": {
+        "$ref": "#/components/schemas/MemberCardIdDto"
+       },
+       "dependent": {
+        "$ref": "#/components/schemas/DependentRushDeliveryDto"
+       }
+      },
+      "required": [
+       "clientOrg",
+       "member",
+       "memberCard"
+      ]
+     },
+     "DependentRushDeliveryDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier for the related person",
+        "example": "3d3bdad9-21e0-47bc-becd-b4872c0e8bf9"
+       },
+       "rushDelivery": {
+        "type": "boolean",
+        "description": "Indicates whether to ship the card via express mail; if omitted, default is false to ship first class mail",
+        "example": true
+       },
+       "address": {
+        "$ref": "#/components/schemas/BaseAddress"
+       },
+       "waiveRushDeliveryFee": {
+        "type": "boolean",
+        "description": "Flag to waive rush delivery fee",
+        "example": true
+       }
+      },
+      "required": [
+       "id"
+      ]
+     },
+     "DocPostDependentCardRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/DependentCardRequest"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "PostDependentCardResponse": {
+      "type": "object",
+      "properties": {
+       "memberCard": {
+        "$ref": "#/components/schemas/MemberCardIdDto"
+       },
+       "dependentCard": {
+        "$ref": "#/components/schemas/MemberCardIdDto"
+       }
+      },
+      "required": [
+       "dependentCard",
+       "memberCard"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/freezecard.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CARD MANAGEMENT API",
+    "description": "These API's are used to manage card related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/cards/freeze": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Freeze Card",
+      "description": "Freezes, or temporarily suspends, the card which prevents authorization requests from being accepted and disables any operations that can occur on the card. Previously authorized transactions will settle to the account.",
+      "operationId": "freezeCard",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "cardProxy",
+        "in": "query",
+        "description": "Card identifier (this was returned when the card was created)",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": 5263218885395
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberCardStatusResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-360: Card status does not allow freezing\n- GBL-176: Card in current status cannot be frozen\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CardStatusDto": {
+      "type": "object",
+      "properties": {
+       "status": {
+        "type": "string",
+        "description": "Status of card"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "The reason for a particular status"
+       },
+       "cardLastFour": {
+        "type": "string",
+        "description": "Last four digits of the card number"
+       }
+      }
+     },
+     "MemberCardStatus": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberCardStatus": {
+        "$ref": "#/components/schemas/CardStatusDto"
+       }
+      }
+     },
+     "MemberCardStatusResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberCardStatus"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/reissue.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CARD MANAGEMENT API",
+    "description": "These API's are used to manage card related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/cards/reissue": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Reissue Card",
+      "description": "Reissue an existing card that is in a lost/stolen status. The lost/stolen card will be assigned a “Replaced” status and a new card number and card proxy will be generated for the reissued card.",
+      "operationId": "reIssue",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/ReissueCardRequestDoc"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/CardResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-169: Card is not in a lost or stolen status and cannot be reissued\n- GBL-314: Card recently requested, please wait before submitting another\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "MemberCardIdDto": {
+      "type": "object",
+      "properties": {
+       "cardProxy": {
+        "type": "string",
+        "description": "Card identifier (this was returned when the card was created)",
+        "example": 5263218885395
+       }
+      },
+      "required": [
+       "cardProxy"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseAddress": {
+      "type": "object",
+      "properties": {
+       "line1": {
+        "type": "string",
+        "description": "The first line of the address",
+        "example": 10
+       },
+       "line2": {
+        "type": "string",
+        "description": "The (optional) second line of the address",
+        "example": "address line2"
+       },
+       "city": {
+        "type": "string",
+        "description": "Address city",
+        "example": "Boston"
+       },
+       "stateProvince": {
+        "type": "string",
+        "description": "2-Character address state or province",
+        "example": "MA"
+       },
+       "country": {
+        "type": "string",
+        "description": "Address country",
+        "example": "US"
+       },
+       "postalCode": {
+        "type": "string",
+        "description": "Address zip code",
+        "example": "02119"
+       },
+       "postalCodeExtension": {
+        "type": "string",
+        "description": "Address zip code extension",
+        "example": "0123"
+       }
+      },
+      "required": [
+       "city",
+       "country",
+       "line1",
+       "postalCode",
+       "stateProvince"
+      ]
+     },
+     "MemberCardRushDeliveryDto": {
+      "type": "object",
+      "properties": {
+       "cardProxy": {
+        "type": "string",
+        "description": "Card identifier (this was returned when the card was created)",
+        "example": 5263218885395
+       },
+       "rushDelivery": {
+        "type": "boolean",
+        "description": "Indicates whether to ship the card via express mail; if omitted, default is false to ship first class mail",
+        "example": true
+       },
+       "waiveRushDeliveryFee": {
+        "type": "boolean",
+        "description": "Flag to waive rush delivery fee",
+        "example": true
+       }
+      },
+      "required": [
+       "cardProxy"
+      ]
+     },
+     "CardResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberCardResponse"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "MemberCardResponse": {
+      "type": "object",
+      "properties": {
+       "memberCard": {
+        "$ref": "#/components/schemas/MemberCardIdDto"
+       }
+      }
+     },
+     "ReissueCardRequest": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberCard": {
+        "$ref": "#/components/schemas/MemberCardRushDeliveryDto"
+       },
+       "address": {
+        "$ref": "#/components/schemas/BaseAddress"
+       }
+      },
+      "required": [
+       "clientOrg",
+       "member",
+       "memberCard"
+      ]
+     },
+     "ReissueCardRequestDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/ReissueCardRequest"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/replacecard.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CARD MANAGEMENT API",
+    "description": "These API's are used to manage card related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/cards/replace": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Replace Card",
+      "description": "Provisions a replacement debit card and sends the replacement to the provided shipping address (optional). If the shipping address is not provided in the API, the card is shipped to the primary address on file.",
+      "operationId": "replaceCard",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/ReplaceCardRequestDoc"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/CardResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-128: Card cannot be replaced due to current status\n- GBL-230: Upstream error updating card details, please retry\n- GBL-314: Card recently requested, please wait before submitting another\n- GBL-171: Upstream card provider rejected the request (controller catch)\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "MemberCardIdDto": {
+      "type": "object",
+      "properties": {
+       "cardProxy": {
+        "type": "string",
+        "description": "Card identifier (this was returned when the card was created)",
+        "example": 5263218885395
+       }
+      },
+      "required": [
+       "cardProxy"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseAddress": {
+      "type": "object",
+      "properties": {
+       "line1": {
+        "type": "string",
+        "description": "The first line of the address",
+        "example": 10
+       },
+       "line2": {
+        "type": "string",
+        "description": "The (optional) second line of the address",
+        "example": "address line2"
+       },
+       "city": {
+        "type": "string",
+        "description": "Address city",
+        "example": "Boston"
+       },
+       "stateProvince": {
+        "type": "string",
+        "description": "2-Character address state or province",
+        "example": "MA"
+       },
+       "country": {
+        "type": "string",
+        "description": "Address country",
+        "example": "US"
+       },
+       "postalCode": {
+        "type": "string",
+        "description": "Address zip code",
+        "example": "02119"
+       },
+       "postalCodeExtension": {
+        "type": "string",
+        "description": "Address zip code extension",
+        "example": "0123"
+       }
+      },
+      "required": [
+       "city",
+       "country",
+       "line1",
+       "postalCode",
+       "stateProvince"
+      ]
+     },
+     "MemberCardRushDeliveryDto": {
+      "type": "object",
+      "properties": {
+       "cardProxy": {
+        "type": "string",
+        "description": "Card identifier (this was returned when the card was created)",
+        "example": 5263218885395
+       },
+       "rushDelivery": {
+        "type": "boolean",
+        "description": "Indicates whether to ship the card via express mail; if omitted, default is false to ship first class mail",
+        "example": true
+       },
+       "waiveRushDeliveryFee": {
+        "type": "boolean",
+        "description": "Flag to waive rush delivery fee",
+        "example": true
+       }
+      },
+      "required": [
+       "cardProxy"
+      ]
+     },
+     "ReplaceCardRequest": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberCard": {
+        "$ref": "#/components/schemas/MemberCardRushDeliveryDto"
+       },
+       "address": {
+        "$ref": "#/components/schemas/BaseAddress"
+       },
+       "cardPackageName": {
+        "type": "string",
+        "description": "The name of the card package.  If no value is passed, the most recently updated card package will be used by default.",
+        "example": "Health Plan ABC Blue Card"
+       }
+      },
+      "required": [
+       "clientOrg",
+       "member",
+       "memberCard"
+      ]
+     },
+     "ReplaceCardRequestDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/ReplaceCardRequest"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "CardResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberCardResponse"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "MemberCardResponse": {
+      "type": "object",
+      "properties": {
+       "memberCard": {
+        "$ref": "#/components/schemas/MemberCardIdDto"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/reportlost.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CARD MANAGEMENT API",
+    "description": "These API's are used to manage card related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/cards/report-lost": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Report Card Lost",
+      "description": "Reports a card as lost/stolen - the card status is updated to 'Lost' and the card is set to inactive. An automated email is sent to the card holder, notifying them about the change in status. An (optional) event is generated to the client organization about the change in card status.",
+      "operationId": "reportLost",
+      "parameters": [
+       {
+        "name": "cardProxy",
+        "in": "query",
+        "description": "Card identifier (this was returned when the card was created)",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": 5263218885395
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberCardStatusResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-126: Card cannot be reported lost/stolen due to current status\n- GBL-171: Upstream card provider rejected the request (controller catch)\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CardStatusDto": {
+      "type": "object",
+      "properties": {
+       "status": {
+        "type": "string",
+        "description": "Status of card"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "The reason for a particular status"
+       },
+       "cardLastFour": {
+        "type": "string",
+        "description": "Last four digits of the card number"
+       }
+      }
+     },
+     "MemberCardStatus": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberCardStatus": {
+        "$ref": "#/components/schemas/CardStatusDto"
+       }
+      }
+     },
+     "MemberCardStatusResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberCardStatus"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/reportstolen.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CARD MANAGEMENT API",
+    "description": "These API's are used to manage card related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/cards/report-stolen": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Report Card Stolen",
+      "description": "Reports a card as lost/stolen - the card status is updated to 'Lost' and the card is set to inactive. An automated email is sent to the card holder, notifying them about the change in status. An (optional) event is generated to the client organization about the change in card status.",
+      "operationId": "reportStolen",
+      "parameters": [
+       {
+        "name": "cardProxy",
+        "in": "query",
+        "description": "Card identifier (this was returned when the card was created)",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": 5263218885395
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberCardStatusResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-126: Card cannot be reported lost/stolen due to current status\n- GBL-171: Upstream card provider rejected the request (controller catch)\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CardStatusDto": {
+      "type": "object",
+      "properties": {
+       "status": {
+        "type": "string",
+        "description": "Status of card"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "The reason for a particular status"
+       },
+       "cardLastFour": {
+        "type": "string",
+        "description": "Last four digits of the card number"
+       }
+      }
+     },
+     "MemberCardStatus": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberCardStatus": {
+        "$ref": "#/components/schemas/CardStatusDto"
+       }
+      }
+     },
+     "MemberCardStatusResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberCardStatus"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/unfreezecard.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CARD MANAGEMENT API",
+    "description": "These API's are used to manage card related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/cards/unfreeze": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Unfreeze Card",
+      "description": "Unfreezes a frozen card, making it available for transactions. The card is set to an 'Active' state",
+      "operationId": "unfreezeCard",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "cardProxy",
+        "in": "query",
+        "description": "Card identifier (this was returned when the card was created)",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": 5263218885395
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberCardStatusResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-124: Card must be frozen in order to unfreeze it\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CardStatusDto": {
+      "type": "object",
+      "properties": {
+       "status": {
+        "type": "string",
+        "description": "Status of card"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "The reason for a particular status"
+       },
+       "cardLastFour": {
+        "type": "string",
+        "description": "Last four digits of the card number"
+       }
+      }
+     },
+     "MemberCardStatus": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberCardStatus": {
+        "$ref": "#/components/schemas/CardStatusDto"
+       }
+      }
+     },
+     "MemberCardStatusResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberCardStatus"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/createmembercard.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CARD MANAGEMENT API",
+    "description": "These API's are used to manage card related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/cards/card": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Request Primary Member Card",
+      "description": "Create an additional card for an existing member, and associate to existing member accounts. The API takes an existing primary member card proxy number as input. The package name for the new card is also required.",
+      "operationId": "createMemberCard",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/MemberCardRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/CardResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-182: Requested card package name is not valid for the member\n- GBL-183: A new card already exists for the requested card package\n- GBL-199: Card already exists for this member (controller catch)\n- GBL-131: Upstream card provider rejected the request (controller catch)\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "MemberCardIdDto": {
+      "type": "object",
+      "properties": {
+       "cardProxy": {
+        "type": "string",
+        "description": "Card identifier (this was returned when the card was created)",
+        "example": 5263218885395
+       }
+      },
+      "required": [
+       "cardProxy"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CardResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberCardResponse"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "MemberCardResponse": {
+      "type": "object",
+      "properties": {
+       "memberCard": {
+        "$ref": "#/components/schemas/MemberCardIdDto"
+       }
+      }
+     },
+     "ClientOrg": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Data": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrg"
+       },
+       "member": {
+        "$ref": "#/components/schemas/Member"
+       },
+       "memberCard": {
+        "$ref": "#/components/schemas/MemberCard"
+       }
+      }
+     },
+     "Member": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "MemberCard": {
+      "type": "object",
+      "properties": {
+       "cardProxy": {
+        "type": "string",
+        "description": "Proxy id of the card (for the existing card).",
+        "example": 5263218885395
+       },
+       "cardPackageName": {
+        "type": "string",
+        "description": "The name of the card package (for the new card).",
+        "example": "Health Plan ABC Blue Card"
+       },
+       "rushDelivery": {
+        "type": "boolean",
+        "description": "Indicates whether to ship the card via express mail; if omitted, default is false to ship first class mail",
+        "example": true
+       }
+      },
+      "required": [
+       "cardPackageName",
+       "cardProxy"
+      ]
+     },
+     "MemberCardRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/Data"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/activatecard.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CARD MANAGEMENT API",
+    "description": "These API's are used to manage card related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/cards/activate": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Activate Card",
+      "description": "Activates a card, making it available for transactions.",
+      "operationId": "activateCard",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "cardProxy",
+        "in": "query",
+        "description": "Card identifier (this was returned when the card was created)",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": 5263218885395
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberCardStatusResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-125: Card cannot be activated (invalid card status or state)\n- GBL-131: Upstream card provider rejected the request (controller catch)\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CardStatusDto": {
+      "type": "object",
+      "properties": {
+       "status": {
+        "type": "string",
+        "description": "Status of card"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "The reason for a particular status"
+       },
+       "cardLastFour": {
+        "type": "string",
+        "description": "Last four digits of the card number"
+       }
+      }
+     },
+     "MemberCardStatus": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberCardStatus": {
+        "$ref": "#/components/schemas/CardStatusDto"
+       }
+      }
+     },
+     "MemberCardStatusResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberCardStatus"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/setcardstatus.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CARD MANAGEMENT API",
+    "description": "These API's are used to manage card related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/cards/status": {
+     "put": {
+      "tags": [
+       ""
+      ],
+      "summary": "Update Card Status",
+      "description": "This API allows a client to update a card status.",
+      "operationId": "setCardStatus",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/CardStatusChangeRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/MemberCardStatusResponseDoc"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-211: Invalid target status (allowed: Closed, Active, Lost, Frozen, Unfreeze, Stolen)\n- GBL-227: Card in current status cannot be updated to the requested status\n- GBL-212: Transition from current status to requested status is not allowed\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "CardStatusChangeRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/CardStatusRequest"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "CardStatusRequest": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberCard": {
+        "$ref": "#/components/schemas/MemberCardIdDto"
+       },
+       "status": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "clientOrg",
+       "member",
+       "memberCard",
+       "status"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "MemberCardIdDto": {
+      "type": "object",
+      "properties": {
+       "cardProxy": {
+        "type": "string",
+        "description": "Card identifier (this was returned when the card was created)",
+        "example": 5263218885395
+       }
+      },
+      "required": [
+       "cardProxy"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CardStatusDto": {
+      "type": "object",
+      "properties": {
+       "status": {
+        "type": "string",
+        "description": "Status of card"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "The reason for a particular status"
+       },
+       "cardLastFour": {
+        "type": "string",
+        "description": "Last four digits of the card number"
+       }
+      }
+     },
+     "MemberCardStatus": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberCardStatus": {
+        "$ref": "#/components/schemas/CardStatusDto"
+       }
+      }
+     },
+     "MemberCardStatusResponseDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberCardStatus"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ }
+]

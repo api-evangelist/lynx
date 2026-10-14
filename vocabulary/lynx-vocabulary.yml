@@ -1,0 +1,427 @@
+generated: '2026-10-14'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/lynx-account-api-openapi.yml
+- openapi/lynx-card-management-api-openapi.yml
+- openapi/lynx-claims-service-api-openapi.yml
+- openapi/lynx-client-org-management-api-openapi.yml
+- openapi/lynx-commerce-order-api-openapi.yml
+vocabulary:
+  name: Lynx Domain Vocabulary
+  description: 'Terms declared by Lynx''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions. Derived,
+    not authored.'
+  version: '2026-10-14'
+  terms:
+  - term: ClientOrgDto
+    definition: 'Object declared by the contract with fields: name.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/ClientOrgDto
+  - term: ExceptionBaseResponse
+    definition: 'Object declared by the contract with fields: data, exceptions.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/ExceptionBaseResponse
+  - term: ResponseException
+    definition: 'Object declared by the contract with fields: errorCode, exceptionSource, exceptionMessage.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/ResponseException
+  - term: ClientOrgAccountNumberDto
+    definition: 'Object declared by the contract with fields: id, accountNumber.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/ClientOrgAccountNumberDto
+  - term: GetClientOrgAccountNumberResponse
+    definition: 'Object declared by the contract with fields: clientOrg, clientOrgAccount.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/GetClientOrgAccountNumberResponse
+  - term: AccountBalanceDto
+    definition: 'Object declared by the contract with fields: id, name, availableAmount, balanceAmount, lastFourAccountNumber, routingNumber,
+      type, accountQualifierType, verifiedDate, verifiedIndicator, updateDate.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/AccountBalanceDto
+  - term: GetClientOrgBankAccountBalanceResponse
+    definition: 'Object declared by the contract with fields: clientOrg, clientOrgBankAccounts.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/GetClientOrgBankAccountBalanceResponse
+  - term: ClientOrgAccountDetailsDto
+    definition: 'Object declared by the contract with fields: id, name, availableAmount, balanceAmount, accountNumber, routingNumber, type, accountQualifierType,
+      verifiedDate, verifiedIndicator, updateDate.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/ClientOrgAccountDetailsDto
+  - term: GetClientOrgAccountsResponse
+    definition: 'Object declared by the contract with fields: clientOrg, clientOrgAccounts.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/GetClientOrgAccountsResponse
+  - term: BaseMember
+    definition: 'Object declared by the contract with fields: clientMemberId.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/BaseMember
+  - term: GetMemberAccountNumberResponse
+    definition: 'Object declared by the contract with fields: clientOrg, memberAccount, member.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/GetMemberAccountNumberResponse
+  - term: MemberFullAccountNumberDto
+    definition: 'Object declared by the contract with fields: accountNumber, name, effectiveDate, expirationDate.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/MemberFullAccountNumberDto
+  - term: GetMemberAccountBalanceResponse
+    definition: 'Object declared by the contract with fields: clientOrg, member, memberAccounts.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/GetMemberAccountBalanceResponse
+  - term: MemberAccountBalanceDto
+    definition: 'Object declared by the contract with fields: id, name, availableAmount, balanceAmount, lastFourAccountNumber, routingNumber,
+      type, accountQualifierType, verifiedDate, verifiedIndicator, updateDate, incentiveRatio. (5 more)'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/MemberAccountBalanceDto
+  - term: Idempotency
+    definition: 'Object declared by the contract with fields: idempotencyKey.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/Idempotency
+  - term: BaseMemberProduct
+    definition: 'Object declared by the contract with fields: productName.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/BaseMemberProduct
+  - term: MemberAccountStatusRequest
+    definition: 'Object declared by the contract with fields: data, idempotency.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/MemberAccountStatusRequest
+  - term: PatchAccountStatusMemberDto
+    definition: 'Object declared by the contract with fields: clientMemberId, memberBankAccountId.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/PatchAccountStatusMemberDto
+  - term: PatchMemberAccountStatusDto
+    definition: 'Object declared by the contract with fields: accountType, id.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/PatchMemberAccountStatusDto
+  - term: PatchUpdateMemberAccountStatusRequest
+    definition: 'Object declared by the contract with fields: clientOrg, member, memberProduct, memberAccount, status, statusReason, memberAuthorized,
+      memberAuthorizedDate.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/PatchUpdateMemberAccountStatusRequest
+  - term: MemberAccountStatusDto
+    definition: 'Object declared by the contract with fields: id, type, status, name.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/MemberAccountStatusDto
+  - term: UpdateMemberAccountStatusResponse
+    definition: 'Object declared by the contract with fields: clientOrg, member, memberAccounts.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/UpdateMemberAccountStatusResponse
+  - term: AccountDto
+    definition: 'Object declared by the contract with fields: accountType.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/AccountDto
+  - term: AccountTransferData
+    definition: 'Object declared by the contract with fields: amount, dateOfTransfer, transferType, transferScope, priorCustodianName, priorCustodianAccountNumber,
+      attestEligibleAccount, attestWithin60Days, attestNoPriorRollover, priorCustodianAttention, priorCustodianAddressLine1, priorCustodianAddressLine2.
+      (5 more)'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/AccountTransferData
+  - term: MemberAccountTransferRequestData
+    definition: 'Object declared by the contract with fields: account, clientOrg, member, product, memberBankAccount, accountTransfer.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/MemberAccountTransferRequestData
+  - term: MemberBankAccount
+    definition: 'Object declared by the contract with fields: id.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/MemberBankAccount
+  - term: PostMemberAccountTransferRequest
+    definition: 'Object declared by the contract with fields: data, idempotency.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/PostMemberAccountTransferRequest
+  - term: ProductDto
+    definition: 'Object declared by the contract with fields: name.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/ProductDto
+  - term: PostMemberAccountTransferResponse
+    definition: 'Object declared by the contract with fields: id.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/PostMemberAccountTransferResponse
+  - term: AccountTransferRequestInfo
+    definition: 'Object declared by the contract with fields: id, requestedDate, clientMemberId, amount, transferType, transferScope, priorCustodianName,
+      investmentsLiquidated, settlementStatus, memberAccountId.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/AccountTransferRequestInfo
+  - term: GetMemberAccountTransferResponse
+    definition: 'Object declared by the contract with fields: clientOrg, member, accountTransfers.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/GetMemberAccountTransferResponse
+  - term: MemberAccountData
+    definition: 'Object declared by the contract with fields: id, electionAmount.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/MemberAccountData
+  - term: PatchMemberAccountRequest
+    definition: 'Object declared by the contract with fields: clientOrg, member, memberProduct, memberAccount.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/PatchMemberAccountRequest
+  - term: PatchMemberAccountRequestDoc
+    definition: 'Object declared by the contract with fields: data, idempotency.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/PatchMemberAccountRequestDoc
+  - term: PatchMemberAccountResponse
+    definition: 'Object declared by the contract with fields: id.'
+    tags:
+    - Object
+    source: openapi/lynx-account-api-openapi.yml#/components/schemas/PatchMemberAccountResponse
+  - term: BaseMemberCard
+    definition: 'Object declared by the contract with fields: type, cardDesign, status, statusReason, expirationMonth, expirationYear, cvv, brand,
+      deliveryMethod, nameOnCard, motherMaidenName, issuingAgency. (9 more)'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/BaseMemberCard
+  - term: CardDesignDto
+    definition: 'Object declared by the contract with fields: name.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/CardDesignDto
+  - term: GetMemberCardsResponse
+    definition: 'Object declared by the contract with fields: member, clientOrg, memberAccountCards.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/GetMemberCardsResponse
+  - term: MemberAccountCardDto
+    definition: 'Object declared by the contract with fields: memberAccounts, memberCard.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/MemberAccountCardDto
+  - term: MemberAccountDto
+    definition: 'Object declared by the contract with fields: accountType, lastFourAccountNumber, name, effectiveDate, expirationDate.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/MemberAccountDto
+  - term: GetCardDetailsResponseDoc
+    definition: 'Object declared by the contract with fields: data, exceptions.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/GetCardDetailsResponseDoc
+  - term: MemberAndMemberCardDto
+    definition: 'Object declared by the contract with fields: member, memberCard.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/MemberAndMemberCardDto
+  - term: CardRequestDto
+    definition: 'Object declared by the contract with fields: partnerCardId, cardDeliveryStatus, issueDate, estimatedDeliveryDate, deliveryDate,
+      trackingNumber, trackingUrl, shippingMethod, nameOnCard, shipToAddress1, shipToAddress2, shipToCity. (5 more)'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/CardRequestDto
+  - term: GetCardRequestsResponse
+    definition: 'Object declared by the contract with fields: clientOrg, member, cardRequest.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/GetCardRequestsResponse
+  - term: GetCardRequestsResponseDoc
+    definition: 'Object declared by the contract with fields: data, exceptions.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/GetCardRequestsResponseDoc
+  - term: CardStatusDto
+    definition: 'Object declared by the contract with fields: status, statusReason, cardLastFour.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/CardStatusDto
+  - term: MemberCardStatus
+    definition: 'Object declared by the contract with fields: member, memberCardStatus.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/MemberCardStatus
+  - term: MemberCardStatusResponseDoc
+    definition: 'Object declared by the contract with fields: data, exceptions.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/MemberCardStatusResponseDoc
+  - term: MemberCardIdDto
+    definition: 'Object declared by the contract with fields: cardProxy.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/MemberCardIdDto
+  - term: BaseAddress
+    definition: 'Object declared by the contract with fields: line1, line2, city, stateProvince, country, postalCode, postalCodeExtension.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/BaseAddress
+  - term: DependentCardRequest
+    definition: 'Object declared by the contract with fields: clientOrg, member, memberCard, dependent.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/DependentCardRequest
+  - term: DependentRushDeliveryDto
+    definition: 'Object declared by the contract with fields: id, rushDelivery, address, waiveRushDeliveryFee.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/DependentRushDeliveryDto
+  - term: DocPostDependentCardRequest
+    definition: 'Object declared by the contract with fields: data, idempotency.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/DocPostDependentCardRequest
+  - term: PostDependentCardResponse
+    definition: 'Object declared by the contract with fields: memberCard, dependentCard.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/PostDependentCardResponse
+  - term: MemberCardRushDeliveryDto
+    definition: 'Object declared by the contract with fields: cardProxy, rushDelivery, waiveRushDeliveryFee.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/MemberCardRushDeliveryDto
+  - term: CardResponseDoc
+    definition: 'Object declared by the contract with fields: data, exceptions.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/CardResponseDoc
+  - term: MemberCardResponse
+    definition: 'Object declared by the contract with fields: memberCard.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/MemberCardResponse
+  - term: ReissueCardRequest
+    definition: 'Object declared by the contract with fields: clientOrg, member, memberCard, address.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/ReissueCardRequest
+  - term: ReissueCardRequestDoc
+    definition: 'Object declared by the contract with fields: data, idempotency.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/ReissueCardRequestDoc
+  - term: ReplaceCardRequest
+    definition: 'Object declared by the contract with fields: clientOrg, member, memberCard, address, cardPackageName.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/ReplaceCardRequest
+  - term: ReplaceCardRequestDoc
+    definition: 'Object declared by the contract with fields: data, idempotency.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/ReplaceCardRequestDoc
+  - term: ClientOrg
+    definition: 'Object declared by the contract with fields: name.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/ClientOrg
+  - term: Data
+    definition: 'Object declared by the contract with fields: clientOrg, member, memberCard.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/Data
+  - term: Member
+    definition: 'Object declared by the contract with fields: clientMemberId.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/Member
+  - term: MemberCard
+    definition: 'Object declared by the contract with fields: cardProxy, cardPackageName, rushDelivery.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/MemberCard
+  - term: MemberCardRequest
+    definition: 'Object declared by the contract with fields: data, idempotency.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/MemberCardRequest
+  - term: CardStatusChangeRequest
+    definition: 'Object declared by the contract with fields: data, idempotency.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/CardStatusChangeRequest
+  - term: CardStatusRequest
+    definition: 'Object declared by the contract with fields: clientOrg, member, memberCard, status.'
+    tags:
+    - Object
+    source: openapi/lynx-card-management-api-openapi.yml#/components/schemas/CardStatusRequest
+  - term: MemberClaimUpdateDto
+    definition: 'Object declared by the contract with fields: itemDescription, amount, id.'
+    tags:
+    - Object
+    source: openapi/lynx-claims-service-api-openapi.yml#/components/schemas/MemberClaimUpdateDto
+  - term: MemberClaimsData
+    definition: 'Object declared by the contract with fields: claimNumber, member, clientOrg, claimAmount, expenseDate, merchantName, category,
+      description, items.'
+    tags:
+    - Object
+    source: openapi/lynx-claims-service-api-openapi.yml#/components/schemas/MemberClaimsData
+  - term: PutMemberClaimRequest
+    definition: 'Object declared by the contract with fields: data, idempotency.'
+    tags:
+    - Object
+    source: openapi/lynx-claims-service-api-openapi.yml#/components/schemas/PutMemberClaimRequest
+  - term: PersistClaimsResponse
+    definition: 'Object declared by the contract with fields: claimNumber, clientMemberId.'
+    tags:
+    - Object
+    source: openapi/lynx-claims-service-api-openapi.yml#/components/schemas/PersistClaimsResponse
+  - term: CreateClaimRequestData
+    definition: 'Object declared by the contract with fields: clientOrg, member, memberAccount, memberBankAccount, merchantName, description,
+      expenseDate, claimAmount, reimbursementType, category, items, address. (1 more)'
+    tags:
+    - Object
+    source: openapi/lynx-claims-service-api-openapi.yml#/components/schemas/CreateClaimRequestData
+  - term: MemberAccountIdDto
+    definition: 'Object declared by the contract with fields: id.'
+    tags:
+    - Object
+    source: openapi/lynx-claims-service-api-openapi.yml#/components/schemas/MemberAccountIdDto
+  - term: MemberBankAccountDto
+    definition: 'Object declared by the contract with fields: id.'
+    tags:
+    - Object
+    source: openapi/lynx-claims-service-api-openapi.yml#/components/schemas/MemberBankAccountDto
+  - term: MemberClaimItemDto
+    definition: 'Object declared by the contract with fields: itemDescription, amount.'
+    tags:
+    - Object
+    source: openapi/lynx-claims-service-api-openapi.yml#/components/schemas/MemberClaimItemDto
+  - term: PostMemberClaimRequest
+    definition: 'Object declared by the contract with fields: data, idempotency.'
+    tags:
+    - Object
+    source: openapi/lynx-claims-service-api-openapi.yml#/components/schemas/PostMemberClaimRequest
+  - term: MemberDto
+    definition: 'Object declared by the contract with fields: clientMemberId, firstName, lastName.'
+    tags:
+    - Object
+    source: openapi/lynx-claims-service-api-openapi.yml#/components/schemas/MemberDto
+  - term: AiAdjudicationResultDTO
+    definition: 'Object declared by the contract with fields: aiValidAmount, aiDenyReason, aiRecommendation, confidence, suggestion, flags, merchant,
+      expenseDate, claimAmount, receiptTotal, receiptMerchant, receiptDate.'
+    tags:
+    - Object
+    source: openapi/lynx-claims-service-api-openapi.yml#/components/schemas/AiAdjudicationResultDTO
+  - term: ClaimDetailItem
+    definition: 'Object declared by the contract with fields: id, itemDescription, amount.'
+    tags:
+    - Object
+    source: openapi/lynx-claims-service-api-openapi.yml#/components/schemas/ClaimDetailItem

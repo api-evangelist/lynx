@@ -1,0 +1,75 @@
+generated: '2026-10-14'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 5
+  own: 4
+  other_domain: 1
+  platform: 0
+  roles:
+  - identity
+  - portal
+  - sandbox
+  - status
+  - website
+hosts:
+- host: docs.lynx-fh.com
+  found_by:
+  - pointer
+  - apis[]
+  types:
+  - DeveloperPortal
+  - Documentation
+  - APIReference
+  - GettingStarted
+  - ChangeLog
+  serves:
+  - docs
+  registrable_domain: lynx-fh.com
+  role: portal
+  relation: own
+- host: lynx-fh.com
+  found_by:
+  - pointer
+  types:
+  - Website
+  serves: []
+  registrable_domain: lynx-fh.com
+  role: website
+  relation: own
+- host: sandbox.lynx-fh.co
+  found_by:
+  - pointer
+  - apis[]
+  types:
+  - Sandbox
+  serves:
+  - api
+  registrable_domain: lynx-fh.co
+  role: sandbox
+  relation: other-domain
+- host: status.lynx-fh.com
+  found_by:
+  - pointer
+  types:
+  - StatusPage
+  serves: []
+  registrable_domain: lynx-fh.com
+  role: status
+  relation: own
+- host: www.lynx-fh.com
+  found_by:
+  - pointer
+  types:
+  - BlogRSS
+  - SignUp
+  - Support
+  - Blog
+  - PrivacyPolicy
+  - TermsOfService
+  - Compliance
+  serves: []
+  registrable_domain: lynx-fh.com
+  role: identity
+  relation: own

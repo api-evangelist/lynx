@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json",
+  "title": "PostMemberEcommerceOrderRequestDoc",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-commerce-order-api-openapi.yml#/components/schemas/PostMemberEcommerceOrderRequestDoc",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/MemberEcommerceOrderRequestDtoDoc"
+    },
+    "idempotency": {
+      "$ref": "#/$defs/Idempotency",
+      "description": "Unique identifier that represents the operation"
+    }
+  },
+  "required": [
+    "data",
+    "idempotency"
+  ],
+  "$defs": {
+    "BaseMember": {
+      "type": "object",
+      "properties": {
+        "clientMemberId": {
+          "type": "string",
+          "description": "Unique client-side identifier for the member"
+        }
+      },
+      "required": [
+        "clientMemberId"
+      ]
+    },
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ExternalCardRequestDtoDoc": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "A unique identifier for the external card transaction, provided by the card partner. TrustCommerce gives back a transaction id, ProHealth the auth code of the pre-authorization it verified"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Amount charged to card"
+        },
+        "partnerOrgName": {
+          "type": "string",
+          "description": "The card partner the transaction was captured with, ProHealth or TrustCommerce"
+        }
+      },
+      "required": [
+        "amount",
+        "id",
+        "partnerOrgName"
+      ]
+    },
+    "Idempotency": {
+      "type": "object",
+      "properties": {
+        "idempotencyKey": {
+          "type": "string",
+          "description": "Unique identifier that represents the operation"
+        }
+      }
+    },
+    "MemberAccountAmountDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier of the bank account"
+        },
+        "amount": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "MemberEcommerceOrderRequestDtoDoc": {
+      "type": "object",
+      "properties": {
+        "clientOrg": {
+          "$ref": "#/$defs/ClientOrgDto"
+        },
+        "member": {
+          "$ref": "#/$defs/BaseMember"
+        },
+        "memberAccounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MemberAccountAmountDto"
+          }
+        },
+        "externalCards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExternalCardRequestDtoDoc"
+          }
+        },
+        "emailAddress": {
+          "type": "string",
+          "description": "Email address - any notifications will be sent to this email address"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "10-Digit phone number"
+        }
+      },
+      "required": [
+        "emailAddress",
+        "phoneNumber"
+      ]
+    }
+  }
+}

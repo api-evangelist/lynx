@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-patch-member-account-request-doc-schema.json",
+  "title": "PatchMemberAccountRequestDoc",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-account-api-openapi.yml#/components/schemas/PatchMemberAccountRequestDoc",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/PatchMemberAccountRequest"
+    },
+    "idempotency": {
+      "$ref": "#/$defs/Idempotency",
+      "description": "Unique identifier that represents the operation"
+    }
+  },
+  "required": [
+    "data",
+    "idempotency"
+  ],
+  "$defs": {
+    "BaseMember": {
+      "type": "object",
+      "properties": {
+        "clientMemberId": {
+          "type": "string",
+          "description": "Unique client-side identifier for the member"
+        }
+      },
+      "required": [
+        "clientMemberId"
+      ]
+    },
+    "BaseMemberProduct": {
+      "type": "object",
+      "properties": {
+        "productName": {
+          "type": "string",
+          "description": "The name of the product"
+        }
+      },
+      "required": [
+        "productName"
+      ]
+    },
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Idempotency": {
+      "type": "object",
+      "properties": {
+        "idempotencyKey": {
+          "type": "string",
+          "description": "Unique identifier that represents the operation"
+        }
+      }
+    },
+    "MemberAccountData": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Account Id"
+        },
+        "electionAmount": {
+          "type": "number",
+          "description": "Election Amount"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "PatchMemberAccountRequest": {
+      "type": "object",
+      "properties": {
+        "clientOrg": {
+          "$ref": "#/$defs/ClientOrgDto"
+        },
+        "member": {
+          "$ref": "#/$defs/BaseMember"
+        },
+        "memberProduct": {
+          "$ref": "#/$defs/BaseMemberProduct"
+        },
+        "memberAccount": {
+          "$ref": "#/$defs/MemberAccountData"
+        }
+      },
+      "required": [
+        "clientOrg",
+        "member",
+        "memberAccount",
+        "memberProduct"
+      ]
+    }
+  }
+}

@@ -1,0 +1,799 @@
+openapi: 3.1.0
+info:
+  title: SUBSTANTIATION SERVICE API
+  description: <Insert page description with key 'api.service.desc' within application.properties>
+  termsOfService: http://lynx-fh.com
+  license:
+    name: LynxFH
+    url: http://lynx-fh.com
+  version: <Insert version with key 'api.service.ver' within application.properties>
+servers:
+- url: https://sandbox.lynx-fh.co
+security:
+- bearerAuth: []
+paths:
+  /substantiation/list:
+    get:
+      tags:
+      - ''
+      summary: Get All Member Substantiation Summary by Client
+      description: 'This API will return a list of transactions requiring substantiation associated to member
+
+        accounts at the root client organization level.
+
+        '
+      operationId: getAllMemberSubstantiations
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: false
+        schema:
+          type: string
+        example: 3f50436491
+      - name: memberName
+        in: query
+        description: Search by Member name
+        required: false
+        schema:
+          type: string
+        example: lastName or firstName
+      - name: status
+        in: query
+        description: Status of the member transaction substantiation.
+        required: false
+        schema:
+          type: string
+          enum:
+          - PENDING
+          - NOT_SUBSTANTIATED
+          - SUBSTANTIATED
+          - BLOCKED
+          - BLOCKED_WITH_ERROR
+        example: NOT_SUBSTANTIATED
+      - name: stageCode
+        in: query
+        description: Substantiation stage of the member transaction
+        required: false
+        schema:
+          type: string
+          enum:
+          - PNDS1
+          - PNDS2
+          - PNDS3
+          - PNDS4
+          - PMIS1
+          - PMIS2
+          - PMIS3
+          - PMIS4
+          - IELS1
+          - IELS2
+          - IELS3
+          - IELS4
+          - ALL_PENDING
+          - ALL_PENDING_MORE_INFO
+          - ALL_INELIGIBLE
+          - AUTO
+        example: PNDS1
+      - name: sortValue
+        in: query
+        description: The property by which the response is sorted
+        required: false
+        schema:
+          type: string
+        example: 'Allowed values: transactionDate, firstName, lastName, substantiationStage'
+      - name: sortOrder
+        in: query
+        description: The sort direction
+        required: false
+        schema:
+          type: string
+          default: Descending
+          enum:
+          - Ascending
+          - Descending
+        example: 'Allowed values: Descending, Ascending'
+      - name: page
+        in: query
+        description: Page number to be returned. If not specified, default is 1.
+        required: false
+        schema:
+          type: integer
+          default: 1
+        example: 1
+      - name: pageSize
+        in: query
+        description: Maximum number of items to be returned per page. If not specified, default is 25.
+        required: false
+        schema:
+          type: integer
+          default: 25
+        example: 25
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMemberSubstantiationResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /substantiation/member-substantiation:
+    patch:
+      tags:
+      - ''
+      summary: Update Member Transaction Substantiation Status
+      description: 'This API is used to manually substantiate a member transaction as an eligible expense or
+
+        update the substantiation stage if additional information is needed or the expense is deemed ineligible
+
+        '
+      operationId: patchMemberSubstantiation
+      requestBody:
+        description: This is the patch MemberTransactionSubstantiation request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchMemberTransactionSubstantiationRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatchMemberTransactionSubstantiationResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-328: Only transactions with a substantiation status of Not Substantiated may be updated
+
+            - GBL-329: ineligibleAmount must be greater than 0 and cannot be greater than the transaction amount if substantiationStage is IELS1
+
+            - GBL-330: For current stage, allowed next stage values are restricted
+
+            - GBL-331: You cannot update a MemberRecurringExpense associated with the MemberSubstantiation
+
+            - GBL-332: padDays cannot be greater than recurringExpenseFrequency
+
+            - GBL-333: expirationDate must be greater than the required number of days from today''s date
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /substantiation/member-substantiation/history:
+    get:
+      tags:
+      - ''
+      summary: Get Member Transaction Substantiation History
+      description: 'This API will return substantiation history for a member transaction.
+
+        '
+      operationId: getMemberSubstantiationHistory
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: transactionId
+        in: query
+        description: Internal unique identifier for the monetary transaction
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMemberSubstantiationHistoryResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /substantiation/receipt:
+    delete:
+      tags:
+      - ''
+      summary: Delete Member Substantiation Receipt
+      description: Delete Member Substantiation Receipt.
+      operationId: deleteMemberSubstantiationReceipt
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: substantiationId
+        in: query
+        description: Member Substantiation Id
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      - name: receiptId
+        in: query
+        description: Receipt Id
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: cf82639c-e3b6-4d51-9871-0e452a2b1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /substantiation/receipts:
+    post:
+      tags:
+      - ''
+      summary: Upload Receipts to Member Substantiation
+      description: Allow members to upload receipts to Member Substantiation
+      operationId: addReceipts
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                data:
+                  $ref: '#/components/schemas/MemberUploadReceiptDoc'
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+              required:
+              - data
+              - files
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddReceiptResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+components:
+  schemas:
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    ReceiptData:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Id
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+        s3Path:
+          type: string
+          description: s3 path to the file
+          example: /client/clientOrgName/Member/Client_Member_id/Receipt/id
+      required:
+      - id
+      - s3Path
+    GetMemberSubstantiationHistoryResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The name of the client organization
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+        firstName:
+          type: string
+          description: First name
+        lastName:
+          type: string
+          description: Last name
+        referenceIdentifier:
+          type: string
+          description: Transaction reference identifier
+        transactionId:
+          type: string
+          format: uuid
+          description: Internal unique identifier for the monetary transaction
+        history:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberSubstantiationHistory'
+        receipts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReceiptData'
+      required:
+      - clientMemberId
+      - clientOrg
+      - firstName
+      - lastName
+      - referenceIdentifier
+      - transactionId
+    MemberSubstantiationHistory:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Status of the member transaction substantiation.
+          enum:
+          - PENDING
+          - NOT_SUBSTANTIATED
+          - SUBSTANTIATED
+          - BLOCKED
+          - BLOCKED_WITH_ERROR
+        stage:
+          type: string
+          description: Substantiation stage of the member transaction
+          enum:
+          - PNDS1
+          - PNDS2
+          - PNDS3
+          - PNDS4
+          - PMIS1
+          - PMIS2
+          - PMIS3
+          - PMIS4
+          - IELS1
+          - IELS2
+          - IELS3
+          - IELS4
+          - PNDAR
+          - PMIAR
+          - IELPR
+          - AUTO
+        stageName:
+          type: string
+          description: Substantiation stage name
+        stageStatusDate:
+          type: string
+          format: date-time
+          description: Date the substantiation activity occurred
+        methodApplied:
+          type: string
+          description: Method of substantiation for the member transaction; possible values are Manual, Copay, Recurring Expense, de Minimis, and IIAS
+      required:
+      - methodApplied
+      - stage
+      - stageName
+      - stageStatusDate
+      - status
+    GetMemberSubstantiationResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The name of the client organization
+        substantiation:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberSubstantiationDetail'
+      required:
+      - clientOrg
+    MemberSubstantiationDetail:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+        firstName:
+          type: string
+          description: First name
+        lastName:
+          type: string
+          description: Last name
+        transactionDate:
+          type: string
+          format: date-time
+          description: Date of service that triggered this transaction
+        partnerTransactionId:
+          type: string
+          format: uuid
+          description: Card processor uuid for the transaction
+        mcc:
+          type: integer
+          format: int32
+          description: Code representing the merchant's line of business
+        merchantName:
+          type: string
+          description: Name of merchant accepting the original transaction
+        amount:
+          type: number
+          description: Dollar transaction amount
+        direction:
+          type: string
+          description: Debit vs Credit
+        referenceIdentifier:
+          type: string
+          description: Transaction reference identifier
+        stage:
+          type: string
+          description: Substantiation stage of the member transaction
+          enum:
+          - PNDS1
+          - PNDS2
+          - PNDS3
+          - PNDS4
+          - PMIS1
+          - PMIS2
+          - PMIS3
+          - PMIS4
+          - IELS1
+          - IELS2
+          - IELS3
+          - IELS4
+          - PNDAR
+          - PMIAR
+          - IELPR
+          - AUTO
+        stageName:
+          type: string
+          description: Substantiation stage name
+        nextStage:
+          type: string
+          description: Next substantiation stage the member transaction will be moved to if no other manual activities occur
+          enum:
+          - PNDS1
+          - PNDS2
+          - PNDS3
+          - PNDS4
+          - PMIS1
+          - PMIS2
+          - PMIS3
+          - PMIS4
+          - IELS1
+          - IELS2
+          - IELS3
+          - IELS4
+          - PNDAR
+          - PMIAR
+          - IELPR
+          - AUTO
+        nextStatusDate:
+          type: string
+          format: date-time
+          description: Date the member transaction will be moved to the next substantiation stage if no other manual activities occur
+        status:
+          type: string
+          description: Status of the member transaction substantiation.
+          enum:
+          - PENDING
+          - NOT_SUBSTANTIATED
+          - SUBSTANTIATED
+          - BLOCKED
+          - BLOCKED_WITH_ERROR
+        receipts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReceiptData'
+      required:
+      - amount
+      - clientMemberId
+      - direction
+      - firstName
+      - lastName
+      - mcc
+      - merchantName
+      - nextStage
+      - nextStatusDate
+      - partnerTransactionId
+      - referenceIdentifier
+      - stage
+      - stageName
+      - status
+      - transactionDate
+    BaseMember:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+    MemberRecurringExpenseData:
+      type: object
+      properties:
+        frequency:
+          type: string
+          description: Indicates the time period in days for the recurring expense to occur.  Required when Recurring Expense Indicator is true
+          enum:
+          - WEEKLY
+          - BIWEEKLY
+          - MONTHLY
+          - BIMONTHLY
+          - QUARTERLY
+          example: MONTHLY
+        expirationDate:
+          type: string
+          description: Indicates the expiration date for the recurring expense.  Required when Recurring Expense Indicator is true
+          example: '2025-12-31'
+        padDays:
+          type: integer
+          format: int32
+          description: 'Number of days to pad plus or minus during weekly, bi-weekly, monthly, bi-monthly, and quarterly recurring substantiation.  The number of pad days cannot be greater than the recurring expense frequency.  Standard timeframes are typically:  Weekly 7 days +/- 2 pad days, bi-monthly 15 days +/- 4 pad days, Monthly 30 days +/- 7 pad days, bi-monthly 60 days +/- 10 pad days, Quarterly 90 days +/- 15 pad days.  Required when Recurring Expense Indicator is true.'
+          example: 7
+    MemberTransactionSubstantiationData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The name of the client organization
+          example: Lorem
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        transactionId:
+          type: string
+          format: uuid
+          description: Internal unique identifier for the monetary transaction
+          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+        stage:
+          type: string
+          description: 'Substantiation stage for the member transaction.  Possible values:  PNDS1 = Pending - Stage 1, PMIS1 = Pending More Info - Stage 1, IELS1 = Ineligible - Stage 1, PNDAR = Pending - Approved Receipt, PMIAR = Pending More Info - Approved Receipt, IELPR = Ineligible - Plan Reimbursed'
+          enum:
+          - PNDS1
+          - PMIS1
+          - IELS1
+          - PNDAR
+          - PMIAR
+          - IELPR
+          example: PMIS1
+        additionalInformationRequested:
+          type: string
+          description: Describes the type of additional information that is needed in order to review the transaction for manual substantiation.  Field is required when Substantiation Stage is PMIS1 (Pending More Info - Stage 1)
+          example: The documentation submitted does not indicate what service(s) were rendered. Please submit an itemized statement indicating the service/product, date and cost
+        ineligibleAmount:
+          type: number
+          description: Amount that is not eligible based on IRS guidelines for qualified medical expenses.  Field is required when Substantiation Stage is IELS1 (Ineligible - Stage 1).
+          example: 1500.75
+        ineligibleReason:
+          type: string
+          description: Reason why the expense is not eligible.  Field is required when Substantiation Stage is IELS1 (Ineligible - Stage 1)
+          example: Cosmetic procedures are not eligible
+        serviceType:
+          type: string
+          description: Describes the type of service that was rendered.  Field is required when Substantiation Stage is PNDS1 (Pending - Stage 1), PMIS1 (Pending More Info - Stage 1), and IELS1 (Ineligible - Stage 1)
+          example: Laboratory Tests
+        comment:
+          type: string
+          description: Free-form note regarding the review of the transaction
+          example: Member uploaded receipt on 05/16; reviewed on 05/18 and approved as eligible expense
+        recurringExpense:
+          $ref: '#/components/schemas/MemberRecurringExpenseData'
+          description: Used to flag the transaction as a recurring expense so that subsequent transactions that match on amount, merchant, and time period are fully substantiated without the need for submission of a receipt or further review. Fields may only be passed when manually substantiating a transaction, i.e. Substantiation Stage is PNDAR (Pending - Approved Receipt) or PMIAR (Pending More Info - Approved Receipt)
+      required:
+      - clientOrg
+      - member
+      - stage
+      - transactionId
+    PatchMemberTransactionSubstantiationRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/MemberTransactionSubstantiationData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    PatchMemberTransactionSubstantiationResponse:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+        transactionId:
+          type: string
+          format: uuid
+          description: Internal unique identifier for the monetary transaction
+          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+      required:
+      - clientMemberId
+      - transactionId
+    BaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    MemberSubstantiationReceiptData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberTransactionId:
+          type: string
+          format: uuid
+          description: Member Transaction Id
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - clientOrg
+      - member
+      - memberTransactionId
+    MemberUploadReceiptDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/MemberSubstantiationReceiptData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    AddReceiptResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        transactionId:
+          type: string
+          format: uuid
+        receipts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReceiptData'
+      required:
+      - clientOrg
+      - member
+      - receipts
+      - transactionId
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-provenance:
+  method: searched
+  source: https://docs.lynx-fh.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.lynx-fh.com/reference/addreceipts.md
+  - https://docs.lynx-fh.com/reference/deletemembersubstantiationreceipt.md
+  - https://docs.lynx-fh.com/reference/getallmembersubstantiations.md
+  - https://docs.lynx-fh.com/reference/getmembersubstantiationhistory.md
+  - https://docs.lynx-fh.com/reference/patchmembersubstantiation.md
+  merge:
+    pages: 5
+    deduped: 19
+    conflicts_kept_first: 0

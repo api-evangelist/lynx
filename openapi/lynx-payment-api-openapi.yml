@@ -1,0 +1,1516 @@
+openapi: 3.1.0
+info:
+  title: PAYMENT API
+  description: 'The Payment API is used to disburse payments from a member account on the Lynx-FH platform to external vendors. The API initiates the transfer of the payments from the specific member account to external service providers. '
+  termsOfService: http://lynx-fh.com
+  license:
+    name: LynxFH
+    url: http://lynx-fh.com
+  version: '1.0'
+servers:
+- url: https://sandbox.lynx-fh.co
+security:
+- bearerAuth: []
+paths:
+  /payments/client/ach-pull:
+    post:
+      tags:
+      - ''
+      summary: Submit Client ACH Pull
+      description: ' This API is invoked to initiate a transfer of funds from a child Client’s external account into their FBO Contribution account.Fees and other associated billing amounts may also be transferred into the Tenant Client''s Revenue and Reserve accounts.  This API is only accessible by IP addresses that have been whitelisted.'
+      operationId: achPull
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocAchPullRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientOrgTransactionResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-213: ClientOrg is not configured to allow ACH pulls
+
+            - GBL-214: clientOrgExternalBankAccountId is not authorized for ACH pull
+
+            - GBL-215: Transaction amount must be greater than $1
+
+            - GBL-216: Contribution amount is greater than the allowed maximum
+
+            - GBL-218: Routing number could not be verified
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /payments/client/ach-pull/v2:
+    post:
+      tags:
+      - ''
+      summary: Submit Client ACH Pull V2
+      description: ' This API allows a client to initiate a transfer of funds from an external bank account linked to their child Client Org, into a specified Client Org-owned account (e.g., Contribution, Revenue, Reserve, or others). Only one destination account may be specified per request.'
+      operationId: achPullv2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocAchPullRequestV2'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientOrgTransactionResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-213: ClientOrg is not configured to allow ACH pulls
+
+            - GBL-214: clientOrgExternalBankAccountId is not authorized for ACH pull
+
+            - GBL-215: Transaction amount must be greater than $1
+
+            - GBL-216: Contribution amount is greater than the allowed maximum
+
+            - GBL-218: Routing number could not be verified
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /payments/client/ach-push:
+    post:
+      tags:
+      - ''
+      summary: Submit Client ACH Push
+      description: "    This API is invoked to initiate a transfer of funds from a Client’s Revenue account\n    into their linked external account. This API is only accessible by IP addresses that\n    have been whitelisted.\n"
+      operationId: achPush
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AchPushRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientOrgTransactionResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-133: There are Insufficient Funds in the Account
+
+            - GBL-215: Transaction amount must be greater than $1
+
+            - GBL-311: ClientOrg is not configured to allow ACH pushes
+
+            - GBL-312: ACH pushes are only allowed for REVENUE, MEMBER_OPERATIONS accounts
+
+            - GBL-313: clientOrgExternalBankAccountId is not authorized for ACH push
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    delete:
+      tags:
+      - ''
+      summary: Delete Pending ACH Push
+      description: "    This API allows a client to delete an ACH that has not yet been processed.\n    A client would be able to delete any pending distribution that has a settlement_status = 'INITIATED'\n"
+      operationId: deleteAchPush
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: referenceIdentifier
+        in: query
+        description: Reference Idenifier
+        required: true
+        schema:
+          type: string
+        example: Lorem
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberTransactionResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-361: Unable to delete a distribution in its current status
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /payments/client/book-transfer:
+    post:
+      tags:
+      - ''
+      summary: Submit Book Transfer
+      description: This API initiates an immediate book transfer between client org accounts. The endpoint can be used to move funds between different Contribution FBOs associated with the same Client Organization or to move funds from the Tenant Clients Reserve Account to a Contribution FBO.
+      operationId: executeExternalBookTransfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocExternalBookTransferRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExternalBookTransferResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-202: Invalid value – cannot be zero or negative
+
+            - GBL-226: originatingClientOrgAccountId and receivingClientOrgAccountId values cannot be the same
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /payments/client/contribute:
+    post:
+      tags:
+      - ''
+      summary: Submit Client Contribution
+      description: A client organization will invoke this API is to initiate a contribution from the client organization's FBO account to a member account on the Lynx platform. The API initiates the underlying banking transactions that need to occur to do the money transfer.
+      operationId: clientOrgContribute
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientOrgContributionRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientOrgTransactionResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-201: Cannot contribute to previous tax year beyond cutoff date
+
+            - GBL-202: Invalid value – cannot be zero or negative
+
+            - GBL-352: ClientOrgAccountId is not a valid contribution account for product and account type
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /payments/client/member-adjustment:
+    post:
+      tags:
+      - ''
+      summary: Member Account Adjustment
+      description: 'This API allows clients to adjust a member''s account balance while updating
+
+        associated client organization accounts when necessary.
+
+        '
+      operationId: adjustMemberPurse
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostMemberAccountAdjustmentRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostMemberAccountAdjustmentResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-133: There are Insufficient Funds in the Account
+
+            - GBL-173: Account is currently in an ineligible status
+
+            - GBL-291: Member Account is not configured for the requested transaction type
+
+            - GBL-292: Amount is greater than the product_funding_configuration
+
+            - GBL-293: Client Org is not configured for this transaction type
+
+            - GBL-302: The ''clientOrgAccount'' object is not applicable for Good Faith Funded Account Types
+
+            - GBL-303: Invalid client org account. It must be within the hierarchy of the members client org and of type CONTRIBUTION/REVENUE
+
+            - GBL-318: Account Type(s) are not supported for this functionality
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /payments/client/member-transfer:
+    post:
+      tags:
+      - ''
+      summary: Member Funds Transfer
+      description: 'This API initiates an immediate member-level fund transfer within a client’s ICHRA program.
+
+        Clients can use this API to Transfer funds between a member’s two different member accounts
+
+        in different sub-programs within the same client org.
+
+        '
+      operationId: memberFundTransfer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostMemberTransferRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostMemberTransferResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-133: There are Insufficient Funds in the Account
+
+            - GBL-305: Member Accounts do not match criteria for MemberFundTransfer request
+
+            - GBL-306: originatingMemberAccountId is not a valid member account type for transfers
+
+            - GBL-307: receivingAccountId is not a valid member account type for transfers
+
+            - GBL-308: originatingMemberAccountId and receivingAccountId cannot be the same
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /payments/incentive/contribute:
+    post:
+      tags:
+      - ''
+      summary: Submit Incentive Contribution
+      description: This API is invoked to initiate a member directed incentive contribution which moves funds from the Contribution FBO account to the Omnibus FBO account and provides the incentive ratio adjusted points in the member account.
+      operationId: memberIncentiveContribute
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocMemberIncentiveContributionRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberIncentiveResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-134: ClientOrg is in Inactive state
+
+            - GBL-135: Insufficient funds. Your current available balance is insufficient
+
+            - GBL-141: No incentive ratio is configured for clientMemberId
+
+            - GBL-188: Contribution would cause the Account to exceed the IRS HSA Contribution Limit for Tax Year
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /payments/incentive/redeem:
+    post:
+      tags:
+      - ''
+      summary: Submit Incentive Redemption
+      description: This API is invoked to initiate a member directed incentive redemption which moves funds from the Omnibus FBO account to the Distribution FBO account and subtracts the incentive ratio adjusted points in the member account.
+      operationId: memberIncentiveRedeem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocMemberIncentiveRedemptionRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberIncentiveResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-134: ClientOrg is in Inactive state
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /payments/member/contribute:
+    post:
+      tags:
+      - ''
+      summary: Submit Member Contribution
+      description: This API is invoked to initiate a member directed contribution from the member's external account into the HSA account. The API takes in an identifier to a linked bank account that is used as the source for the transfer. The linked account must be verified by Plaid and setup on Lynx before invoking this API. Please see the API section 'External Account API' for information on how to link an external account.
+      operationId: memberContribute
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberContributionRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberContributionResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-190: Member contributions are not allowed for account type
+
+            - GBL-201: Cannot contribute to previous tax year beyond cutoff date
+
+            - GBL-202: Invalid value – cannot be zero or negative
+
+            - GBL-205: A processor token is required for transfer from external bank account
+
+            - GBL-206: Invalid amount value - must be 2 decimals
+
+            - GBL-283: Transactions are not allowed for member accounts that have expired
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /payments/member/reimburse:
+    post:
+      tags:
+      - ''
+      summary: Submit Reimbursement Request
+      description: ' A client organization will invoke this API is to initiate a Reimbursement from the member account on the Lynx platform to an external member bank account. The API initiates the underlying banking transactions that need to occur to do the money transfer.'
+      operationId: memberReimburse
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocMemberReimburseRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberTransactionResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-191: Member reimbursements are not allowed for account type
+
+            - GBL-202: Invalid value – cannot be zero or negative
+
+            - GBL-206: Invalid amount value - must be 2 decimals
+
+            - GBL-133: There are Insufficient Funds in the Account
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+components:
+  schemas:
+    AccountDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: UUID of the member account
+          example: cf783c22-b62b-4529-8678-6704d74b5f9c
+        accountType:
+          type: string
+          description: Type of account
+          example: HSA
+      required:
+      - accountType
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    DocMemberReimburseRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DocMemberReimburseRequestData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    DocMemberReimburseRequestData:
+      type: object
+      properties:
+        member:
+          $ref: '#/components/schemas/Member'
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        product:
+          $ref: '#/components/schemas/Product'
+        account:
+          $ref: '#/components/schemas/AccountDto'
+        memberBankAccount:
+          $ref: '#/components/schemas/MemberBankAccount'
+        payeeDisbursement:
+          $ref: '#/components/schemas/PayeeDisbursement'
+      required:
+      - account
+      - clientOrg
+      - member
+      - memberBankAccount
+      - payeeDisbursement
+      - product
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+    Member:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+    MemberBankAccount:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: External bank account
+          example: Platypus bank
+      required:
+      - id
+    PayeeDisbursement:
+      type: object
+      properties:
+        amount:
+          type: number
+          format: double
+          description: Amount to disburse
+          example: 345.28
+        shortMemo:
+          type: string
+          description: 10 character memo
+          example: March19
+        longMemo:
+          type: string
+          description: Long descriptions Max 100 characters
+          example: John Smith's monthly contribution
+        correctionIndicator:
+          type: boolean
+          description: Indicates whether the transaction is a correction
+          example: true
+      required:
+      - amount
+      - shortMemo
+    Product:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the product
+          example: HSA_01
+      required:
+      - name
+    MemberTransactionResponse:
+      type: object
+      properties:
+        memberTransaction:
+          $ref: '#/components/schemas/ReferenceIdentifierDto'
+    ReferenceIdentifierDto:
+      type: object
+      properties:
+        referenceIdentifier:
+          type: string
+          description: Transaction reference identifier
+          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    BaseMember:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+    DocMemberContributionRequest:
+      type: object
+      properties:
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        memberBankAccount:
+          $ref: '#/components/schemas/MemberBankAccount'
+        account:
+          $ref: '#/components/schemas/AccountDto'
+        product:
+          $ref: '#/components/schemas/Product'
+        memberContribution:
+          $ref: '#/components/schemas/MemberContribution'
+      required:
+      - account
+      - clientOrg
+      - member
+      - memberBankAccount
+      - memberContribution
+      - product
+    MemberContribution:
+      type: object
+      properties:
+        shortMemo:
+          type: string
+          description: 10 character memo
+          example: March19
+        longMemo:
+          type: string
+          description: Long descriptions Max 100 characters
+          example: John Smith's monthly contribution
+        contributionDate:
+          type: string
+          description: Date on which this contribution applies (Future dated contributions coming soon!)
+          example: '2022-05-30'
+        amount:
+          type: number
+          format: double
+          description: Dollar contribution amount
+          example: 437.5
+        accountNumber:
+          type: string
+          description: Account number of external account (optional)
+          example: 1107987282
+        routingNumber:
+          type: string
+          description: 'Routing number of external account (optional) '
+          example: 211070328
+        inlineMemberAccountVerifiedIndicator:
+          type: boolean
+          description: External account verification indicator
+          example: true
+        taxYear:
+          type: string
+          description: Tax year to which this contribution or limit applies
+          example: 2021
+        correctionIndicator:
+          type: boolean
+          description: Indicates whether the transaction is a correction
+          example: true
+        contributionType:
+          type: string
+          description: Contribution Request Type (Optional)
+          example: MemberContribution
+      required:
+      - amount
+      - contributionDate
+      - shortMemo
+    MemberContributionRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DocMemberContributionRequest'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+      required:
+      - data
+      - idempotency
+    MemberContributionRequestDto:
+      type: object
+      properties:
+        referenceIdentifier:
+          type: string
+          description: Contribution reference identifier
+          example: 4dbdb4694-4875-47c5-a663-04d9aee9ee91
+    MemberContributionResponse:
+      type: object
+      properties:
+        memberContribution:
+          $ref: '#/components/schemas/MemberContributionRequestDto'
+    Account:
+      type: object
+      properties:
+        accountType:
+          type: string
+          description: Type of account
+          example: HSA
+      required:
+      - accountType
+    ClientOrgAccount:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: UUID of the client organization's FBO account
+          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+      required:
+      - id
+    ClientOrgContribution:
+      type: object
+      properties:
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        account:
+          $ref: '#/components/schemas/Account'
+        product:
+          $ref: '#/components/schemas/Product'
+        type:
+          type: string
+          description: Type of contribution
+          enum:
+          - Member
+          - Sponsor
+          - Incentive
+          - RewardRedemption
+          - ClientOrgContribution
+          - Payroll
+          example: Sponsor
+        shortMemo:
+          type: string
+          description: 10 character memo
+          example: March19
+        longMemo:
+          type: string
+          description: Long descriptions Max 100 characters
+          example: John Smith's monthly contribution
+        amount:
+          type: number
+          format: double
+          description: Dollar contribution amount
+          example: 437.5
+        contributionDate:
+          type: string
+          description: Date on which this contribution applies (Future dated contributions coming soon!)
+          example: '2022-05-30'
+        taxYear:
+          type: string
+          description: Tax year to which this contribution or limit applies
+          example: 2021
+        correctionIndicator:
+          type: boolean
+          description: Indicates whether the transaction is a correction
+          example: true
+      required:
+      - account
+      - amount
+      - contributionDate
+      - member
+      - product
+      - shortMemo
+      - type
+    ClientOrgContributionRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DocClientOrgContributionRequest'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+      required:
+      - data
+      - idempotency
+    DocClientOrgContributionRequest:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        clientOrgAccount:
+          $ref: '#/components/schemas/ClientOrgAccount'
+        clientOrgContribution:
+          $ref: '#/components/schemas/ClientOrgContribution'
+      required:
+      - clientOrg
+      - clientOrgAccount
+      - clientOrgContribution
+    ClientOrgTransactionResponse:
+      type: object
+      properties:
+        clientOrgTransaction:
+          $ref: '#/components/schemas/ReferenceIdentifierDto'
+    DocMemberIncentiveRedemptionRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DocRedemptionMemberIncentive'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    DocMemberIncentiveRedemptionTransaction:
+      type: object
+      properties:
+        clientTransactionIdentifier:
+          type: string
+          description: Transaction reference identifier
+          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
+        amount:
+          type: number
+          description: Dollar transaction amount. Either amount or incentiveValue is required.
+          example: 782.34
+        incentiveValue:
+          type: number
+          description: Virtual currency balance of the incentive account based on the incentive ratio. Either amount or incentiveValue is required.
+          example: 782.34
+        transactionDate:
+          type: string
+          format: date-time
+          description: Date of service that triggered this transaction
+          example: '2022-03-21'
+        shortMemo:
+          type: string
+          description: 10 character memo
+          example: March19
+        longMemo:
+          type: string
+          description: Long descriptions Max 100 characters
+          example: John Smith's monthly contribution
+        type:
+          type: string
+          description: Type of redemption
+          enum:
+          - Reimbursement
+          - MemberPurchase
+          - TransferPointsToDollars
+          - MemberTransfer
+          - Closed
+          example: TransferPointsToDollars
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagDto'
+      required:
+      - clientTransactionIdentifier
+      - shortMemo
+      - type
+    DocRedemptionMemberIncentive:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        product:
+          $ref: '#/components/schemas/ProductNameDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberTransaction:
+          $ref: '#/components/schemas/DocMemberIncentiveRedemptionTransaction'
+    ProductNameDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the product
+          example: HSA_01
+      required:
+      - name
+    TagDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Constant used to define the metadata within a key-value pair
+        value:
+          type: string
+          description: Variable belonging to the metadata within a key-value pair
+        type:
+          type: string
+          description: Additional client-defined qualifier that may be used to further classify the key-value pair
+      required:
+      - name
+      - value
+    MemberIncentiveResponse:
+      type: object
+      properties:
+        memberTransaction:
+          $ref: '#/components/schemas/MemberTransactionReferenceIdentifierDto'
+    MemberTransactionReferenceIdentifierDto:
+      type: object
+      properties:
+        referenceIdentifier:
+          type: string
+          description: Transaction reference identifier
+          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
+    DocContributionMemberIncentive:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        product:
+          $ref: '#/components/schemas/ProductNameDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberTransaction:
+          $ref: '#/components/schemas/DocMemberIncentiveContributionTransaction'
+    DocMemberIncentiveContributionRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DocContributionMemberIncentive'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    DocMemberIncentiveContributionTransaction:
+      type: object
+      properties:
+        clientTransactionIdentifier:
+          type: string
+          description: Transaction reference identifier
+          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
+        amount:
+          type: number
+          description: Dollar transaction amount. Either amount or incentiveValue is required.
+          example: 782.34
+        incentiveValue:
+          type: number
+          description: Virtual currency balance of the incentive account based on the incentive ratio. Either amount or incentiveValue is required.
+          example: 782.34
+        transactionDate:
+          type: string
+          format: date-time
+          description: Date of service that triggered this transaction
+          example: '2022-03-21'
+        shortMemo:
+          type: string
+          description: 10 character memo
+          example: March19
+        longMemo:
+          type: string
+          description: Long descriptions Max 100 characters
+          example: John Smith's monthly contribution
+        type:
+          type: string
+          description: Type of contribution
+          enum:
+          - MemberContribution
+          - ClientOrgContribution
+          - Incentive
+          - Payroll
+          - Cashback
+          - Refund
+          example: Incentive
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagDto'
+      required:
+      - clientTransactionIdentifier
+      - shortMemo
+      - type
+    DocExternalBookTransferRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ExternalBookTransferRequest'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    ExternalBookTransferDetailsDTO:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Transaction dollar amount for transfer
+          example: 100000
+        longMemo:
+          type: string
+          description: Long descriptions Max 100 characters
+          example: Adjustment to client contribution FBO
+        shortMemo:
+          type: string
+          description: 10 character memo
+          example: Adjustment
+        clientTransactionIdentifier:
+          type: string
+          description: Client transaction reference identifier
+          example: ' ADJ05212024000013'
+      required:
+      - amount
+      - shortMemo
+    ExternalBookTransferRequest:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        originatingClientOrgAccount:
+          $ref: '#/components/schemas/OriginatingClientOrgAccountDTO'
+        receivingClientOrgAccount:
+          $ref: '#/components/schemas/ReceivingClientOrgAccountDTO'
+        clientOrgTransaction:
+          $ref: '#/components/schemas/ExternalBookTransferDetailsDTO'
+      required:
+      - clientOrg
+      - clientOrgTransaction
+      - originatingClientOrgAccount
+      - receivingClientOrgAccount
+    OriginatingClientOrgAccountDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The UUID of the account funds will be pulled from
+          example: e008a16d-54a8-4eea-9480-116b21c164f7
+      required:
+      - id
+    ReceivingClientOrgAccountDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ' The UUID of the account funds will be deposited into'
+          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+      required:
+      - id
+    ExternalBookTransferResponse:
+      type: object
+      properties:
+        clientOrgTransaction:
+          $ref: '#/components/schemas/ReferenceIdentifierDto'
+    ExternalBankAccountId:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the bank account
+          example: 6ae73974-2bd1-0f0d-7316-bbfff8cdc91b
+      required:
+      - id
+    AchPullData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        childClientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        clientOrgExternalBankAccount:
+          $ref: '#/components/schemas/ExternalBankAccountId'
+        clientOrgContribution:
+          $ref: '#/components/schemas/ContributionData'
+      required:
+      - clientOrg
+      - clientOrgContribution
+      - clientOrgExternalBankAccount
+    ContributionData:
+      type: object
+      properties:
+        product:
+          $ref: '#/components/schemas/Product'
+        account:
+          $ref: '#/components/schemas/Account'
+        amount:
+          type: number
+          description: The amount of the transaction
+          example: 100
+        revenueAmount:
+          type: number
+          description: Transaction dollar amount for Tenant Client Revenue account
+          example: 100
+        reserveAmount:
+          type: number
+          description: Transaction dollar amount for Tenant Client Reserve account
+          example: 1200
+        longMemo:
+          type: string
+          description: Long descriptions Max 100 characters
+          example: John Smith's monthly contribution
+        shortMemo:
+          type: string
+          description: 10 character memo
+          example: March19
+      required:
+      - account
+      - amount
+      - product
+      - shortMemo
+    DocAchPullRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AchPullData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    MemberAccountIdDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the bank account
+          example: 6ae73974-2bd1-0f0d-7316-bbfff8cdc91b
+      required:
+      - id
+    MemberTransferRequest:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        originatingMemberAccount:
+          $ref: '#/components/schemas/MemberAccountIdDto'
+        receivingMemberAccount:
+          $ref: '#/components/schemas/MemberAccountIdDto'
+        transaction:
+          $ref: '#/components/schemas/MemberTransferTransaction'
+    MemberTransferTransaction:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Dollar Amount
+          example: 10
+        longMemo:
+          type: string
+          description: Long descriptions Max 100 characters
+          example: John Smith's monthly contribution
+        shortMemo:
+          type: string
+          description: 10 character memo
+          example: March19
+        clientTransactionIdentifier:
+          type: string
+          description: Transaction reference identifier
+          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
+      required:
+      - amount
+    PostMemberTransferRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/MemberTransferRequest'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    PostMemberTransferResponse:
+      type: object
+      properties:
+        memberTransaction:
+          $ref: '#/components/schemas/ReferenceIdentifierDto'
+    AdjustmentTransactionDto:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: The amount of the transaction
+          example: 100
+        longMemo:
+          type: string
+          description: Long descriptions Max 100 characters
+          example: John Smith's monthly contribution
+        category:
+          type: string
+          description: Describes the transaction category
+          enum:
+          - ADJUSTMENT
+          example: ADJUSTMENT
+        type:
+          type: string
+          description: Additional transaction type
+          enum:
+          - MissedFunding
+          - ThirdPartyServices
+          - MemberFundTransfer
+          - MemberDebit
+          - MemberOperationsDebit
+          - MemberOperationsCredit
+          - RewardFunding
+          example: MissedFunding
+        clientTransactionIdentifier:
+          type: string
+          description: Transaction reference identifier
+          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
+      required:
+      - amount
+      - category
+      - type
+    ClientOrgAccountIdDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: UUID of the client organization's FBO account
+          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+      required:
+      - id
+    MemberAccountAdjustmentDto:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        product:
+          $ref: '#/components/schemas/ProductNameDto'
+        member:
+          $ref: '#/components/schemas/MemberAccountTransactionDto'
+        clientOrgAccount:
+          $ref: '#/components/schemas/ClientOrgAccountIdDto'
+      required:
+      - clientOrg
+      - member
+      - product
+    MemberAccountTransactionDto:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        memberAccount:
+          $ref: '#/components/schemas/MemberAccountIdDto'
+        memberTransaction:
+          $ref: '#/components/schemas/AdjustmentTransactionDto'
+        relatedMemberTransaction:
+          $ref: '#/components/schemas/MemberTransactionReferenceIdentifierDto'
+      required:
+      - clientMemberId
+      - memberAccount
+      - memberTransaction
+    PostMemberAccountAdjustmentRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/MemberAccountAdjustmentDto'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    PostMemberAccountAdjustmentResponse:
+      type: object
+      properties:
+        memberTransaction:
+          $ref: '#/components/schemas/ReferenceIdentifierDto'
+    AchPushData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        clientOrgBankAccount:
+          $ref: '#/components/schemas/ExternalBankAccountId'
+        clientOrgAccount:
+          $ref: '#/components/schemas/ClientOrgAccountIdDto'
+        clientOrgTransaction:
+          $ref: '#/components/schemas/AchPushTransaction'
+    AchPushRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AchPushData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    AchPushTransaction:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Dollar Amount
+          example: 10
+        longMemo:
+          type: string
+          description: Long descriptions Max 100 characters
+          example: John Smith's monthly contribution
+        shortMemo:
+          type: string
+          description: 10 character memo
+          example: March19
+      required:
+      - amount
+    ClientOrgAccountIdDtoDoc:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: UUID of the client organization’s account
+          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+      required:
+      - id
+    DocAchPullDataV2:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        childClientOrg:
+          $ref: '#/components/schemas/DocChildClientOrgDto'
+        clientOrgExternalBankAccount:
+          $ref: '#/components/schemas/ExternalBankAccountId'
+        clientOrgAccount:
+          $ref: '#/components/schemas/ClientOrgAccountIdDtoDoc'
+        amount:
+          type: number
+          description: The amount of the transaction
+          example: 100
+        longMemo:
+          type: string
+          description: Long descriptions Max 100 characters
+          example: John Smith's monthly contribution
+        shortMemo:
+          type: string
+          description: 10 character memo
+          example: March19
+      required:
+      - amount
+      - clientOrg
+      - clientOrgAccount
+      - clientOrgExternalBankAccount
+      - shortMemo
+    DocAchPullRequestV2:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DocAchPullDataV2'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    DocChildClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the child client organization
+          example: Health_Plan_ABC_Division_Child
+      required:
+      - name
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-provenance:
+  method: searched
+  source: https://docs.lynx-fh.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.lynx-fh.com/reference/achpull.md
+  - https://docs.lynx-fh.com/reference/achpullv2.md
+  - https://docs.lynx-fh.com/reference/achpush.md
+  - https://docs.lynx-fh.com/reference/adjustmemberpurse.md
+  - https://docs.lynx-fh.com/reference/clientorgcontribute.md
+  - https://docs.lynx-fh.com/reference/deleteachpush.md
+  - https://docs.lynx-fh.com/reference/executeexternalbooktransfer.md
+  - https://docs.lynx-fh.com/reference/membercontribute.md
+  - https://docs.lynx-fh.com/reference/memberfundtransfer.md
+  - https://docs.lynx-fh.com/reference/memberincentivecontribute.md
+  - https://docs.lynx-fh.com/reference/memberincentiveredeem.md
+  - https://docs.lynx-fh.com/reference/memberreimburse.md
+  merge:
+    pages: 12
+    deduped: 84
+    conflicts_kept_first: 0

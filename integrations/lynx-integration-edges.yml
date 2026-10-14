@@ -1,0 +1,16 @@
+generated: '2026-10-14'
+method: none
+source:
+- https://zapier.com/apps/lynx/integrations
+- https://n8n.io/integrations/lynx/
+- https://composio.dev/toolkits/lynx
+- https://monid.ai/tools/lynx
+checked:
+- https://composio.dev/toolkits/lynx
+- https://monid.ai/tools/lynx
+- https://n8n.io/integrations/lynx/
+- https://zapier.com/apps/lynx/integrations
+summary: null
+marketplace_apps: []
+edges: []
+templates: []

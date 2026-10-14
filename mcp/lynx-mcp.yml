@@ -1,0 +1,230 @@
+generated: '2026-10-14'
+method: derived
+generator: derive-mcp-candidate.py
+source:
+- openapi/lynx-account-api-openapi.yml
+- openapi/lynx-card-management-api-openapi.yml
+- openapi/lynx-claims-service-api-openapi.yml
+- openapi/lynx-client-org-management-api-openapi.yml
+- openapi/lynx-commerce-order-api-openapi.yml
+- openapi/lynx-commodity-api-openapi.yml
+- openapi/lynx-copay-management-service-api-openapi.yml
+- openapi/lynx-enrollment-api-openapi.yml
+- openapi/lynx-external-account-api-openapi.yml
+- openapi/lynx-external-notification-api-openapi.yml
+- openapi/lynx-investments-api-openapi.yml
+- openapi/lynx-member-management-api-openapi.yml
+- openapi/lynx-payment-api-openapi.yml
+- openapi/lynx-related-person-api-openapi.yml
+- openapi/lynx-substantiation-service-api-openapi.yml
+- openapi/lynx-tags-api-openapi.yml
+- openapi/lynx-transaction-api-openapi.yml
+- openapi/lynx-upload-api-openapi.yml
+status: candidate
+deployment:
+  mode: none
+  auth: unknown
+  verified: derived
+note: No MCP server was found. No probe result in the dossier. Candidate tools below are derived from the 179 operation(s) in the provider's own
+  OpenAPI (40 listed); they describe what a server WOULD expose, not one that exists.
+tools:
+- name: get_client_org_account_number
+  operationId: getClientOrgAccountNumber
+  method: GET
+  path: /accounts/client/account-number
+  description: Get FBO Account Number
+- name: activate_card
+  operationId: activateCard
+  method: POST
+  path: /cards/activate
+  description: Activate Card
+- name: update_claim
+  operationId: updateClaim
+  method: PUT
+  path: /claims/member/claim
+  description: Update a Claim
+- name: generate_application_token
+  operationId: generateApplicationToken
+  method: POST
+  path: /clients/application-token
+  description: Generate Client Org Application Token
+- name: add_to_cart
+  operationId: addToCart
+  method: POST
+  path: /commerce/cart/add
+  description: Add to Cart
+- name: get_client_org_commerce_catalog
+  operationId: getClientOrgCommerceCatalog
+  method: GET
+  path: /commerce/catalog
+  description: Get Client Org Commerce Catalog
+- name: get_copay_groups_by_client_org
+  operationId: getCopayGroupsByClientOrg
+  method: GET
+  path: /copay/groups
+  description: Get All Client Org Copay Groups
+- name: business_enroll
+  operationId: businessEnroll
+  method: POST
+  path: /enrollments/client
+  description: Client Organization Enrollment
+- name: add_client_org_external_bank_account
+  operationId: addClientOrgExternalBankAccount
+  method: POST
+  path: /externalaccounts/client
+  description: Link External Account to a Client Organization
+- name: get_client_org_notification_configuration
+  operationId: getClientOrgNotificationConfiguration
+  method: GET
+  path: /externalnotifications/notifications/clientOrgNotification
+  description: GET /externalnotifications/notifications/clientOrgNotification
+- name: get_investment_account_balance
+  operationId: getInvestmentAccountBalance
+  method: GET
+  path: /investments/accounts/balance
+  description: Get Account Balance
+- name: account_details
+  operationId: accountDetails
+  method: GET
+  path: /members/account
+  description: Get Member Account Details
+- name: ach_pull
+  operationId: achPull
+  method: POST
+  path: /payments/client/ach-pull
+  description: Submit Client ACH Pull
+- name: add_new_related_person
+  operationId: addNewRelatedPerson
+  method: POST
+  path: /relatedpersons
+  description: Add Related Person
+- name: get_all_member_substantiations
+  operationId: getAllMemberSubstantiations
+  method: GET
+  path: /substantiation/list
+  description: Get All Member Substantiation Summary by Client
+- name: add_tag
+  operationId: addTag
+  method: POST
+  path: /tags
+  description: Add Tags
+- name: get_pending_achactivity
+  operationId: getPendingACHActivity
+  method: GET
+  path: /transactions/client/ach-pending
+  description: GET Pending ACH Activity
+- name: business_upload_document
+  operationId: businessUploadDocument
+  method: POST
+  path: /uploads/business/document
+  description: Upload Client Org Enrollment Documents
+- name: get_all_fboaccount_balances
+  operationId: getAllFBOAccountBalances
+  method: GET
+  path: /accounts/client/balance
+  description: Get FBO Account Balance
+- name: create_member_card
+  operationId: createMemberCard
+  method: POST
+  path: /cards/card
+  description: Request Primary Member Card
+- name: create_claim
+  operationId: createClaim
+  method: POST
+  path: /claims/member/claim
+  description: Create a Claim
+- name: get_client_org_applications
+  operationId: getClientOrgApplications
+  method: GET
+  path: /clients/applications
+  description: Get Client Org Applications
+- name: get_cart_detail
+  operationId: getCartDetail
+  method: GET
+  path: /commerce/cart/detail
+  description: Get Cart Detail
+- name: get_client_org_exclusion_list
+  operationId: getClientOrgExclusionList
+  method: GET
+  path: /commerce/catalog/exclusion
+  description: Get Client Org Exclusion List
+- name: create
+  operationId: create
+  method: POST
+  path: /copay/groups
+  description: Client Org Copay Group
+- name: get_member_enrollments_by_client_org
+  operationId: getMemberEnrollmentsByClientOrg
+  method: GET
+  path: /enrollments/list
+  description: Get Member Enrollment Summary
+- name: delete_client_org_account
+  operationId: deleteClientOrgAccount
+  method: DELETE
+  path: /externalaccounts/client
+  description: Delete Linked Client Organization External Account
+- name: create_client_org_notification_config
+  operationId: createClientOrgNotificationConfig
+  method: POST
+  path: /externalnotifications/notifications/clientOrgNotification
+  description: Configure Member Notification
+- name: get_eodaccount_positions
+  operationId: getEODAccountPositions
+  method: GET
+  path: /investments/accounts/eod/positions
+  description: Get EOD Account Positions
+- name: update_member_addresses
+  operationId: updateMemberAddresses
+  method: PUT
+  path: /members/addresses
+  description: Update Member Addresses
+- name: ach_pullv2
+  operationId: achPullv2
+  method: POST
+  path: /payments/client/ach-pull/v2
+  description: Submit Client ACH Pull V2
+- name: delete_related_person
+  operationId: deleteRelatedPerson
+  method: DELETE
+  path: /relatedpersons
+  description: Delete Related Person
+- name: patch_member_substantiation
+  operationId: patchMemberSubstantiation
+  method: PATCH
+  path: /substantiation/member-substantiation
+  description: Update Member Transaction Substantiation Status
+- name: delete_tag
+  operationId: deleteTag
+  method: DELETE
+  path: /tags
+  description: Delete a Tag
+- name: get_all_member_authorizations_by_client
+  operationId: getAllMemberAuthorizationsByClient
+  method: GET
+  path: /transactions/client/authorizations/list
+  description: Get All Member Authorization Summary by Client
+- name: handle_file_upload
+  operationId: handleFileUpload
+  method: POST
+  path: /uploads/member/document
+  description: Upload Enrollment Documents
+- name: get_client_org_accounts
+  operationId: getClientOrgAccounts
+  method: GET
+  path: /accounts/client/list
+  description: Get All FBO Accounts
+- name: get_card_requests
+  operationId: getCardRequests
+  method: GET
+  path: /cards/card-requests
+  description: Get Card Requests
+- name: member_claim_detail
+  operationId: memberClaimDetail
+  method: GET
+  path: /claims/member/claim/detail
+  description: Member Claims Detail
+- name: get_client_org_subscribed_events
+  operationId: getClientOrgSubscribedEvents
+  method: GET
+  path: /clients/events
+  description: Get Client Org Subscribed Events

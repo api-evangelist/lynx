@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-put-member-claim-request-schema.json",
+  "title": "PutMemberClaimRequest",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-claims-service-api-openapi.yml#/components/schemas/PutMemberClaimRequest",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/MemberClaimsData"
+    },
+    "idempotency": {
+      "$ref": "#/$defs/Idempotency",
+      "description": "Unique identifier that represents the operation"
+    }
+  },
+  "required": [
+    "data",
+    "idempotency"
+  ],
+  "$defs": {
+    "BaseMember": {
+      "type": "object",
+      "properties": {
+        "clientMemberId": {
+          "type": "string",
+          "description": "Unique client-side identifier for the member"
+        }
+      },
+      "required": [
+        "clientMemberId"
+      ]
+    },
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Idempotency": {
+      "type": "object",
+      "properties": {
+        "idempotencyKey": {
+          "type": "string",
+          "description": "Unique identifier that represents the operation"
+        }
+      }
+    },
+    "MemberClaimUpdateDto": {
+      "type": "object",
+      "properties": {
+        "itemDescription": {
+          "type": "string",
+          "description": "Description of the item or service. e.g. Tums, Teeth Cleaning"
+        },
+        "amount": {
+          "type": "number",
+          "description": "The cost of the individual item."
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "ID of the existing item detail. Omit for new items."
+        }
+      },
+      "required": [
+        "amount",
+        "itemDescription"
+      ]
+    },
+    "MemberClaimsData": {
+      "type": "object",
+      "properties": {
+        "claimNumber": {
+          "type": "string",
+          "description": "The claim number"
+        },
+        "member": {
+          "$ref": "#/$defs/BaseMember"
+        },
+        "clientOrg": {
+          "$ref": "#/$defs/ClientOrgDto"
+        },
+        "claimAmount": {
+          "type": "number",
+          "description": "Total amount of the claim"
+        },
+        "expenseDate": {
+          "type": "string",
+          "description": "Date of Expense"
+        },
+        "merchantName": {
+          "type": "string",
+          "description": "Name of the merchant related to the claim"
+        },
+        "category": {
+          "type": "string",
+          "description": "The category for the Claim",
+          "enum": [
+            "OverTheCounter",
+            "Wellness",
+            "HealthyFood",
+            "RentPayment",
+            "UtilityPayment",
+            "MortgagePayment",
+            "Other",
+            "FitnessFacility",
+            "FitnessClass"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "The short description for the claim"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MemberClaimUpdateDto"
+          }
+        }
+      },
+      "required": [
+        "category",
+        "claimAmount",
+        "claimNumber",
+        "clientOrg",
+        "description",
+        "expenseDate",
+        "member",
+        "merchantName"
+      ]
+    }
+  }
+}

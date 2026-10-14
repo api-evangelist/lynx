@@ -1,0 +1,261 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-get-commodity-detail-doc-model-response-schema.json",
+  "title": "GetCommodityDetailDocModelResponse",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-commodity-api-openapi.yml#/components/schemas/GetCommodityDetailDocModelResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/GetCommodityDetailResponse"
+    },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ResponseException"
+      }
+    }
+  },
+  "$defs": {
+    "ActiveIngredientDto": {
+      "type": "object",
+      "properties": {
+        "ingredientName": {
+          "type": "string",
+          "description": "Active ingredients in a commodity"
+        }
+      }
+    },
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "CommodityDetailDto": {
+      "type": "object",
+      "properties": {
+        "sku": {
+          "type": "string",
+          "description": "Stock Keeping Unit"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the commodity"
+        },
+        "category": {
+          "type": "string",
+          "description": "Pipe delimited list of commodity types"
+        },
+        "brand": {
+          "type": "string",
+          "description": "Brand of commodity"
+        },
+        "price": {
+          "type": "number",
+          "description": "Price of commodity"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of commodity available for sale"
+        },
+        "fsaEligible": {
+          "type": "boolean",
+          "description": "Indicates if commodity is FSA eligible"
+        },
+        "upcNumber": {
+          "type": "string",
+          "description": "Universal Product Code"
+        },
+        "uom": {
+          "type": "string",
+          "description": "Unit of Measurement"
+        },
+        "lowInventoryIndicator": {
+          "type": "boolean",
+          "description": "Indicates if commodity is low inventory"
+        },
+        "supplierDescription": {
+          "type": "string",
+          "description": "Supplier description of commodity"
+        },
+        "longDescription": {
+          "type": "string",
+          "description": "Long description of Commodity"
+        },
+        "invoiceDescription": {
+          "type": "string",
+          "description": "Invoice description of commodity"
+        },
+        "manufacturerName": {
+          "type": "string",
+          "description": "Manufacturer name of commodity"
+        },
+        "manufacturerNumber": {
+          "type": "string",
+          "description": "Manufacturer number of commodity"
+        },
+        "application": {
+          "type": "string",
+          "description": "Application of commodity"
+        },
+        "shippingWidth": {
+          "type": "number",
+          "description": "Shipping width of commodity"
+        },
+        "shippingWeight": {
+          "type": "number",
+          "description": "Shipping weight of commodity"
+        },
+        "shippingDepth": {
+          "type": "number",
+          "description": "Shipping depth of commodity"
+        },
+        "shippingHeight": {
+          "type": "number",
+          "description": "Shipping height of commodity"
+        },
+        "uomWeight": {
+          "type": "string",
+          "description": "Type of weight for commodity"
+        },
+        "quantityPerSell": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Quantity per commodity"
+        },
+        "hierarchy": {
+          "type": "string",
+          "description": "Hierarchy for a commodity"
+        },
+        "discontinuedDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date a commodity was discontinued"
+        },
+        "stockStatus": {
+          "type": "string",
+          "description": "Stock status for commodity"
+        },
+        "velocity": {
+          "type": "string",
+          "description": "Indicates how quickly a commodity sells"
+        },
+        "returnableItem": {
+          "type": "boolean",
+          "description": "Indicates if commodity is a returnable item"
+        },
+        "californiaProp65": {
+          "type": "boolean",
+          "description": "Indicates if commodity is subject to California Prop 65"
+        },
+        "commodityImages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CommodityImageDto"
+          }
+        },
+        "activeIngredients": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ActiveIngredientDto"
+          }
+        },
+        "capacity": {
+          "type": "string",
+          "description": "Amount of storage for a commodity"
+        },
+        "volume": {
+          "type": "string",
+          "description": "Quantity/Size of the commodity"
+        },
+        "retailFeatures": {
+          "type": "string",
+          "description": "Describes a commodity’s features and use cases"
+        },
+        "fasteningType": {
+          "type": "string",
+          "description": "Indicates the method used to secure the adult diaper."
+        },
+        "adultDiaperSize": {
+          "type": "string",
+          "description": "Specifies the labeled size of the adult diaper."
+        },
+        "sizingRange": {
+          "type": "string",
+          "description": "Provides the waist/hip measurement range that the diaper fits."
+        },
+        "size": {
+          "type": "string",
+          "description": "Specifies the designated size name for the product, which helps identify the fit."
+        },
+        "manualOverrideImage": {
+          "type": "string",
+          "description": "Commodity image URL"
+        },
+        "discountAmount": {
+          "type": "number",
+          "description": "Discount Amount"
+        },
+        "outOfStock": {
+          "type": "boolean",
+          "description": "Indicates the commodity holds less than the configured inventory buffer and cannot be ordered"
+        }
+      }
+    },
+    "CommodityImageDto": {
+      "type": "object",
+      "properties": {
+        "referenceNumber": {
+          "type": "string",
+          "description": "Commodity image reference number"
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "Commodity image URL"
+        },
+        "primaryIndicator": {
+          "type": "boolean",
+          "description": "Primary Indicator"
+        }
+      }
+    },
+    "GetCommodityDetailResponse": {
+      "type": "object",
+      "properties": {
+        "clientOrg": {
+          "$ref": "#/$defs/ClientOrgDto"
+        },
+        "commodityDetail": {
+          "$ref": "#/$defs/CommodityDetailDto"
+        }
+      }
+    },
+    "ResponseException": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string",
+          "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+        },
+        "exceptionSource": {
+          "type": "string",
+          "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+        },
+        "exceptionMessage": {
+          "type": "string",
+          "description": "Additional information about the exception"
+        }
+      }
+    }
+  }
+}

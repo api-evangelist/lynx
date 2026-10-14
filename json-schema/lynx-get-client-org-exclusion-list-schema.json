@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-get-client-org-exclusion-list-schema.json",
+  "title": "GetClientOrgExclusionList",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-commodity-api-openapi.yml#/components/schemas/GetClientOrgExclusionList",
+  "type": "object",
+  "properties": {
+    "clientOrg": {
+      "$ref": "#/$defs/ClientOrgDto"
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ExclusionDto"
+      }
+    }
+  },
+  "$defs": {
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "ExclusionDto": {
+      "type": "object",
+      "properties": {
+        "exclusionType": {
+          "type": "string",
+          "description": "Type of exclusions that are being added"
+        },
+        "exclusionValue": {
+          "type": "string",
+          "description": "Item to be excluded from commerce availability"
+        }
+      }
+    }
+  }
+}

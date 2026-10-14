@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-get-member-account-balance-response-schema.json",
+  "title": "GetMemberAccountBalanceResponse",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-account-api-openapi.yml#/components/schemas/GetMemberAccountBalanceResponse",
+  "type": "object",
+  "properties": {
+    "clientOrg": {
+      "$ref": "#/$defs/ClientOrgDto",
+      "description": "The name of the client organization"
+    },
+    "member": {
+      "$ref": "#/$defs/BaseMember",
+      "description": "Object describing the member"
+    },
+    "memberAccounts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/MemberAccountBalanceDto"
+      }
+    }
+  },
+  "$defs": {
+    "BaseMember": {
+      "type": "object",
+      "properties": {
+        "clientMemberId": {
+          "type": "string",
+          "description": "Unique client-side identifier for the member"
+        }
+      },
+      "required": [
+        "clientMemberId"
+      ]
+    },
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "MemberAccountBalanceDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "UUID of the client organization's FBO account"
+        },
+        "name": {
+          "type": "string",
+          "description": "A name for this account"
+        },
+        "availableAmount": {
+          "type": "number",
+          "description": "Available balance to spend for the account"
+        },
+        "balanceAmount": {
+          "type": "number",
+          "description": "Settled transaction balance for the account"
+        },
+        "lastFourAccountNumber": {
+          "type": "string",
+          "description": "The last four digits of the bank account number"
+        },
+        "routingNumber": {
+          "type": "string",
+          "description": "The account routing number (9 Digits, numeric)"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of account"
+        },
+        "accountQualifierType": {
+          "type": "string",
+          "description": "The purpose for this account"
+        },
+        "verifiedDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the account was verified"
+        },
+        "verifiedIndicator": {
+          "type": "boolean",
+          "description": "Flag that represents the state of verification of an account"
+        },
+        "updateDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last known date when the balance was last updated"
+        },
+        "incentiveRatio": {
+          "type": "number",
+          "description": "The number that is multiplied by the cash deposit value to determine the incentive value"
+        },
+        "incentiveValue": {
+          "type": "number",
+          "description": "Virtual currency balance of the incentive account based on the incentive ratio"
+        },
+        "creationDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the account was created"
+        },
+        "effectiveDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the account becomes effective for the member"
+        },
+        "expirationDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the account expires for the member"
+        },
+        "nextScheduledFundsLoadDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Date when the next scheduled funding will occur for the account"
+        }
+      }
+    }
+  }
+}

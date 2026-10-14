@@ -1,0 +1,229 @@
+openapi: 3.1.0
+info:
+  title: UPLOAD API
+  description: These API's are used to manage documents and files uploads
+  termsOfService: '"https://lynx-fh.com/terms/"'
+  version: '"1.0"'
+servers:
+- url: https://sandbox.lynx-fh.co
+security:
+- bearerAuth: []
+paths:
+  /uploads/business/document:
+    post:
+      tags:
+      - ''
+      summary: Upload Client Org Enrollment Documents
+      description: Uploads a document file for client org enrollment. Supported file types are pdf, jpeg or png.
+      operationId: businessUploadDocument
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadDocumentRequestMultipart'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadBusinessDocumentResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+      security:
+      - bearerAuth: []
+  /uploads/member/document:
+    post:
+      tags:
+      - ''
+      summary: Upload Enrollment Documents
+      description: Uploads a document file for member enrollment. Supported file types are pdf, jpeg or png.
+      operationId: handleFileUpload
+      parameters:
+      - name: documentId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: documentType
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: qualifier
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: clientMemberId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: clientOrgName
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: productName
+        in: query
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+              - file
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    UploadBusinessDocumentRequest:
+      type: object
+      properties:
+        documentId:
+          type: string
+          description: Unique identifier (UUID) for the uploaded business document.
+          example: f81d4fae-7dec-11d0-a765-00a0c91e6bf6
+        documentType:
+          type: string
+          description: Type of the document being uploaded.
+          example: Social Security Card
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The client organization's registered name in the system.
+          example: Client_Org_ABC
+        childClientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The child client organization name associated with the document upload.
+          example: Client_Org_ABC_Child
+        productName:
+          type: string
+          description: The product associated with the document or client request.
+          example: HSA_01
+      required:
+      - childClientOrg
+      - clientOrg
+      - documentId
+      - documentType
+      - productName
+    UploadDocumentRequestMultipart:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/UploadBusinessDocumentRequest'
+          description: This field only accepts a raw string, not a JSON object. Because of that limitation, we can’t embed a structured example directly in the input box. Please view documentation for an example result.
+        file:
+          type: string
+          format: binary
+          description: Uploaded file
+      required:
+      - data
+      - file
+    UploadBusinessDocumentResponse:
+      type: object
+      properties:
+        documentId:
+          type: string
+        documentType:
+          type: string
+        clientOrgName:
+          type: string
+    BaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-provenance:
+  method: searched
+  source: https://docs.lynx-fh.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.lynx-fh.com/reference/businessuploaddocument.md
+  - https://docs.lynx-fh.com/reference/memberuploaddocument.md
+  merge:
+    pages: 2
+    deduped: 3
+    conflicts_kept_first: 0

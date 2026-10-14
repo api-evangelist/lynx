@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-get-member-account-transfer-response-schema.json",
+  "title": "GetMemberAccountTransferResponse",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-account-api-openapi.yml#/components/schemas/GetMemberAccountTransferResponse",
+  "type": "object",
+  "properties": {
+    "clientOrg": {
+      "$ref": "#/$defs/ClientOrgDto"
+    },
+    "member": {
+      "$ref": "#/$defs/BaseMember"
+    },
+    "accountTransfers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/AccountTransferRequestInfo"
+      }
+    }
+  },
+  "$defs": {
+    "AccountTransferRequestInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "requestedDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "clientMemberId": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "transferType": {
+          "type": "string"
+        },
+        "transferScope": {
+          "type": "string"
+        },
+        "priorCustodianName": {
+          "type": "string"
+        },
+        "investmentsLiquidated": {
+          "type": "boolean"
+        },
+        "settlementStatus": {
+          "type": "string"
+        },
+        "memberAccountId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "BaseMember": {
+      "type": "object",
+      "properties": {
+        "clientMemberId": {
+          "type": "string",
+          "description": "Unique client-side identifier for the member"
+        }
+      },
+      "required": [
+        "clientMemberId"
+      ]
+    },
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    }
+  }
+}

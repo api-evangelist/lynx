@@ -1,0 +1,2377 @@
+[
+ {
+  "page": "https://docs.lynx-fh.com/reference/getclientorgaccountnumber.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "ACCOUNT API",
+    "description": "These set of APIs interact with the BaaS vendor (unit) to create bank accounts, facilitate payment and card transactions.",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/accounts/client/account-number": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get FBO Account Number",
+      "description": "This API will return the full account number for the specified business account.",
+      "operationId": "getClientOrgAccountNumber",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientOrgAccountId",
+        "in": "query",
+        "description": "UUID of the client organization's FBO account",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "4dbdba69-4875-47c5-a663-04d9aee9ee91"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetClientOrgAccountNumberResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "ClientOrgAccountNumberDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the client organization's FBO account",
+        "example": "4dbdba69-4875-47c5-a663-04d9aee9ee91"
+       },
+       "accountNumber": {
+        "type": "string",
+        "description": "The bank account number",
+        "example": "0002109789118"
+       }
+      }
+     },
+     "GetClientOrgAccountNumberResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "clientOrgAccount": {
+        "$ref": "#/components/schemas/ClientOrgAccountNumberDto"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getallfboaccountbalances.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "ACCOUNT API",
+    "description": "These set of APIs interact with the BaaS vendor (unit) to create bank accounts, facilitate payment and card transactions.",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/accounts/client/balance": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get FBO Account Balance",
+      "description": "Retrieves the settled and available balances for a client organizations' account(s). The client organization is passed in as a request parameter.",
+      "operationId": "getAllFBOAccountBalances",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientOrgAccountId",
+        "in": "query",
+        "description": "UUID of the client organization's FBO account",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "4dbdba69-4875-47c5-a663-04d9aee9ee91"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetClientOrgBankAccountBalanceResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "AccountBalanceDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the client organization's FBO account",
+        "example": "4dbdba69-4875-47c5-a663-04d9aee9ee91"
+       },
+       "name": {
+        "type": "string",
+        "description": "A name for this account",
+        "example": "John's Bank of America XX-0435"
+       },
+       "availableAmount": {
+        "type": "number",
+        "description": "Available balance to spend for the account",
+        "example": 379
+       },
+       "balanceAmount": {
+        "type": "number",
+        "description": "Settled transaction balance for the account",
+        "example": 379
+       },
+       "lastFourAccountNumber": {
+        "type": "string",
+        "description": "The last four digits of the bank account number",
+        "example": 9118
+       },
+       "routingNumber": {
+        "type": "string",
+        "description": "The account routing number (9 Digits, numeric)",
+        "example": 211070178
+       },
+       "type": {
+        "type": "string",
+        "description": "Type of account",
+        "example": "HSA"
+       },
+       "accountQualifierType": {
+        "type": "string",
+        "description": "The purpose for this account",
+        "example": "John Smith's tax-free health spend"
+       },
+       "verifiedDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account was verified",
+        "example": "2018-03-22"
+       },
+       "verifiedIndicator": {
+        "type": "boolean",
+        "description": "Flag that represents the state of verification of an account",
+        "example": true
+       },
+       "updateDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Last known date when the balance was last updated",
+        "example": "2018-03-22"
+       }
+      }
+     },
+     "GetClientOrgBankAccountBalanceResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       },
+       "clientOrgBankAccounts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/AccountBalanceDto"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getclientorgaccounts.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "ACCOUNT API",
+    "description": "These set of APIs interact with the BaaS vendor (unit) to create bank accounts, facilitate payment and card transactions.",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/accounts/client/list": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get All FBO Accounts",
+      "description": "This API will return a list of all business accounts associated to the client organization",
+      "operationId": "getClientOrgAccounts",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientOrgAccountId",
+        "in": "query",
+        "description": "UUID of the client organization's FBO account",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "4dbdba69-4875-47c5-a663-04d9aee9ee91"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetClientOrgAccountsResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "ClientOrgAccountDetailsDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the client organization's FBO account",
+        "example": "4dbdba69-4875-47c5-a663-04d9aee9ee91"
+       },
+       "name": {
+        "type": "string",
+        "description": "A name for this account",
+        "example": "John's Bank of America XX-0435"
+       },
+       "availableAmount": {
+        "type": "number",
+        "description": "Available balance to spend for the account",
+        "example": 379
+       },
+       "balanceAmount": {
+        "type": "number",
+        "description": "Settled transaction balance for the account",
+        "example": 379
+       },
+       "accountNumber": {
+        "type": "string",
+        "description": "The bank account number",
+        "example": "0002109789118"
+       },
+       "routingNumber": {
+        "type": "string",
+        "description": "The account routing number (9 Digits, numeric)",
+        "example": 211070178
+       },
+       "type": {
+        "type": "string",
+        "description": "Type of account",
+        "example": "HSA"
+       },
+       "accountQualifierType": {
+        "type": "string",
+        "description": "The purpose for this account",
+        "example": "John Smith's tax-free health spend"
+       },
+       "verifiedDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account was verified",
+        "example": "2018-03-22"
+       },
+       "verifiedIndicator": {
+        "type": "boolean",
+        "description": "Flag that represents the state of verification of an account",
+        "example": true
+       },
+       "updateDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the record was last updated",
+        "example": "2018-03-22"
+       }
+      }
+     },
+     "GetClientOrgAccountsResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "clientOrgAccounts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ClientOrgAccountDetailsDto"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getmemberaccountnumber.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "ACCOUNT API",
+    "description": "These set of APIs interact with the BaaS vendor (unit) to create bank accounts, facilitate payment and card transactions.",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/accounts/member/account-number": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Member Account Number",
+      "description": "This API will return the full account number for the specified member account.",
+      "operationId": "getMemberAccountNumber",
+      "parameters": [
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "productName",
+        "in": "query",
+        "description": "The name of the product",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "HSA_01"
+       },
+       {
+        "name": "accountType",
+        "in": "query",
+        "description": "Type of account",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "HSA"
+       },
+       {
+        "name": "accountId",
+        "in": "query",
+        "description": "UUID of the member account",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "597bf428-3ee0-4a69-a303-dbacfaca5b37"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetMemberAccountNumberResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "GetMemberAccountNumberResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "memberAccount": {
+        "$ref": "#/components/schemas/MemberFullAccountNumberDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       }
+      }
+     },
+     "MemberFullAccountNumberDto": {
+      "type": "object",
+      "properties": {
+       "accountNumber": {
+        "type": "string",
+        "description": "The bank account number",
+        "example": "0002109789118"
+       },
+       "name": {
+        "type": "string",
+        "description": "A name for this account",
+        "example": "John's Bank of America XX-0435"
+       },
+       "effectiveDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account becomes effective for the member",
+        "example": "2024-10-10"
+       },
+       "expirationDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account expires for the member",
+        "example": "2024-10-10"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getbalance.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "ACCOUNT API",
+    "description": "These set of APIs interact with the BaaS vendor (unit) to create bank accounts, facilitate payment and card transactions.",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/accounts/member/balance": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Member Account Balance",
+      "description": "Retrieves the settled and available balance for a member (identified by the clientMemberId).",
+      "operationId": "getBalance",
+      "parameters": [
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "productName",
+        "in": "query",
+        "description": "The name of the product",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "HSA_01"
+       },
+       {
+        "name": "accountType",
+        "in": "query",
+        "description": "Type of account",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "HSA"
+       },
+       {
+        "name": "accountId",
+        "in": "query",
+        "description": "UUID of the member account",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "597bf428-3ee0-4a69-a303-dbacfaca5b37"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetMemberAccountBalanceResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "GetMemberAccountBalanceResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember",
+        "description": "Object describing the member"
+       },
+       "memberAccounts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberAccountBalanceDto"
+        }
+       }
+      }
+     },
+     "MemberAccountBalanceDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the client organization's FBO account",
+        "example": "4dbdba69-4875-47c5-a663-04d9aee9ee91"
+       },
+       "name": {
+        "type": "string",
+        "description": "A name for this account",
+        "example": "John's Bank of America XX-0435"
+       },
+       "availableAmount": {
+        "type": "number",
+        "description": "Available balance to spend for the account",
+        "example": 379
+       },
+       "balanceAmount": {
+        "type": "number",
+        "description": "Settled transaction balance for the account",
+        "example": 379
+       },
+       "lastFourAccountNumber": {
+        "type": "string",
+        "description": "The last four digits of the bank account number",
+        "example": 9118
+       },
+       "routingNumber": {
+        "type": "string",
+        "description": "The account routing number (9 Digits, numeric)",
+        "example": 211070178
+       },
+       "type": {
+        "type": "string",
+        "description": "Type of account",
+        "example": "HSA"
+       },
+       "accountQualifierType": {
+        "type": "string",
+        "description": "The purpose for this account",
+        "example": "John Smith's tax-free health spend"
+       },
+       "verifiedDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account was verified",
+        "example": "2018-03-22"
+       },
+       "verifiedIndicator": {
+        "type": "boolean",
+        "description": "Flag that represents the state of verification of an account",
+        "example": true
+       },
+       "updateDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Last known date when the balance was last updated",
+        "example": "2018-03-22"
+       },
+       "incentiveRatio": {
+        "type": "number",
+        "description": "The number that is multiplied by the cash deposit value to determine the incentive value",
+        "example": 1.2
+       },
+       "incentiveValue": {
+        "type": "number",
+        "description": "Virtual currency balance of the incentive account based on the incentive ratio",
+        "example": 379
+       },
+       "creationDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account was created",
+        "example": "2018-03-22"
+       },
+       "effectiveDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account becomes effective for the member",
+        "example": "2024-10-10"
+       },
+       "expirationDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the account expires for the member",
+        "example": "2024-10-10"
+       },
+       "nextScheduledFundsLoadDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when the next scheduled funding will occur for the account",
+        "example": "2024-10-10"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/updateaccountstatus.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "ACCOUNT API",
+    "description": "These set of APIs interact with the BaaS vendor (unit) to create bank accounts, facilitate payment and card transactions.",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/accounts/member/status": {
+     "patch": {
+      "tags": [
+       ""
+      ],
+      "summary": "Update Member Account Status",
+      "description": "Updates the member account status in order to close, freeze, or activate the account.",
+      "operationId": "updateAccountStatus",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/MemberAccountStatusRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/UpdateMemberAccountStatusResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-157: Status cannot be updated as the account is not Active or Closed\n- GBL-161: Member account status cannot be updated for the requested product\n- GBL-179: Member Account is already in the requested status\n- GBL-258: Member account cannot be closed with a negative balance\n- GBL-259: Member account cannot be closed with an active Investment account\n- GBL-260: Member must authorize the account to be closed since this is a member-owned account\n- GBL-261: Invalid product configuration\n- GBL-271: Member account cannot be closed as member does not have a linked external account\n- GBL-375: Investment account cannot be closed while positions or cash balance remain\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMemberProduct": {
+      "type": "object",
+      "properties": {
+       "productName": {
+        "type": "string",
+        "description": "The name of the product",
+        "example": "HSA_01"
+       }
+      },
+      "required": [
+       "productName"
+      ]
+     },
+     "MemberAccountStatusRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/PatchUpdateMemberAccountStatusRequest"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "PatchAccountStatusMemberDto": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       },
+       "memberBankAccountId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account",
+        "example": "6ae73974-2bd1-0f0d-7316-bbfff8cdc91b"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "PatchMemberAccountStatusDto": {
+      "type": "object",
+      "properties": {
+       "accountType": {
+        "type": "string",
+        "description": "Type of account",
+        "example": "HSA"
+       },
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the member account",
+        "example": "597bf428-3ee0-4a69-a303-dbacfaca5b37"
+       }
+      }
+     },
+     "PatchUpdateMemberAccountStatusRequest": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/PatchAccountStatusMemberDto"
+       },
+       "memberProduct": {
+        "$ref": "#/components/schemas/BaseMemberProduct"
+       },
+       "memberAccount": {
+        "$ref": "#/components/schemas/PatchMemberAccountStatusDto"
+       },
+       "status": {
+        "type": "string",
+        "enum": [
+         "CLOSE",
+         "FREEZE",
+         "ACTIVATE"
+        ]
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "The reason for a particular status; Required when closing the account",
+        "enum": [
+         "Close Account - Customer Request",
+         "Close Account - Deceased",
+         "Close Account - Other"
+        ],
+        "example": "Close Account - Customer Request"
+       },
+       "memberAuthorized": {
+        "type": "boolean",
+        "description": "Indicates whether member has authorized closure of the account; this is required when it is a member-owned account type, such as a Health Savings Account",
+        "example": true
+       },
+       "memberAuthorizedDate": {
+        "type": "string",
+        "description": "Date when the member has authorized closure of the account; this is required when it is a member-owned account type, such as a Health Savings Account",
+        "example": "2024-07-01"
+       }
+      },
+      "required": [
+       "clientOrg",
+       "memberAccount",
+       "memberProduct",
+       "status"
+      ]
+     },
+     "MemberAccountStatusDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "description": "UUID of the member account",
+        "example": "597bf428-3ee0-4a69-a303-dbacfaca5b37"
+       },
+       "type": {
+        "type": "string",
+        "description": "Type of account",
+        "example": "HSA"
+       },
+       "status": {
+        "type": "string",
+        "description": "The status of this account",
+        "example": "Account_Active"
+       },
+       "name": {
+        "type": "string",
+        "description": "A name for this account",
+        "example": "John's Bank of America XX-0435"
+       }
+      }
+     },
+     "UpdateMemberAccountStatusResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberAccounts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberAccountStatusDto"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/postaccounttransfer.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "ACCOUNT API",
+    "description": "These set of APIs interact with the BaaS vendor (unit) to create bank accounts, facilitate payment and card transactions.",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/accounts/member/account-transfer-request": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Member Account Transfer",
+      "description": "Member Account Transfer",
+      "operationId": "postAccountTransfer",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/PostMemberAccountTransferRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/PostMemberAccountTransferResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "AccountDto": {
+      "type": "object",
+      "properties": {
+       "accountType": {
+        "type": "string",
+        "description": "Type of account",
+        "example": "HSA"
+       }
+      },
+      "required": [
+       "accountType"
+      ]
+     },
+     "AccountTransferData": {
+      "type": "object",
+      "properties": {
+       "amount": {
+        "type": "number",
+        "description": "Amount to Transfer",
+        "example": 10
+       },
+       "dateOfTransfer": {
+        "type": "string",
+        "description": "Date of Transfer",
+        "example": "2026-01-01"
+       },
+       "transferType": {
+        "type": "string",
+        "description": "Transfer Type",
+        "enum": [
+         "INDIRECT_ROLLOVER",
+         "DIRECT_ROLLOVER",
+         "TRANSFER"
+        ],
+        "example": "INDIRECT_ROLLOVER"
+       },
+       "transferScope": {
+        "type": "string",
+        "description": "Transfer Scope",
+        "enum": [
+         "FULL_ACCOUNT",
+         "PARTIAL"
+        ],
+        "example": "FULL_ACCOUNT"
+       },
+       "priorCustodianName": {
+        "type": "string",
+        "description": "Custodian Name",
+        "example": "West Bank"
+       },
+       "priorCustodianAccountNumber": {
+        "type": "string",
+        "description": "Custodian Account Number",
+        "example": 19990346
+       },
+       "attestEligibleAccount": {
+        "type": "boolean",
+        "description": "Attest Eligible Account",
+        "example": true
+       },
+       "attestWithin60Days": {
+        "type": "boolean",
+        "description": "Attest within 60 days",
+        "example": true
+       },
+       "attestNoPriorRollover": {
+        "type": "boolean",
+        "description": "Attest Prior Rollover",
+        "example": true
+       },
+       "priorCustodianAttention": {
+        "type": "string",
+        "description": "priorCustodianAttention",
+        "example": "lorem"
+       },
+       "priorCustodianAddressLine1": {
+        "type": "string",
+        "description": "Address Line 1",
+        "example": 15
+       },
+       "priorCustodianAddressLine2": {
+        "type": "string",
+        "description": "Address Line 2"
+       },
+       "priorCustodianCity": {
+        "type": "string",
+        "description": "City",
+        "example": "Boston"
+       },
+       "priorCustodianState": {
+        "type": "string",
+        "description": "State",
+        "example": "MA"
+       },
+       "priorCustodianZip": {
+        "type": "string",
+        "description": "Postal Code",
+        "example": "02210"
+       },
+       "priorCustodianPhone": {
+        "type": "string",
+        "description": "Phone Number",
+        "example": 888
+       },
+       "investmentsLiquidated": {
+        "type": "boolean",
+        "description": "investmentsLiquidated",
+        "example": true
+       }
+      },
+      "required": [
+       "amount",
+       "dateOfTransfer",
+       "priorCustodianName",
+       "transferScope",
+       "transferType"
+      ]
+     },
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "MemberAccountTransferRequestData": {
+      "type": "object",
+      "properties": {
+       "account": {
+        "$ref": "#/components/schemas/AccountDto"
+       },
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "product": {
+        "$ref": "#/components/schemas/ProductDto"
+       },
+       "memberBankAccount": {
+        "$ref": "#/components/schemas/MemberBankAccount"
+       },
+       "accountTransfer": {
+        "$ref": "#/components/schemas/AccountTransferData"
+       }
+      },
+      "required": [
+       "account",
+       "accountTransfer",
+       "clientOrg",
+       "member",
+       "product"
+      ]
+     },
+     "MemberBankAccount": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "External bank account",
+        "example": "Platypus bank"
+       }
+      },
+      "required": [
+       "id"
+      ]
+     },
+     "PostMemberAccountTransferRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberAccountTransferRequestData"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "ProductDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the product",
+        "example": "HSA_01"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "PostMemberAccountTransferResponse": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Account Transfer Request Id",
+        "example": "5fb82b31-6a31-4866-bc93-a11a9e1df8d6"
+       }
+      },
+      "required": [
+       "id"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getaccounttransfers.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "ACCOUNT API",
+    "description": "These set of APIs interact with the BaaS vendor (unit) to create bank accounts, facilitate payment and card transactions.",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/accounts/member/account-transfer-requests": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Member Account Transfers",
+      "description": "Get Member Account Transfers",
+      "operationId": "getAccountTransfers",
+      "parameters": [
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "format": "int32",
+         "default": 1
+        }
+       },
+       {
+        "name": "pageSize",
+        "in": "query",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "format": "int32",
+         "default": 25
+        }
+       },
+       {
+        "name": "sortBy",
+        "in": "query",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "default": "requestedDate"
+        }
+       },
+       {
+        "name": "sortOrder",
+        "in": "query",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "default": "Ascending"
+        }
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetMemberAccountTransferResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "AccountTransferRequestInfo": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid"
+       },
+       "requestedDate": {
+        "type": "string",
+        "format": "date"
+       },
+       "clientMemberId": {
+        "type": "string"
+       },
+       "amount": {
+        "type": "number"
+       },
+       "transferType": {
+        "type": "string"
+       },
+       "transferScope": {
+        "type": "string"
+       },
+       "priorCustodianName": {
+        "type": "string"
+       },
+       "investmentsLiquidated": {
+        "type": "boolean"
+       },
+       "settlementStatus": {
+        "type": "string"
+       },
+       "memberAccountId": {
+        "type": "string",
+        "format": "uuid"
+       }
+      }
+     },
+     "GetMemberAccountTransferResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "accountTransfers": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/AccountTransferRequestInfo"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/updatememberaccount.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "ACCOUNT API",
+    "description": "These set of APIs interact with the BaaS vendor (unit) to create bank accounts, facilitate payment and card transactions.",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/accounts/member/account": {
+     "patch": {
+      "tags": [
+       ""
+      ],
+      "summary": "Update Member Account",
+      "description": "Updates Member Account",
+      "operationId": "updateMemberAccount",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/PatchMemberAccountRequestDoc"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/PatchMemberAccountResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMemberProduct": {
+      "type": "object",
+      "properties": {
+       "productName": {
+        "type": "string",
+        "description": "The name of the product",
+        "example": "HSA_01"
+       }
+      },
+      "required": [
+       "productName"
+      ]
+     },
+     "MemberAccountData": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Account Id",
+        "example": "5fb82b31-6a31-4866-bc93-a11a9e1df8d6"
+       },
+       "electionAmount": {
+        "type": "number",
+        "description": "Election Amount",
+        "example": 150
+       }
+      },
+      "required": [
+       "id"
+      ]
+     },
+     "PatchMemberAccountRequest": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberProduct": {
+        "$ref": "#/components/schemas/BaseMemberProduct"
+       },
+       "memberAccount": {
+        "$ref": "#/components/schemas/MemberAccountData"
+       }
+      },
+      "required": [
+       "clientOrg",
+       "member",
+       "memberAccount",
+       "memberProduct"
+      ]
+     },
+     "PatchMemberAccountRequestDoc": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/PatchMemberAccountRequest"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "PatchMemberAccountResponse": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Account Transfer Request Id",
+        "example": "5fb82b31-6a31-4866-bc93-a11a9e1df8d6"
+       }
+      },
+      "required": [
+       "id"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ }
+]

@@ -1,0 +1,2443 @@
+[
+ {
+  "page": "https://docs.lynx-fh.com/reference/getclientorgexclusionlist.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COMMODITY API",
+    "description": "These API's are for commerce commodity management",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/commerce/catalog/exclusion": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Client Org Exclusion List",
+      "description": "The get client org exclusion list API is used to get the exclusions of what the client org can purchase through e-commerce.",
+      "operationId": "getClientOrgExclusionList",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetClientOrgExclusionList"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "ExclusionDto": {
+      "type": "object",
+      "properties": {
+       "exclusionType": {
+        "type": "string",
+        "description": "Type of exclusions that are being added",
+        "example": "SKU"
+       },
+       "exclusionValue": {
+        "type": "string",
+        "description": "Item to be excluded from commerce availability",
+        "example": "111111_AA"
+       }
+      }
+     },
+     "GetClientOrgExclusionList": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "exclusions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ExclusionDto"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getcommoditydetail.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COMMODITY API",
+    "description": "These API's are for commerce commodity management",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/commerce/commodity/detail": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Commodity Detail",
+      "description": "This API returns the details for a specific commodity.",
+      "operationId": "getCommodityDetail",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "sku",
+        "in": "query",
+        "description": "Stock Keeping Unit",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "1008194_EA"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetCommodityDetailDocModelResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-327: Product is unavailable due to current status\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "ActiveIngredientDto": {
+      "type": "object",
+      "properties": {
+       "ingredientName": {
+        "type": "string",
+        "description": "Active ingredients in a commodity"
+       }
+      }
+     },
+     "CommodityDetailDto": {
+      "type": "object",
+      "properties": {
+       "sku": {
+        "type": "string",
+        "description": "Stock Keeping Unit",
+        "example": "1008194_EA"
+       },
+       "description": {
+        "type": "string",
+        "description": "Description of the commodity",
+        "example": "McKesson Vinyl Exam Glove, Small, Clear"
+       },
+       "category": {
+        "type": "string",
+        "description": "Pipe delimited list of commodity types",
+        "example": "Gloves|Socks"
+       },
+       "brand": {
+        "type": "string",
+        "description": "Brand of commodity",
+        "example": "Apple"
+       },
+       "price": {
+        "type": "number",
+        "description": "Price of commodity",
+        "example": 9.99
+       },
+       "quantity": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Number of commodity available for sale",
+        "example": 145
+       },
+       "fsaEligible": {
+        "type": "boolean",
+        "description": "Indicates if commodity is FSA eligible"
+       },
+       "upcNumber": {
+        "type": "string",
+        "description": "Universal Product Code"
+       },
+       "uom": {
+        "type": "string",
+        "description": "Unit of Measurement"
+       },
+       "lowInventoryIndicator": {
+        "type": "boolean",
+        "description": "Indicates if commodity is low inventory"
+       },
+       "supplierDescription": {
+        "type": "string",
+        "description": "Supplier description of commodity"
+       },
+       "longDescription": {
+        "type": "string",
+        "description": "Long description of Commodity"
+       },
+       "invoiceDescription": {
+        "type": "string",
+        "description": "Invoice description of commodity"
+       },
+       "manufacturerName": {
+        "type": "string",
+        "description": "Manufacturer name of commodity"
+       },
+       "manufacturerNumber": {
+        "type": "string",
+        "description": "Manufacturer number of commodity"
+       },
+       "application": {
+        "type": "string",
+        "description": "Application of commodity"
+       },
+       "shippingWidth": {
+        "type": "number",
+        "description": "Shipping width of commodity"
+       },
+       "shippingWeight": {
+        "type": "number",
+        "description": "Shipping weight of commodity"
+       },
+       "shippingDepth": {
+        "type": "number",
+        "description": "Shipping depth of commodity"
+       },
+       "shippingHeight": {
+        "type": "number",
+        "description": "Shipping height of commodity"
+       },
+       "uomWeight": {
+        "type": "string",
+        "description": "Type of weight for commodity"
+       },
+       "quantityPerSell": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Quantity per commodity"
+       },
+       "hierarchy": {
+        "type": "string",
+        "description": "Hierarchy for a commodity"
+       },
+       "discontinuedDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date a commodity was discontinued"
+       },
+       "stockStatus": {
+        "type": "string",
+        "description": "Stock status for commodity"
+       },
+       "velocity": {
+        "type": "string",
+        "description": "Indicates how quickly a commodity sells"
+       },
+       "returnableItem": {
+        "type": "boolean",
+        "description": "Indicates if commodity is a returnable item"
+       },
+       "californiaProp65": {
+        "type": "boolean",
+        "description": "Indicates if commodity is subject to California Prop 65"
+       },
+       "commodityImages": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/CommodityImageDto"
+        }
+       },
+       "activeIngredients": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ActiveIngredientDto"
+        }
+       },
+       "capacity": {
+        "type": "string",
+        "description": "Amount of storage for a commodity",
+        "example": 1250
+       },
+       "volume": {
+        "type": "string",
+        "description": "Quantity/Size of the commodity",
+        "example": 25
+       },
+       "retailFeatures": {
+        "type": "string",
+        "description": "Describes a commodity’s features and use cases",
+        "example": "Temporarily relieves symptoms due to hay fever or other upper respiratory allergies: runny nose; sneezing; itchy, watery eyes; itching of the nose or throat"
+       },
+       "fasteningType": {
+        "type": "string",
+        "description": "Indicates the method used to secure the adult diaper.",
+        "example": "Refastenable Tabs"
+       },
+       "adultDiaperSize": {
+        "type": "string",
+        "description": "Specifies the labeled size of the adult diaper.",
+        "example": "Large"
+       },
+       "sizingRange": {
+        "type": "string",
+        "description": "Provides the waist/hip measurement range that the diaper fits.",
+        "example": 45
+       },
+       "size": {
+        "type": "string",
+        "description": "Specifies the designated size name for the product, which helps identify the fit.",
+        "example": "Large"
+       },
+       "manualOverrideImage": {
+        "type": "string",
+        "description": "Commodity image URL"
+       },
+       "discountAmount": {
+        "type": "number",
+        "description": "Discount Amount"
+       },
+       "outOfStock": {
+        "type": "boolean",
+        "description": "Indicates the commodity holds less than the configured inventory buffer and cannot be ordered"
+       }
+      }
+     },
+     "CommodityImageDto": {
+      "type": "object",
+      "properties": {
+       "referenceNumber": {
+        "type": "string",
+        "description": "Commodity image reference number"
+       },
+       "imageUrl": {
+        "type": "string",
+        "description": "Commodity image URL"
+       },
+       "primaryIndicator": {
+        "type": "boolean",
+        "description": "Primary Indicator"
+       }
+      }
+     },
+     "GetCommodityDetailDocModelResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/GetCommodityDetailResponse"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "GetCommodityDetailResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "commodityDetail": {
+        "$ref": "#/components/schemas/CommodityDetailDto"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getclientorgcommercecatalog.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COMMODITY API",
+    "description": "These API's are for commerce commodity management",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/commerce/catalog": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Client Org Commerce Catalog",
+      "description": "The get client org commerce catalog API is used to get the commerce items for a client org.",
+      "operationId": "getClientOrgCommerceCatalog",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "catalogName",
+        "in": "query",
+        "description": "The name of the catalog",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "HSA_Catalog"
+       },
+       {
+        "name": "categories",
+        "in": "query",
+        "description": "Pipe delimited list of commodity types",
+        "required": false,
+        "style": "pipeDelimited",
+        "explode": false,
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "example": "Gloves|Socks"
+       },
+       {
+        "name": "brand",
+        "in": "query",
+        "description": "Brand of commodity",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Apple"
+       },
+       {
+        "name": "searchValue",
+        "in": "query",
+        "description": "Search commodities by description, category, sku or brand",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Antimicrobial"
+       },
+       {
+        "name": "sortValue",
+        "in": "query",
+        "description": "The property by which the response is sorted",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "enum": [
+          "Price",
+          "Description",
+          "Trending",
+          "Popular"
+         ]
+        },
+        "example": "Price"
+       },
+       {
+        "name": "sortOrder",
+        "in": "query",
+        "description": "The sort direction",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "enum": [
+          "Descending",
+          "Ascending"
+         ]
+        },
+        "example": "Descending"
+       },
+       {
+        "name": "page",
+        "in": "query",
+        "description": "Page number to be returned. If not specified, default is 1.",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "default": 1
+        },
+        "example": 1
+       },
+       {
+        "name": "pageSize",
+        "in": "query",
+        "description": "Maximum number of items to be returned per page. If not specified, default is 25.",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "default": 25
+        },
+        "example": 25
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/CommerceCatalogResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CatalogDto": {
+      "type": "object",
+      "properties": {
+       "catalogName": {
+        "type": "string"
+       },
+       "commodities": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/CommodityDto"
+        }
+       }
+      }
+     },
+     "CommerceCatalogResponse": {
+      "type": "object",
+      "properties": {
+       "catalog": {
+        "$ref": "#/components/schemas/CatalogDto"
+       }
+      }
+     },
+     "CommodityDto": {
+      "type": "object",
+      "properties": {
+       "sku": {
+        "type": "string",
+        "description": "Stock Keeping Unit",
+        "example": "1008194_EA"
+       },
+       "description": {
+        "type": "string",
+        "description": "Description of the commodity",
+        "example": "McKesson Vinyl Exam Glove, Small, Clear"
+       },
+       "category": {
+        "type": "string",
+        "description": "Pipe delimited list of commodity types",
+        "example": "Gloves|Socks"
+       },
+       "brand": {
+        "type": "string",
+        "description": "Brand of commodity",
+        "example": "Apple"
+       },
+       "price": {
+        "type": "number",
+        "description": "Price of commodity",
+        "example": 9.99
+       },
+       "quantity": {
+        "type": "integer",
+        "format": "int32",
+        "description": "Number of commodity available for sale",
+        "example": 145
+       },
+       "fsaEligible": {
+        "type": "boolean",
+        "description": "Indicates if commodity is FSA eligible"
+       },
+       "primaryImage": {
+        "type": "string",
+        "description": "Display image for commodity",
+        "example": "https://imgcdn.mckesson.com/CumulusWeb/Images/Original_Image/476343.jpg"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getcatalogfield.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COMMODITY API",
+    "description": "These API's are for commerce commodity management",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/commerce/catalog/field": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Category and Brand by Catalog",
+      "description": "The get category and brand by catalog API is used to get filtering criteria for the shop online catalogs.",
+      "operationId": "getCatalogField",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "catalogName",
+        "in": "query",
+        "description": "The name of the catalog",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "HSA_Catalog"
+       },
+       {
+        "name": "field",
+        "in": "query",
+        "description": "Field to get entries of",
+        "required": true,
+        "schema": {
+         "type": "string",
+         "enum": [
+          "category",
+          "brand",
+          "classification"
+         ]
+        },
+        "example": "category"
+       },
+       {
+        "name": "threshold",
+        "in": "query",
+        "description": "Minimum value of an entry to be returned",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "format": "int32",
+         "default": 1
+        },
+        "example": 1
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetCatalogFieldResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-289: Invalid field, unable to search by the provided field value\n- GBL-605: Member does not have any active products\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found.\n- GBL-350: Member not found with clientMemberId in clientOrgName\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "FieldItemDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "count": {
+        "type": "integer",
+        "format": "int32"
+       }
+      }
+     },
+     "GetCatalogFieldResponse": {
+      "type": "object",
+      "properties": {
+       "field": {
+        "type": "string"
+       },
+       "list": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/FieldItemDto"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/addclientorgexclusions.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COMMODITY API",
+    "description": "These API's are for commerce commodity management",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/commerce/catalog/exclusion": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Add Client Org Exclusion",
+      "description": "The add client org exclusion API is used to add exclusions to what members of the client org can purchase through e-commerce.",
+      "operationId": "addClientOrgExclusions",
+      "requestBody": {
+       "description": "This is the add client org exclusion request",
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/ClientOrgExclusionListRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/BaseResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-274: Cannot add to Exclusion List, invalid exclusion type\n- GBL-228: Exclusion already included in the list or commodity not found\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ClientOrgExclusionListRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/ClientOrgExclusionListRequestDto"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "ClientOrgExclusionListRequestDto": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "exclusionType": {
+        "type": "string",
+        "description": "Type of exclusions that are being added",
+        "enum": [
+         "SKU",
+         "Brand",
+         "Category"
+        ],
+        "example": "SKU"
+       },
+       "exclusions": {
+        "type": "array",
+        "description": "Item to be excluded from commerce availability",
+        "example": "111111_AA",
+        "items": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/deleteclientorgexclusions.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COMMODITY API",
+    "description": "These API's are for commerce commodity management",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/commerce/catalog/exclusion": {
+     "delete": {
+      "tags": [
+       ""
+      ],
+      "summary": "Delete Client Org Exclusion",
+      "description": "The delete client org exclusion API is used to delete an item from the exclusion list of what members of the client org can purchase through e-commerce.",
+      "operationId": "deleteClientOrgExclusions",
+      "requestBody": {
+       "description": "This is the delete client org exclusion request",
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/ClientOrgExclusionListRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/BaseResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-210: The following exclusions are invalid or could not be found\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ClientOrgExclusionListRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/ClientOrgExclusionListRequestDto"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "ClientOrgExclusionListRequestDto": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "exclusionType": {
+        "type": "string",
+        "description": "Type of exclusions that are being added",
+        "enum": [
+         "SKU",
+         "Brand",
+         "Category"
+        ],
+        "example": "SKU"
+       },
+       "exclusions": {
+        "type": "array",
+        "description": "Item to be excluded from commerce availability",
+        "example": "111111_AA",
+        "items": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getcommercecommoditylist.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COMMODITY API",
+    "description": "These API's are for commerce commodity management",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/commerce/commodity/list": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Commerce Commodities",
+      "description": "The get commerce commodities API is used to get the commerce items for a client org.",
+      "operationId": "getCommerceCommodityList",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "catalogName",
+        "in": "query",
+        "description": "The name of the catalog",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "HSA_Catalog"
+       },
+       {
+        "name": "classificationName",
+        "in": "query",
+        "description": "Lynx custom category groupings",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Summer Sale"
+       },
+       {
+        "name": "categories",
+        "in": "query",
+        "description": "Pipe delimited list of commodity types",
+        "required": false,
+        "style": "pipeDelimited",
+        "explode": false,
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "example": "Gloves|Socks"
+       },
+       {
+        "name": "brands",
+        "in": "query",
+        "description": "Brand of commodity",
+        "required": false,
+        "style": "pipeDelimited",
+        "explode": false,
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "example": "Apple"
+       },
+       {
+        "name": "searchValue",
+        "in": "query",
+        "description": "Search commodities by description, category, sku or brand",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Antimicrobial"
+       },
+       {
+        "name": "product",
+        "in": "query",
+        "description": "The name of the product",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "HSA_01"
+       },
+       {
+        "name": "sortValue",
+        "in": "query",
+        "description": "The property by which the response is sorted",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "enum": [
+          "Price",
+          "Description",
+          "Trending",
+          "Popular"
+         ]
+        },
+        "example": "Price"
+       },
+       {
+        "name": "sortOrder",
+        "in": "query",
+        "description": "The sort direction",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "enum": [
+          "Descending",
+          "Ascending"
+         ]
+        },
+        "example": "Descending"
+       },
+       {
+        "name": "page",
+        "in": "query",
+        "description": "Page number to be returned. If not specified, default is 1.",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "default": 1
+        },
+        "example": 1
+       },
+       {
+        "name": "pageSize",
+        "in": "query",
+        "description": "Maximum number of items to be returned per page. If not specified, default is 25.",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "default": 25
+        },
+        "example": 25
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/CommerceCommodityListDocModelResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-354: Classification name does not exist or is not available\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BasePagination": {
+      "type": "object",
+      "properties": {
+       "totalItems": {
+        "type": "integer",
+        "format": "int64"
+       },
+       "totalPages": {
+        "type": "integer",
+        "format": "int32"
+       },
+       "pageSize": {
+        "type": "integer",
+        "format": "int32"
+       },
+       "page": {
+        "type": "integer",
+        "format": "int32"
+       }
+      }
+     },
+     "CommerceCommodityListDocModelResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/CommerceCommodityListResponse"
+       },
+       "metadata": {
+        "$ref": "#/components/schemas/Metadata"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "CommerceCommodityListResponse": {
+      "type": "object",
+      "properties": {
+       "commodities": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/CommodityListItemDto"
+        }
+       }
+      }
+     },
+     "CommodityListItemDto": {
+      "type": "object",
+      "properties": {
+       "sku": {
+        "type": "string"
+       },
+       "category": {
+        "type": "string"
+       },
+       "brand": {
+        "type": "string"
+       },
+       "description": {
+        "type": "string"
+       },
+       "price": {
+        "type": "number"
+       },
+       "quantity": {
+        "type": "integer",
+        "format": "int32"
+       },
+       "catalogs": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "eligibleProducts": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "fsaEligible": {
+        "type": "boolean"
+       },
+       "primaryImage": {
+        "type": "string"
+       },
+       "discountAmount": {
+        "type": "number"
+       },
+       "outOfStock": {
+        "type": "boolean"
+       }
+      }
+     },
+     "Metadata": {
+      "type": "object",
+      "properties": {
+       "pagination": {
+        "$ref": "#/components/schemas/BasePagination"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getproductclientorgcatalogs.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COMMODITY API",
+    "description": "These API's are for commerce commodity management",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/commerce/catalog/list": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Member Catalogs",
+      "description": "Returns the catalogs available to the member for online purchases.",
+      "operationId": "getProductClientOrgCatalogs",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetCatalogFieldResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found.\n- GBL-350: Member not found with clientMemberId in clientOrgName\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "FieldItemDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "count": {
+        "type": "integer",
+        "format": "int32"
+       }
+      }
+     },
+     "GetCatalogFieldResponse": {
+      "type": "object",
+      "properties": {
+       "field": {
+        "type": "string"
+       },
+       "list": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/FieldItemDto"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getclassifications.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COMMODITY API",
+    "description": "These API's are for commerce commodity management",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/commerce/classification": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Classifications",
+      "description": "Get classifications for a client org or member",
+      "operationId": "getClassifications",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "productName",
+        "in": "query",
+        "description": "The name of the product",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "HSA_01"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "array",
+           "items": {
+            "$ref": "#/components/schemas/MemberViewCommerceClassificationDto"
+           }
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "MemberViewCommerceClassificationDto": {
+      "type": "object",
+      "properties": {
+       "classificationName": {
+        "type": "string"
+       },
+       "displayImage": {
+        "type": "string"
+       },
+       "displayName": {
+        "type": "string"
+       },
+       "effectiveDate": {
+        "type": "string",
+        "format": "date-time"
+       },
+       "expirationDate": {
+        "type": "string",
+        "format": "date-time"
+       },
+       "defaultIndicator": {
+        "type": "boolean"
+       },
+       "category": {
+        "type": "string"
+       },
+       "classificationId": {
+        "type": "string",
+        "format": "uuid"
+       },
+       "productNames": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getcommodityfacets.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "COMMODITY API",
+    "description": "These API's are for commerce commodity management",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/commerce/commodity/facets": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Catalog Facets",
+      "description": "Returns the category and brand filter facets with counts, scoped to the current classification, search and cross-selection context so each option's count matches the commodity list the grid would return.",
+      "operationId": "getCommodityFacets",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "catalogName",
+        "in": "query",
+        "description": "The name of the catalog",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "HSA_Catalog"
+       },
+       {
+        "name": "classificationName",
+        "in": "query",
+        "description": "Lynx custom category groupings",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Summer Sale"
+       },
+       {
+        "name": "categories",
+        "in": "query",
+        "description": "Pipe delimited list of commodity types",
+        "required": false,
+        "style": "pipeDelimited",
+        "explode": false,
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "example": "Gloves|Socks"
+       },
+       {
+        "name": "brands",
+        "in": "query",
+        "description": "Brand of commodity",
+        "required": false,
+        "style": "pipeDelimited",
+        "explode": false,
+        "schema": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "example": "Apple"
+       },
+       {
+        "name": "searchValue",
+        "in": "query",
+        "description": "Search commodities by description, category, sku or brand",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Antimicrobial"
+       },
+       {
+        "name": "product",
+        "in": "query",
+        "description": "The name of the product",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "HSA_01"
+       },
+       {
+        "name": "categoryThreshold",
+        "in": "query",
+        "description": "Minimum number of products for a category to appear in the facet",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "format": "int32",
+         "default": 1
+        }
+       },
+       {
+        "name": "brandThreshold",
+        "in": "query",
+        "description": "Minimum number of products for a brand to appear in the facet",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "format": "int32",
+         "default": 1
+        }
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/CommerceCatalogFacetsResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-354: Classification name does not exist or is not available\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "CommerceCatalogFacetsResponse": {
+      "type": "object",
+      "properties": {
+       "categories": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/FieldItemDto"
+        }
+       },
+       "brands": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/FieldItemDto"
+        }
+       }
+      }
+     },
+     "FieldItemDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "count": {
+        "type": "integer",
+        "format": "int32"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ }
+]

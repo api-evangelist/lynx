@@ -1,0 +1,559 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-member-request-schema.json",
+  "title": "MemberRequest",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-enrollment-api-openapi.yml#/components/schemas/MemberRequest",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/Data"
+    },
+    "idempotency": {
+      "$ref": "#/$defs/Idempotency"
+    }
+  },
+  "required": [
+    "data",
+    "idempotency"
+  ],
+  "$defs": {
+    "AddressRequest": {
+      "type": "object",
+      "properties": {
+        "line1": {
+          "type": "string",
+          "description": "The first line of the address"
+        },
+        "line2": {
+          "type": "string",
+          "description": "The (optional) second line of the address"
+        },
+        "city": {
+          "type": "string",
+          "description": "Address city"
+        },
+        "stateProvince": {
+          "type": "string",
+          "description": "2-Character address state or province"
+        },
+        "country": {
+          "type": "string",
+          "description": "Address country"
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "Address zip code"
+        },
+        "postalCodeExtension": {
+          "type": "string",
+          "description": "Address zip code extension"
+        },
+        "typeDescription": {
+          "type": "string",
+          "description": "Client-defined description for the address"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of person"
+        },
+        "attentionCareOf": {
+          "type": "string",
+          "description": "If the address is 'in-care-of' someone else"
+        },
+        "line3": {
+          "type": "string",
+          "description": "The (optional) third line of the address"
+        },
+        "line4": {
+          "type": "string",
+          "description": "The (optional) fourth line of the address"
+        },
+        "pobox": {
+          "type": "string",
+          "description": "P.O. Box number"
+        },
+        "county": {
+          "type": "string",
+          "description": "Address county"
+        },
+        "primaryIndicator": {
+          "type": "boolean",
+          "description": "Determines whether this is a primary address"
+        }
+      },
+      "required": [
+        "city",
+        "country",
+        "line1",
+        "postalCode",
+        "stateProvince"
+      ]
+    },
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "Data": {
+      "type": "object",
+      "properties": {
+        "member": {
+          "$ref": "#/$defs/Member"
+        }
+      },
+      "required": [
+        "member"
+      ]
+    },
+    "EmailRequest": {
+      "type": "object",
+      "properties": {
+        "typeDescription": {
+          "type": "string",
+          "description": "Client-defined description for the email address"
+        },
+        "emailAddress": {
+          "type": "string",
+          "description": "Email address - any notifications will be sent to this email address"
+        },
+        "primaryIndicator": {
+          "type": "boolean",
+          "description": "Determines whether this is a primary email address"
+        }
+      },
+      "required": [
+        "emailAddress",
+        "primaryIndicator"
+      ]
+    },
+    "HSA01ConsentDoc": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the consent to be accepted",
+          "enum": [
+            "HSA_CUSTODIAL_AGREEMENT",
+            "DEPOSIT_ACCOUNT_AGREEMENT",
+            "TRUTH_IN_SAVINGS",
+            "FUNDS_AVAILABILITY_AGREEMENT",
+            "EXTERNAL_FUNDS_TRANSFER",
+            "ELECTRONIC_RECORDS_SIGNATURE"
+          ]
+        },
+        "productName": {
+          "type": "string",
+          "description": "The name of the product"
+        }
+      },
+      "required": [
+        "name",
+        "productName"
+      ]
+    },
+    "Idempotency": {
+      "type": "object",
+      "properties": {
+        "idempotencyKey": {
+          "type": "string",
+          "description": "Unique identifier that represents the operation"
+        }
+      }
+    },
+    "Member": {
+      "type": "object",
+      "properties": {
+        "clientMemberId": {
+          "type": "string",
+          "description": "Unique client-side identifier for the member"
+        },
+        "clientOrg": {
+          "$ref": "#/$defs/ClientOrgDto"
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "description": "Date of birth"
+        },
+        "gender": {
+          "type": "string",
+          "description": "Member gender",
+          "enum": [
+            "Male",
+            "Female",
+            "Other",
+            "Non-Disclosed",
+            "Non-binary"
+          ]
+        },
+        "healthPlanCoverageType": {
+          "type": "string",
+          "description": "Type of coverage (Family, Individual)",
+          "enum": [
+            "Individual",
+            "Family"
+          ]
+        },
+        "firstName": {
+          "type": "string",
+          "description": "First name"
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name"
+        },
+        "middleName": {
+          "type": "string",
+          "description": "Middle name"
+        },
+        "namePrefix": {
+          "type": "string",
+          "description": "Prefix for the name"
+        },
+        "nameSuffix": {
+          "type": "string",
+          "description": "Suffix for the name"
+        },
+        "preferredGenderPronoun": {
+          "type": "string",
+          "description": "Member preferred gender pronoun",
+          "enum": [
+            "She/Her",
+            "He/Him",
+            "They/Them"
+          ]
+        },
+        "race": {
+          "type": "string",
+          "description": "Member race",
+          "enum": [
+            "American Indian or Alaska Native",
+            "Asian",
+            "Native Hawaiian or Other Pacific Islander",
+            "White",
+            "Other Race"
+          ]
+        },
+        "religion": {
+          "type": "string",
+          "description": "Member religion",
+          "enum": [
+            "Christianity",
+            "Islam",
+            "Hinduism",
+            "Judaism",
+            "Buddhism",
+            "Folk Religions",
+            "Other Religions",
+            "Unaffiliated",
+            "Non-Disclosed"
+          ]
+        },
+        "maritalStatus": {
+          "type": "string",
+          "description": "Marital status (Married, Never Married, Widowed, etc.)",
+          "enum": [
+            "Never Married",
+            "Divorced",
+            "Married",
+            "Widowed",
+            "Annulled",
+            "Interlocutory",
+            "Legally Separated",
+            "Polygamous",
+            "Domestic partner",
+            "Unknown"
+          ]
+        },
+        "countryOfCitizenship": {
+          "type": "string",
+          "description": "Country of citizenship"
+        },
+        "ssn": {
+          "type": "string",
+          "description": "Social Security Number - either SSN or passport are required"
+        },
+        "passport": {
+          "type": "string",
+          "description": "Passport number"
+        },
+        "language": {
+          "type": "string",
+          "description": "Language of the member. Possible values are:  en_US = English, zh_CN = Chinese, es_ES = Spanish, pt_BR = Portuguese, ru_RU = Russian",
+          "enum": [
+            "en_US",
+            "zh_CN",
+            "pt_BR",
+            "es_ES",
+            "ru_RU"
+          ]
+        },
+        "addresses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AddressRequest"
+          }
+        },
+        "emails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EmailRequest"
+          }
+        },
+        "phones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PhoneRequest"
+          }
+        },
+        "memberCardPreferences": {
+          "$ref": "#/$defs/MemberCardPreferences"
+        },
+        "memberProducts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MemberProduct"
+          }
+        },
+        "memberPlanBenefitPackage": {
+          "$ref": "#/$defs/MemberPlanBenefitPackage"
+        },
+        "memberAccessWalletPlan": {
+          "$ref": "#/$defs/MemberAccessWalletPlan",
+          "description": "Access wallet plan for delegated-auth (Lynx rules engine) enrollments. Required when the client org has Lynx as the rules engine and the request contains DA products."
+        },
+        "memberConsents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MemberHSA01ConsentDoc"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TagDto"
+          }
+        }
+      },
+      "required": [
+        "clientMemberId",
+        "clientOrg"
+      ]
+    },
+    "MemberAccessWalletPlan": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the access wallet plan. Must match an existing client_org_access_wallet_plan for the client org. Required when enrolling delegated-auth products on a Lynx rules engine client org."
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "MemberAccount": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "default": "VSA",
+          "description": "Type of account for this member product"
+        },
+        "incentiveRatio": {
+          "type": "number",
+          "format": "double",
+          "default": "1.2",
+          "description": "The number that is multiplied by the cash deposit value to determine the incentive value"
+        },
+        "electionAmount": {
+          "type": "number",
+          "description": "Amount of tax-deductible funds chosen by the member to use on eligible health care or dependent care expenses throughout the plan year"
+        },
+        "numPayPeriod": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The annual election amount is divided evenly by the number of paychecks that an employee has for the year, and that amount is deducted from each paycheck by the employer"
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "MemberCardPreferences": {
+      "type": "object",
+      "properties": {
+        "planName": {
+          "type": "string",
+          "description": "The name of the plan"
+        },
+        "cardPackageName": {
+          "type": "string",
+          "description": "The name of the card package"
+        },
+        "rushDelivery": {
+          "type": "boolean",
+          "description": "Indicates whether to ship the card via express mail; if omitted, default is false to ship first class mail"
+        }
+      },
+      "required": [
+        "cardPackageName",
+        "planName"
+      ]
+    },
+    "MemberHSA01ConsentDoc": {
+      "type": "object",
+      "properties": {
+        "consent": {
+          "$ref": "#/$defs/HSA01ConsentDoc"
+        },
+        "acceptedIndicator": {
+          "type": "boolean",
+          "description": "Indicates the member accepted the consent"
+        },
+        "electronicSignature": {
+          "type": "string",
+          "description": "The member’s digital signature (full name)"
+        },
+        "consentDate": {
+          "type": "string",
+          "description": "Date the consent was accepted"
+        }
+      },
+      "required": [
+        "acceptedIndicator",
+        "consent"
+      ]
+    },
+    "MemberPlanBenefitPackage": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "A unique identifier assigned by CMS (Centers for Medicare & Medicaid Services) to each plan benefit package (PBP) within a contract that a plan sponsor has with CMS.  This number is used to link the plan sponsor's contract and plan identifiers"
+        },
+        "effectiveDate": {
+          "type": "string",
+          "description": "Effective date of the Plan Benefit Package"
+        },
+        "expirationDate": {
+          "type": "string",
+          "description": "Expiration date of the Plan Benefit Package"
+        },
+        "voidIndicator": {
+          "type": "boolean",
+          "description": "Indicates whether to void the Plan Benefit Package"
+        },
+        "ssbciIndicator": {
+          "type": "boolean",
+          "description": "Indicates whether the member is eligible for SSBCI (Special Supplemental Benefits for the Chronically Ill)"
+        },
+        "ssbciEffectiveDate": {
+          "type": "string",
+          "description": "Effective date of SSBCI benefit eligibility"
+        }
+      },
+      "required": [
+        "effectiveDate",
+        "expirationDate",
+        "name"
+      ]
+    },
+    "MemberProduct": {
+      "type": "object",
+      "properties": {
+        "effectiveDate": {
+          "type": "string",
+          "default": "2022-03-25",
+          "description": "Date when the product becomes effective for the member"
+        },
+        "product": {
+          "$ref": "#/$defs/ProductNameDto"
+        },
+        "memberAccounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MemberAccount"
+          }
+        }
+      },
+      "required": [
+        "effectiveDate",
+        "product"
+      ]
+    },
+    "PhoneRequest": {
+      "type": "object",
+      "properties": {
+        "typeDescription": {
+          "type": "string",
+          "description": "Client-defined description for the phone number"
+        },
+        "countryCode": {
+          "type": "string",
+          "default": "1",
+          "description": "Phone country code"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "10-Digit phone number"
+        },
+        "phoneExtension": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Optional extension"
+        },
+        "primaryIndicator": {
+          "type": "boolean",
+          "description": "Determines whether this is a primary phone"
+        }
+      },
+      "required": [
+        "countryCode",
+        "phoneNumber"
+      ]
+    },
+    "ProductNameDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the product"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "TagDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Constant used to define the metadata within a key-value pair"
+        },
+        "value": {
+          "type": "string",
+          "description": "Variable belonging to the metadata within a key-value pair"
+        },
+        "type": {
+          "type": "string",
+          "description": "Additional client-defined qualifier that may be used to further classify the key-value pair"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ]
+    }
+  }
+}

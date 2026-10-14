@@ -1,0 +1,1415 @@
+[
+ {
+  "page": "https://docs.lynx-fh.com/reference/updateclaim-1.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CLAIMS SERVICE API",
+    "description": "<Insert page description with key 'api.service.desc' within application.properties>",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "<Insert version with key 'api.service.ver' within application.properties>"
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/claims/member/claim": {
+     "put": {
+      "tags": [
+       ""
+      ],
+      "summary": "Update a Claim",
+      "description": "API that allows a client to update certain elements of an already existing member claim.\nOnly claims in the Submitted, PendingReview or NeedsReview statuses are able to be updated.\n",
+      "operationId": "updateClaim",
+      "requestBody": {
+       "content": {
+        "multipart/form-data": {
+         "schema": {
+          "type": "object",
+          "properties": {
+           "data": {
+            "$ref": "#/components/schemas/PutMemberClaimRequest"
+           },
+           "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "upload receipt"
+           }
+          },
+          "required": [
+           "data"
+          ]
+         }
+        }
+       }
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/PersistClaimsResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-250: Unable to update member claim in current status\n- GBL-338: Sum of claim detail amounts does not match claim amount\n- GBL-278: Expense date cannot be a future date\n- GBL-279: Invalid claim amount\n- GBL-239: Claim amount exceeds available balance\n- GBL-275: Unsupported file type\n- GBL-276: File size exceeds maximum limit\n- GBL-277: Unable to validate file, please try again\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "MemberClaimUpdateDto": {
+      "type": "object",
+      "properties": {
+       "itemDescription": {
+        "type": "string",
+        "description": "Description of the item or service. e.g. Tums, Teeth Cleaning",
+        "example": "Tylenol"
+       },
+       "amount": {
+        "type": "number",
+        "description": "The cost of the individual item.",
+        "example": 10
+       },
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "ID of the existing item detail. Omit for new items.",
+        "example": "2efe0ba7-9e84-44d1-9c5a-d9cb2d64bbee"
+       }
+      },
+      "required": [
+       "amount",
+       "itemDescription"
+      ]
+     },
+     "MemberClaimsData": {
+      "type": "object",
+      "properties": {
+       "claimNumber": {
+        "type": "string",
+        "description": "The claim number",
+        "example": "C-1234"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "claimAmount": {
+        "type": "number",
+        "description": "Total amount of the claim",
+        "example": 50
+       },
+       "expenseDate": {
+        "type": "string",
+        "description": "Date of Expense",
+        "example": "2024-07-05"
+       },
+       "merchantName": {
+        "type": "string",
+        "description": "Name of the merchant related to the claim",
+        "example": "CVS Pharmacy, Boston MA"
+       },
+       "category": {
+        "type": "string",
+        "description": "The category for the Claim",
+        "enum": [
+         "OverTheCounter",
+         "Wellness",
+         "HealthyFood",
+         "RentPayment",
+         "UtilityPayment",
+         "MortgagePayment",
+         "Other",
+         "FitnessFacility",
+         "FitnessClass"
+        ],
+        "example": "OverTheCounter"
+       },
+       "description": {
+        "type": "string",
+        "description": "The short description for the claim",
+        "example": "Claim to reimburse the purchase of over the counter medicine"
+       },
+       "items": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberClaimUpdateDto"
+        }
+       }
+      },
+      "required": [
+       "category",
+       "claimAmount",
+       "claimNumber",
+       "clientOrg",
+       "description",
+       "expenseDate",
+       "member",
+       "merchantName"
+      ]
+     },
+     "PutMemberClaimRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/MemberClaimsData"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "PersistClaimsResponse": {
+      "type": "object",
+      "properties": {
+       "claimNumber": {
+        "type": "string",
+        "description": "The claim number",
+        "example": "C-1234"
+       },
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "claimNumber",
+       "clientMemberId"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/createclaim-1.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CLAIMS SERVICE API",
+    "description": "<Insert page description with key 'api.service.desc' within application.properties>",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "<Insert version with key 'api.service.ver' within application.properties>"
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/claims/member/claim": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Create a Claim",
+      "description": "Allows a member to submit a Claim refund request for an out-of-pocket expense.",
+      "operationId": "createClaim",
+      "requestBody": {
+       "content": {
+        "multipart/form-data": {
+         "schema": {
+          "type": "object",
+          "properties": {
+           "data": {
+            "$ref": "#/components/schemas/PostMemberClaimRequest"
+           },
+           "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "upload receipt"
+           }
+          },
+          "required": [
+           "data",
+           "file"
+          ]
+         }
+        }
+       }
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/PersistClaimsResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request.\n- GBL-199: Member account has no effective date\n- GBL-200: Claims not allowed for future dated effective date\n- GBL-304: Service date is past the allowed reimbursement period\n- GBL-280: Claims cannot be submitted against an ADVISORY account\n- GBL-294: Claim reimbursement via ACH requires an external account\n- GBL-240: Cannot process ACH reimbursement, no linked external account\n- GBL-338: Sum of claim detail amounts does not match claim amount\n- GBL-278: Expense date cannot be a future date\n- GBL-279: Invalid claim amount\n- GBL-239: Claim amount exceeds available balance\n- GBL-275: Unsupported file type\n- GBL-276: File size exceeds maximum limit\n- GBL-277: Unable to validate file, please try again\n",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "PersistClaimsResponse": {
+      "type": "object",
+      "properties": {
+       "claimNumber": {
+        "type": "string",
+        "description": "The claim number",
+        "example": "C-1234"
+       },
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "claimNumber",
+       "clientMemberId"
+      ]
+     },
+     "BaseAddress": {
+      "type": "object",
+      "properties": {
+       "line1": {
+        "type": "string",
+        "description": "The first line of the address",
+        "example": 10
+       },
+       "line2": {
+        "type": "string",
+        "description": "The (optional) second line of the address",
+        "example": "address line2"
+       },
+       "city": {
+        "type": "string",
+        "description": "Address city",
+        "example": "Boston"
+       },
+       "stateProvince": {
+        "type": "string",
+        "description": "2-Character address state or province",
+        "example": "MA"
+       },
+       "country": {
+        "type": "string",
+        "description": "Address country",
+        "example": "US"
+       },
+       "postalCode": {
+        "type": "string",
+        "description": "Address zip code",
+        "example": "02119"
+       },
+       "postalCodeExtension": {
+        "type": "string",
+        "description": "Address zip code extension",
+        "example": "0123"
+       }
+      },
+      "required": [
+       "city",
+       "country",
+       "line1",
+       "postalCode",
+       "stateProvince"
+      ]
+     },
+     "CreateClaimRequestData": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "memberAccount": {
+        "$ref": "#/components/schemas/MemberAccountIdDto"
+       },
+       "memberBankAccount": {
+        "$ref": "#/components/schemas/MemberBankAccountDto"
+       },
+       "merchantName": {
+        "type": "string",
+        "description": "Name of the merchant related to the claim",
+        "example": "CVS Pharmacy, Boston MA"
+       },
+       "description": {
+        "type": "string",
+        "description": "The short description for the claim",
+        "example": "Claim to reimburse the purchase of over the counter medicine"
+       },
+       "expenseDate": {
+        "type": "string",
+        "description": "The date when the expense was incurred",
+        "example": "2024-01-01"
+       },
+       "claimAmount": {
+        "type": "number",
+        "description": "Total amount of the claim",
+        "example": 50
+       },
+       "reimbursementType": {
+        "type": "string",
+        "description": "Method of payment for Reimbursement (CHECK/ACH)",
+        "example": "CHECK"
+       },
+       "category": {
+        "type": "string",
+        "description": "The category for the Claim",
+        "enum": [
+         "OverTheCounter",
+         "Wellness",
+         "HealthyFood",
+         "RentPayment",
+         "UtilityPayment",
+         "MortgagePayment",
+         "Other",
+         "FitnessFacility",
+         "FitnessClass"
+        ],
+        "example": "OverTheCounter"
+       },
+       "items": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberClaimItemDto"
+        }
+       },
+       "address": {
+        "$ref": "#/components/schemas/BaseAddress"
+       },
+       "serviceType": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "claimAmount",
+       "clientOrg",
+       "expenseDate",
+       "member",
+       "memberAccount",
+       "reimbursementType"
+      ]
+     },
+     "MemberAccountIdDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account",
+        "example": "6ae73974-2bd1-0f0d-7316-bbfff8cdc91b"
+       }
+      },
+      "required": [
+       "id"
+      ]
+     },
+     "MemberBankAccountDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the Member's external bank account",
+        "example": "2aa614ba-5590-4c16-bdd0-3f03964ee274"
+       }
+      },
+      "required": [
+       "id"
+      ]
+     },
+     "MemberClaimItemDto": {
+      "type": "object",
+      "properties": {
+       "itemDescription": {
+        "type": "string",
+        "description": "Description of the item or service. e.g. Tums, Teeth Cleaning",
+        "example": "Tylenol"
+       },
+       "amount": {
+        "type": "number",
+        "description": "The cost of the individual item.",
+        "example": 10
+       }
+      },
+      "required": [
+       "amount",
+       "itemDescription"
+      ]
+     },
+     "PostMemberClaimRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/CreateClaimRequestData"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/memberclaimdetail-1.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CLAIMS SERVICE API",
+    "description": "<Insert page description with key 'api.service.desc' within application.properties>",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "<Insert version with key 'api.service.ver' within application.properties>"
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/claims/member/claim/detail": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Member Claims Detail",
+      "description": "Retrieves details of a member claim for a given member\n",
+      "operationId": "memberClaimDetail",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "claimNumber",
+        "in": "query",
+        "description": "The claim number",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "C-1234"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetClaimDetailResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "MemberBankAccountDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the Member's external bank account",
+        "example": "2aa614ba-5590-4c16-bdd0-3f03964ee274"
+       }
+      },
+      "required": [
+       "id"
+      ]
+     },
+     "MemberDto": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       },
+       "firstName": {
+        "type": "string",
+        "description": "First name",
+        "example": "John"
+       },
+       "lastName": {
+        "type": "string",
+        "description": "Last name",
+        "example": "Smith"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "AiAdjudicationResultDTO": {
+      "type": "object",
+      "properties": {
+       "aiValidAmount": {
+        "type": "number",
+        "description": "Amount that the AI partner validated for the submitted claimdence.",
+        "example": 10
+       },
+       "aiDenyReason": {
+        "type": "string",
+        "description": "Reason for the denial. Null if not denied.",
+        "example": "Silver AI did not recognize any eligible expenses on the receipt/invoice for this claim."
+       },
+       "aiRecommendation": {
+        "type": "string",
+        "description": "The AI'd recommendation for the claim.",
+        "example": "NeedsReview"
+       },
+       "confidence": {
+        "type": "number"
+       },
+       "suggestion": {
+        "type": "string"
+       },
+       "flags": {
+        "type": "array",
+        "items": {
+         "type": "string"
+        }
+       },
+       "merchant": {
+        "type": "string"
+       },
+       "expenseDate": {
+        "type": "string",
+        "format": "date-time"
+       },
+       "claimAmount": {
+        "type": "number"
+       },
+       "receiptTotal": {
+        "type": "number"
+       },
+       "receiptMerchant": {
+        "type": "string"
+       },
+       "receiptDate": {
+        "type": "string",
+        "format": "date-time"
+       }
+      }
+     },
+     "ClaimDetailItem": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the claim detail record",
+        "example": "914f6a4b-2da0-4223-86c3-0ec2ffb86865"
+       },
+       "itemDescription": {
+        "type": "string",
+        "description": "Text description of the item or service",
+        "example": "Tums"
+       },
+       "amount": {
+        "type": "number",
+        "description": "Amount for the individual item",
+        "example": 40
+       }
+      }
+     },
+     "GetClaimDetailResponse": {
+      "type": "object",
+      "properties": {
+       "memberClaim": {
+        "$ref": "#/components/schemas/MemberClaimDetailDto"
+       }
+      }
+     },
+     "MemberAccountDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account",
+        "example": "6ae73974-2bd1-0f0d-7316-bbfff8cdc91b"
+       },
+       "type": {
+        "type": "string",
+        "description": "Type of account",
+        "example": "HSA"
+       },
+       "availableAmount": {
+        "type": "number",
+        "description": "Available balance to spend for the account",
+        "example": 50
+       }
+      },
+      "required": [
+       "availableAmount",
+       "id",
+       "type"
+      ]
+     },
+     "MemberClaimDetailDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "The unique identifier of the claim",
+        "example": "40cd232c-4b42-469c-81d1-d04bf3e95b98"
+       },
+       "claimNumber": {
+        "type": "string",
+        "description": "The claim number",
+        "example": "C-1234"
+       },
+       "memberAccount": {
+        "$ref": "#/components/schemas/MemberAccountDto"
+       },
+       "memberBankAccount": {
+        "$ref": "#/components/schemas/MemberBankAccountDto"
+       },
+       "status": {
+        "type": "string",
+        "description": "The status of the claim",
+        "example": "NeedsReview"
+       },
+       "claimAmount": {
+        "type": "number",
+        "description": "Total amount of the claim",
+        "example": 50
+       },
+       "approvedAmount": {
+        "type": "number",
+        "description": "The Approved Claim Amount",
+        "example": 50
+       },
+       "expenseDate": {
+        "type": "string",
+        "description": "Date of Expense",
+        "example": "2024-07-05"
+       },
+       "statusReason": {
+        "type": "string",
+        "description": "Reason for the current status of the claim",
+        "example": "Reimburse OTC medicine"
+       },
+       "reimbursementType": {
+        "type": "string",
+        "description": " Method of reimbursement (ACH or CHECK).",
+        "example": "ACH"
+       },
+       "merchantName": {
+        "type": "string",
+        "description": "Name of the merchant related to the claim",
+        "example": "CVS Pharmacy, Boston MA"
+       },
+       "addDateTime": {
+        "type": "string",
+        "description": "Date and time of add",
+        "example": "2023-04-24 18:20:12.629221"
+       },
+       "category": {
+        "type": "string",
+        "description": "The category for the Claim",
+        "enum": [
+         "OverTheCounter",
+         "Wellness",
+         "HealthyFood",
+         "RentPayment",
+         "UtilityPayment",
+         "MortgagePayment",
+         "Other",
+         "FitnessFacility",
+         "FitnessClass"
+        ],
+        "example": "OverTheCounter"
+       },
+       "description": {
+        "type": "string",
+        "description": "The short description for the claim",
+        "example": "Claim to reimburse the purchase of over the counter medicine"
+       },
+       "items": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ClaimDetailItem"
+        }
+       },
+       "receipt": {
+        "$ref": "#/components/schemas/ReceiptDto"
+       },
+       "member": {
+        "$ref": "#/components/schemas/MemberDto"
+       },
+       "aiAdjudicationResult": {
+        "$ref": "#/components/schemas/AiAdjudicationResultDTO"
+       }
+      },
+      "required": [
+       "addDateTime",
+       "approvedAmount",
+       "claimAmount",
+       "claimNumber",
+       "expenseDate",
+       "id",
+       "memberAccount",
+       "reimbursementType",
+       "status",
+       "statusReason"
+      ]
+     },
+     "ReceiptDto": {
+      "type": "object",
+      "properties": {
+       "receiptId": {
+        "type": "string",
+        "description": "The ID of the receipt",
+        "example": "R-1234"
+       },
+       "receiptUrl": {
+        "type": "string",
+        "description": "The ID of the receipt",
+        "example": "R-1234"
+       }
+      },
+      "required": [
+       "receiptId",
+       "receiptUrl"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/memberclaims-1.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "CLAIMS SERVICE API",
+    "description": "<Insert page description with key 'api.service.desc' within application.properties>",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "<Insert version with key 'api.service.ver' within application.properties>"
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/claims/member/claim/list": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Member Claims List",
+      "description": "Retrieves a list of all member claims for a given member\n",
+      "operationId": "memberClaims",
+      "parameters": [
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "claimStatus",
+        "in": "query",
+        "description": "The status of the claim",
+        "required": false,
+        "schema": {
+         "type": "string",
+         "enum": [
+          "PendingReview",
+          "Approved",
+          "Rejected",
+          "NeedsReview"
+         ]
+        },
+        "example": "NeedsReview"
+       },
+       {
+        "name": "page",
+        "in": "query",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "format": "int32",
+         "default": 1
+        }
+       },
+       {
+        "name": "pageSize",
+        "in": "query",
+        "required": false,
+        "schema": {
+         "type": "integer",
+         "format": "int32",
+         "default": 25
+        }
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetClaimsResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "MemberAccountIdDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account",
+        "example": "6ae73974-2bd1-0f0d-7316-bbfff8cdc91b"
+       }
+      },
+      "required": [
+       "id"
+      ]
+     },
+     "GetClaimsResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "memberClaims": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberClaimDetailInfo"
+        }
+       }
+      }
+     },
+     "MemberClaimDetailInfo": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "The unique identifier of the claim",
+        "example": "40cd232c-4b42-469c-81d1-d04bf3e95b98"
+       },
+       "claimNumber": {
+        "type": "string",
+        "description": "The claim number",
+        "example": "C-1234"
+       },
+       "memberAccount": {
+        "$ref": "#/components/schemas/MemberAccountIdDto"
+       },
+       "reimbursementType": {
+        "type": "string",
+        "description": " Method of reimbursement (ACH or CHECK).",
+        "example": "ACH"
+       },
+       "status": {
+        "type": "string",
+        "description": "The status of the claim",
+        "example": "NeedsReview"
+       },
+       "claimAmount": {
+        "type": "number",
+        "description": "Total amount of the claim",
+        "example": 50
+       },
+       "approvedAmount": {
+        "type": "number",
+        "description": "The Approved Claim Amount",
+        "example": 50
+       },
+       "expenseDate": {
+        "type": "string",
+        "description": "Date of Expense",
+        "example": "2024-07-05"
+       },
+       "addDatetime": {
+        "type": "string",
+        "description": "Date and time of add",
+        "example": "2024-07-05"
+       },
+       "aiRecommendation": {
+        "type": "string",
+        "description": "The AI'd recommendation for the claim.",
+        "example": "NeedsReview"
+       },
+       "member": {
+        "$ref": "#/components/schemas/MemberDto"
+       }
+      },
+      "required": [
+       "addDatetime",
+       "approvedAmount",
+       "claimAmount",
+       "claimNumber",
+       "expenseDate",
+       "id",
+       "memberAccount",
+       "reimbursementType",
+       "status"
+      ]
+     },
+     "MemberDto": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       },
+       "firstName": {
+        "type": "string",
+        "description": "First name",
+        "example": "John"
+       },
+       "lastName": {
+        "type": "string",
+        "description": "Last name",
+        "example": "Smith"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ }
+]

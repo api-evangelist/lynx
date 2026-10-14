@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-doc-copay-group-get-request-schema.json",
+  "title": "DocCopayGroupGetRequest",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-copay-management-service-api-openapi.yml#/components/schemas/DocCopayGroupGetRequest",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/CopayGroupGetData"
+    },
+    "idempotency": {
+      "$ref": "#/$defs/Idempotency",
+      "description": "Unique identifier that represents the operation"
+    }
+  },
+  "required": [
+    "data",
+    "idempotency"
+  ],
+  "$defs": {
+    "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the client organization"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "CopayGetItem": {
+      "type": "object",
+      "properties": {
+        "copayGroupId": {
+          "type": "string",
+          "format": "uuid",
+          "description": "UUID of the client organization copay group"
+        },
+        "effectiveDate": {
+          "type": "string",
+          "description": "Beginning effective date of the copay group"
+        },
+        "expirationDate": {
+          "type": "string",
+          "description": "A fixed amount (for example, $15) you pay for a covered health care service, usually when you receive the service. The amount can vary by the type of covered health care service."
+        }
+      }
+    },
+    "CopayGroupGetData": {
+      "type": "object",
+      "properties": {
+        "clientOrg": {
+          "$ref": "#/$defs/ClientOrgDto"
+        },
+        "copayGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CopayGetItem"
+          }
+        }
+      },
+      "required": [
+        "clientOrg",
+        "copayGroups"
+      ]
+    },
+    "Idempotency": {
+      "type": "object",
+      "properties": {
+        "idempotencyKey": {
+          "type": "string",
+          "description": "Unique identifier that represents the operation"
+        }
+      }
+    }
+  }
+}

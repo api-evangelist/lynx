@@ -1,0 +1,2088 @@
+[
+ {
+  "page": "https://docs.lynx-fh.com/reference/getclientorgaccounts-1.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "EXTERNAL ACCOUNT API",
+    "description": "These API's are used to manage external account related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/externalaccounts/client": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Linked Client Organization External Accounts",
+      "description": "This API retrieves details of all external accounts linked to a client organization for contributions.When the name of the child client organization is passed, details will be retrieved for the child client organization.If the name of the child client organization is not passed, details will be retrieved for the client organization",
+      "operationId": "getClientOrgAccounts",
+      "parameters": [
+       {
+        "name": "childClientOrgName",
+        "in": "query",
+        "description": "The name of the child client organization",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetClientOrgExternalAccountsResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "ClientOrgBankAccountResponseDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account",
+        "example": "6ae73974-2bd1-0f0d-7316-bbfff8cdc91b"
+       },
+       "name": {
+        "type": "string",
+        "description": "A name for this account",
+        "example": "John's Bank of America XX-0435"
+       },
+       "accountNumberLastFour": {
+        "type": "string",
+        "description": "9118",
+        "example": "The last four digits of the bank account number"
+       },
+       "routingNumber": {
+        "type": "string",
+        "description": "The account routing number (9 Digits, numeric)",
+        "example": 211070178
+       },
+       "type": {
+        "type": "string",
+        "description": "Type of account",
+        "example": "CHECKING"
+       },
+       "achAuthorizedIndicator": {
+        "type": "boolean",
+        "description": "Flag that represents client authorization to do an ACH pull from external bank account",
+        "example": true
+       },
+       "achAuthorizedDate": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Date when client authorized ach pull",
+        "example": "2018-03-22"
+       },
+       "achPushIndicator": {
+        "type": "boolean",
+        "description": "Indicates whether the Client is authorizing the external account for ACH push transactions.",
+        "example": true
+       }
+      },
+      "required": [
+       "accountNumberLastFour",
+       "achAuthorizedIndicator",
+       "achPushIndicator",
+       "name",
+       "routingNumber"
+      ]
+     },
+     "GetClientOrgExternalAccountsResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "externalAccounts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ClientOrgBankAccountResponseDto"
+        }
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/getall.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "EXTERNAL ACCOUNT API",
+    "description": "These API's are used to manage external account related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/externalaccounts/member/list": {
+     "get": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Linked Member External Accounts",
+      "description": "Retrieves details of all active external accounts that a member has linked for contributions and/or reimbursements.",
+      "operationId": "getAll",
+      "parameters": [
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/GetMemberExternalAccountsResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "GetMemberExternalAccountsResponse": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "externalAccounts": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/MemberBankAccountResponseDto"
+        }
+       }
+      }
+     },
+     "MemberBankAccountResponseDto": {
+      "type": "object",
+      "properties": {
+       "type": {
+        "type": "string",
+        "description": "Type of account",
+        "example": "CHECKING"
+       },
+       "routingNumber": {
+        "type": "string",
+        "description": "The account routing number (9 Digits, numeric)",
+        "example": 211070178
+       },
+       "name": {
+        "type": "string",
+        "description": "A name for this account",
+        "example": "John's Bank of America XX-0435"
+       },
+       "verifiedIndicator": {
+        "type": "boolean",
+        "description": "Flag that represents the state of verification of an account",
+        "example": true
+       },
+       "verifiedDate": {
+        "type": "string",
+        "format": "date",
+        "description": "Date when the account was verified",
+        "example": "2018-03-22"
+       },
+       "memberBankAccountId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account",
+        "example": "6ae73974-2bd1-0f0d-7316-bbfff8cdc91b"
+       },
+       "accountNumberLastFour": {
+        "type": "string",
+        "description": "9118",
+        "example": "The last four digits of the bank account number"
+       }
+      },
+      "required": [
+       "accountNumberLastFour",
+       "name",
+       "routingNumber",
+       "verifiedIndicator"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/createexternalaccount.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "EXTERNAL ACCOUNT API",
+    "description": "These API's are used to manage external account related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/externalaccounts/member/link-raw": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Link Member External Account",
+      "description": "This API links an external account to a  member's HSA. This account can be used by the member as a source account to transfer funds into the HSA account or vice versa. A linked bank account must be verified via Plaid before it can be used. In its response, this API returns a UUID that uniquely identifies the linked account object.",
+      "operationId": "createExternalAccount",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/DocMemberBankAccountRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/DocBaseMemberBankAccountResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMemberBankAccountResponse": {
+      "type": "object",
+      "properties": {
+       "memberBankAccount": {
+        "$ref": "#/components/schemas/ExternalBankAccountId"
+       }
+      }
+     },
+     "DocBaseMemberBankAccountResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/BaseMemberBankAccountResponse"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ExternalBankAccountId": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account",
+        "example": "6ae73974-2bd1-0f0d-7316-bbfff8cdc91b"
+       }
+      },
+      "required": [
+       "id"
+      ]
+     },
+     "DocMemberBankAccountExternalDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "A name for this account",
+        "example": "John's Bank of America XX-0435"
+       },
+       "type": {
+        "type": "string",
+        "description": "Type of account",
+        "enum": [
+         "CHECKING",
+         "Checking",
+         "SAVINGS",
+         "Savings"
+        ],
+        "example": "CHECKING"
+       },
+       "routingNumber": {
+        "type": "string",
+        "description": "The account routing number (9 Digits, numeric)",
+        "example": 211070178
+       },
+       "accountNumber": {
+        "type": "string",
+        "description": "The bank account number",
+        "example": "0002109789118"
+       },
+       "verifiedIndicator": {
+        "type": "boolean",
+        "description": "Flag that represents the state of verification of an account",
+        "example": true
+       },
+       "verifiedDate": {
+        "type": "string",
+        "description": "Date when the account was verified",
+        "example": "2018-03-22"
+       }
+      },
+      "required": [
+       "accountNumber",
+       "name",
+       "routingNumber",
+       "verifiedIndicator"
+      ]
+     },
+     "DocMemberBankAccountRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/DocMemberBankAccountRequestData"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "DocMemberBankAccountRequestData": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "memberBankAccount": {
+        "$ref": "#/components/schemas/DocMemberBankAccountExternalDto"
+       }
+      },
+      "required": [
+       "clientOrg",
+       "member",
+       "memberBankAccount"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/generatelinktoken.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "EXTERNAL ACCOUNT API",
+    "description": "These API's are used to manage external account related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/externalaccounts/member/token": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Get Member Link Token",
+      "description": "Retrieves a 'Link Token' that is required for external bank account verification using Plaid. The link token is returned as a value to the 'data' tag in the response.",
+      "operationId": "generateLinkToken",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/DocLinkAccountRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/LinkTokenResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "DocLinkAccountRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/LinkTokenRequest"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "LinkTokenRequest": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "redirectUri": {
+        "type": "string",
+        "description": "Redirection URI",
+        "example": "someurl.com"
+       }
+      },
+      "required": [
+       "clientOrg",
+       "member",
+       "redirectUri"
+      ]
+     },
+     "LinkTokenResponse": {
+      "type": "object",
+      "properties": {
+       "linkToken": {
+        "type": "string",
+        "description": "The link token",
+        "example": "link-sandbox-648b69fa-d59a-4ace-89b4-795dbc663a8d"
+       }
+      },
+      "required": [
+       "linkToken"
+      ]
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/addaccount.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "EXTERNAL ACCOUNT API",
+    "description": "These API's are used to manage external account related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/externalaccounts/member/link-verified": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Link Member External Account Verified",
+      "description": "This API links a verified external account to a  member's HSA. Currently, this account verification happens via Plaid. This account can be used by the member as a source account to transfer funds into the HSA account or vice versa. In its response, this API returns a UUID that uniquely identifies the linked account object.",
+      "operationId": "addAccount",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/DocMemberBankAccountRequestVerified"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/DocBaseMemberBankAccountResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "BaseMember": {
+      "type": "object",
+      "properties": {
+       "clientMemberId": {
+        "type": "string",
+        "description": "Unique client-side identifier for the member",
+        "example": "3f50436491"
+       }
+      },
+      "required": [
+       "clientMemberId"
+      ]
+     },
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "DocMemberBankAccountExternalDtoVerified": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "A name for this account",
+        "example": "John's Bank of America XX-0435"
+       },
+       "type": {
+        "type": "string",
+        "description": "Type of account",
+        "enum": [
+         "CHECKING",
+         "Checking",
+         "SAVINGS",
+         "Savings"
+        ],
+        "example": "CHECKING"
+       },
+       "partnerAccountId": {
+        "type": "string",
+        "description": "Account id given by the verifying agency (such as Plaid)",
+        "example": "EmQeQro1VgCq9md5MKXvFB6r1KwyNJC9WvZPk"
+       },
+       "partnerAccessToken": {
+        "type": "string",
+        "description": "Access token for the account given by the verifying agency (such as Plaid)",
+        "example": "public-sandbox-a9ff063e-d1cb-41f5-ba7d-9a3a044ba211"
+       }
+      },
+      "required": [
+       "name",
+       "partnerAccessToken",
+       "partnerAccountId"
+      ]
+     },
+     "DocMemberBankAccountRequestVerified": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/DocMemberBankAccountRequestVerifiedData"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "DocMemberBankAccountRequestVerifiedData": {
+      "type": "object",
+      "properties": {
+       "member": {
+        "$ref": "#/components/schemas/BaseMember"
+       },
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "memberBankAccount": {
+        "$ref": "#/components/schemas/DocMemberBankAccountExternalDtoVerified"
+       }
+      },
+      "required": [
+       "clientOrg",
+       "member",
+       "memberBankAccount"
+      ]
+     },
+     "BaseMemberBankAccountResponse": {
+      "type": "object",
+      "properties": {
+       "memberBankAccount": {
+        "$ref": "#/components/schemas/ExternalBankAccountId"
+       }
+      }
+     },
+     "DocBaseMemberBankAccountResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/BaseMemberBankAccountResponse"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ExternalBankAccountId": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account",
+        "example": "6ae73974-2bd1-0f0d-7316-bbfff8cdc91b"
+       }
+      },
+      "required": [
+       "id"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/addclientorgexternalbankaccount.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "EXTERNAL ACCOUNT API",
+    "description": "These API's are used to manage external account related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/externalaccounts/client": {
+     "post": {
+      "tags": [
+       ""
+      ],
+      "summary": "Link External Account to a Client Organization",
+      "description": "This API links an external account to a client organization. This account can be used by the client organization as a source account to transfer funds into an FBO Contribution account. When the name of the child client organization is passed, the external account will be linked to the child client organization. If the name of the child client organization is not passed, the external account will be linked to the client organization. In its response, this API returns a UUID that uniquely identifies the linked account object.",
+      "operationId": "addClientOrgExternalBankAccount",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/DocCreateClientOrgExternalBankAccountRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/CreateClientOrgExternalBankAccountResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "ExternalBankAccountId": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account",
+        "example": "6ae73974-2bd1-0f0d-7316-bbfff8cdc91b"
+       }
+      },
+      "required": [
+       "id"
+      ]
+     },
+     "ChildClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the child client organization",
+        "example": "Health_Plan_ABC_Division_Child"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ClientOrgExternalBankAccount": {
+      "type": "object",
+      "properties": {
+       "accountNumber": {
+        "type": "string",
+        "description": "The bank account number",
+        "example": "0002109789118"
+       },
+       "routingNumber": {
+        "type": "string",
+        "description": "The account routing number (9 Digits, numeric)",
+        "example": 211070178
+       },
+       "name": {
+        "type": "string",
+        "description": "A name for this account",
+        "example": "Health Plan ABC Division Bank of America Checking"
+       },
+       "achAuthorizedIndicator": {
+        "type": "boolean",
+        "description": "Indicates whether the Client has been authorized to initiate ACH transactions against this account",
+        "example": true
+       },
+       "achPushIndicator": {
+        "type": "boolean",
+        "description": "Indicates whether the Client is authorizing the external account for ACH push transactions.",
+        "example": true
+       },
+       "type": {
+        "type": "string",
+        "description": "Type of account",
+        "enum": [
+         "Checking",
+         "Savings"
+        ],
+        "example": "Checking"
+       }
+      },
+      "required": [
+       "accountNumber",
+       "achAuthorizedIndicator",
+       "name",
+       "routingNumber",
+       "type"
+      ]
+     },
+     "CreateClientOrgExternalBankAccountRequest": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "childClientOrg": {
+        "$ref": "#/components/schemas/ChildClientOrgDto"
+       },
+       "clientOrgExternalBankAccount": {
+        "$ref": "#/components/schemas/ClientOrgExternalBankAccount"
+       }
+      },
+      "required": [
+       "clientOrg",
+       "clientOrgExternalBankAccount"
+      ]
+     },
+     "DocCreateClientOrgExternalBankAccountRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/CreateClientOrgExternalBankAccountRequest"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "CreateClientOrgExternalBankAccountResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "clientOrgExternalBankAccount": {
+        "$ref": "#/components/schemas/ExternalBankAccountId"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/deletememberexternalaccount.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "EXTERNAL ACCOUNT API",
+    "description": "These API's are used to manage external account related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/externalaccounts/member/delete": {
+     "delete": {
+      "tags": [
+       ""
+      ],
+      "summary": "Delete Linked Member External Account",
+      "description": "This API will allow you to delete a linked external account for a member.",
+      "operationId": "deleteMemberExternalAccount",
+      "parameters": [
+       {
+        "name": "clientMemberId",
+        "in": "query",
+        "description": "Unique client-side identifier for the member",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "3f50436491"
+       },
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "memberBankAccountId",
+        "in": "query",
+        "description": "Unique identifier of the bank account",
+        "required": true,
+        "schema": {
+         "type": "string",
+         "format": "uuid"
+        },
+        "example": "6ae73974-2bd1-0f0d-7316-bbfff8cdc91b"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/DocBaseMemberBankAccountResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "BaseMemberBankAccountResponse": {
+      "type": "object",
+      "properties": {
+       "memberBankAccount": {
+        "$ref": "#/components/schemas/ExternalBankAccountId"
+       }
+      }
+     },
+     "DocBaseMemberBankAccountResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/BaseMemberBankAccountResponse"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ExternalBankAccountId": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account",
+        "example": "6ae73974-2bd1-0f0d-7316-bbfff8cdc91b"
+       }
+      },
+      "required": [
+       "id"
+      ]
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/deleteclientorgaccount.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "EXTERNAL ACCOUNT API",
+    "description": "These API's are used to manage external account related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/externalaccounts/client": {
+     "delete": {
+      "tags": [
+       ""
+      ],
+      "summary": "Delete Linked Client Organization External Account",
+      "description": "This API will allow you to delete a linked external account for a client organization.When the name of the child client organization is passed, the external account will be deleted from thechild client organization. If the name of the child client organization is not passed,the external account will be deleted from the client organization",
+      "operationId": "deleteClientOrgAccount",
+      "parameters": [
+       {
+        "name": "childClientOrgName",
+        "in": "query",
+        "description": "The name of the child client organization",
+        "required": false,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientOrgName",
+        "in": "query",
+        "description": "The name of the client organization",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "example": "Health_Plan_ABC_Division"
+       },
+       {
+        "name": "clientOrgExternalBankAccountId",
+        "in": "query",
+        "description": "External bank account id",
+        "required": true,
+        "schema": {
+         "type": "string",
+         "format": "uuid"
+        },
+        "example": "4dbdba69-4875-47c5-a663-04d9aee9ee91"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/BaseClientOrgBankAccountResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "ExternalBankAccountId": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account",
+        "example": "6ae73974-2bd1-0f0d-7316-bbfff8cdc91b"
+       }
+      },
+      "required": [
+       "id"
+      ]
+     },
+     "BaseClientOrgBankAccountResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/ClientOrgBankAccountResponse"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ClientOrgBankAccountResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrgBankAccount": {
+        "$ref": "#/components/schemas/ExternalBankAccountId"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ },
+ {
+  "page": "https://docs.lynx-fh.com/reference/updatebankaccountauthorization.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "EXTERNAL ACCOUNT API",
+    "description": "These API's are used to manage external account related operations",
+    "termsOfService": "http://lynx-fh.com",
+    "license": {
+     "name": "LynxFH",
+     "url": "http://lynx-fh.com"
+    },
+    "version": "\"1.0\""
+   },
+   "servers": [
+    {
+     "url": "https://sandbox.lynx-fh.co"
+    }
+   ],
+   "security": [
+    {
+     "bearerAuth": []
+    }
+   ],
+   "paths": {
+    "/externalaccounts/client": {
+     "patch": {
+      "tags": [
+       ""
+      ],
+      "summary": "Update Linked Client Organization External Account",
+      "description": "This API allows you to update the ACH authorization status, which indicates whether the client organization has been authorized to initiate ACH transactions against this account. Once authorized, the external account may be updated to revoke the authorization. When the name of the child client organization is passed, the external account will be updated for the child client organization. If the name of the child client organization is not passed, the external account will be updated for the client organization.\n",
+      "operationId": "updateBankAccountAuthorization",
+      "requestBody": {
+       "content": {
+        "application/json": {
+         "schema": {
+          "$ref": "#/components/schemas/DocUpdateBankAccountRequest"
+         }
+        }
+       },
+       "required": true
+      },
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/PatchClientOrgExternalAccountsResponse"
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "Bad request",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       },
+       "401": {
+        "description": "Not authorized"
+       },
+       "404": {
+        "description": "Not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/ExceptionBaseResponse"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "components": {
+    "schemas": {
+     "ClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the client organization",
+        "example": "Health_Plan_ABC_Division"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "Idempotency": {
+      "type": "object",
+      "properties": {
+       "idempotencyKey": {
+        "type": "string",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      }
+     },
+     "ExceptionBaseResponse": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "type": "object",
+        "description": "null"
+       },
+       "exceptions": {
+        "type": "array",
+        "items": {
+         "$ref": "#/components/schemas/ResponseException"
+        }
+       }
+      }
+     },
+     "ResponseException": {
+      "type": "object",
+      "properties": {
+       "errorCode": {
+        "type": "string",
+        "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+       },
+       "exceptionSource": {
+        "type": "string",
+        "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+       },
+       "exceptionMessage": {
+        "type": "string",
+        "description": "Additional information about the exception"
+       }
+      }
+     },
+     "ChildClientOrgDto": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string",
+        "description": "The name of the child client organization",
+        "example": "Health_Plan_ABC_Division_Child"
+       }
+      },
+      "required": [
+       "name"
+      ]
+     },
+     "ClientOrgExternalBankAccountDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "UUID of the client organization's external bank account",
+        "example": "2aa614ba-5590-4c16-bdd0-3f03964ee274"
+       },
+       "achAuthorizedIndicator": {
+        "type": "boolean",
+        "description": "Indicates whether the Client has been authorized to initiate ACH transactions against this account",
+        "example": false
+       }
+      },
+      "required": [
+       "achAuthorizedIndicator",
+       "id"
+      ]
+     },
+     "DocUpdateBankAccountRequest": {
+      "type": "object",
+      "properties": {
+       "data": {
+        "$ref": "#/components/schemas/UpdateClientOrgExternalAccountDto"
+       },
+       "idempotency": {
+        "$ref": "#/components/schemas/Idempotency",
+        "description": "Unique identifier that represents the operation",
+        "example": "cf82639c-e3b6-4d51-9871-0e452a2b1566"
+       }
+      },
+      "required": [
+       "data",
+       "idempotency"
+      ]
+     },
+     "UpdateClientOrgExternalAccountDto": {
+      "type": "object",
+      "properties": {
+       "clientOrg": {
+        "$ref": "#/components/schemas/ClientOrgDto"
+       },
+       "childClientOrg": {
+        "$ref": "#/components/schemas/ChildClientOrgDto"
+       },
+       "clientOrgExternalBankAccount": {
+        "$ref": "#/components/schemas/ClientOrgExternalBankAccountDto"
+       }
+      },
+      "required": [
+       "clientOrg",
+       "clientOrgExternalBankAccount"
+      ]
+     },
+     "ClientOrgBankAccountIDResponseDto": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "format": "uuid",
+        "description": "Unique identifier of the bank account",
+        "example": "6ae73974-2bd1-0f0d-7316-bbfff8cdc91b"
+       }
+      }
+     },
+     "PatchClientOrgExternalAccountsResponse": {
+      "type": "object",
+      "properties": {
+       "clientOrgExternalBankAccount": {
+        "$ref": "#/components/schemas/ClientOrgBankAccountIDResponseDto"
+       }
+      }
+     }
+    },
+    "securitySchemes": {
+     "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT"
+     }
+    }
+   }
+  }
+ }
+]

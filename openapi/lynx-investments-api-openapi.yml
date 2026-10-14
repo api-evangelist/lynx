@@ -1,0 +1,2600 @@
+openapi: 3.1.0
+info:
+  title: INVESTMENTS API
+  description: These API's are used to manage investments related operations
+  termsOfService: http://lynx-fh.com
+  license:
+    name: LynxFH
+    url: http://lynx-fh.com
+  version: '"1.0"'
+servers:
+- url: https://sandbox.lynx-fh.co
+security:
+- bearerAuth: []
+paths:
+  /investments/accounts/balance:
+    get:
+      tags:
+      - ''
+      summary: Get Account Balance
+      description: This API returns real time cash balances for a specific account.
+      operationId: getInvestmentAccountBalance
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      responses:
+        '200':
+          description: Ok
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseInvestmentAccountBalanceResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseInvestmentAccountBalanceResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseInvestmentAccountBalanceResponse'
+  /investments/accounts/eod/positions:
+    get:
+      tags:
+      - ''
+      summary: Get EOD Account Positions
+      description: This API returns a list of all the end of day equity positions related to an account
+      operationId: getEODAccountPositions
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEodPositionResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /investments/accounts/performance:
+    get:
+      tags:
+      - ''
+      summary: Get Account Performance
+      description: This API returns the daily realized and unrealized PL for a specific account.
+      operationId: getAccountPerformance
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: period
+        in: query
+        description: May be defined as 1-60 days in the past from the current date. If set, do not use startDate and endDate values.
+        required: false
+        schema:
+          type: string
+        example: 2
+      - name: startDate
+        in: query
+        description: Start date of requested time frame of the accounts performance; format should follow 2019-07-08 or 2019-07-08T00:00:00Z
+        required: false
+        schema:
+          type: string
+        example: '2019-07-08'
+      - name: endDate
+        in: query
+        description: End date of requested time frame of the accounts performance; format should follow 2019-07-08 or 2019-07-08T00:00:00Z
+        required: false
+        schema:
+          type: string
+        example: '2019-07-08'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAccountPerformanceResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /investments/accounts/portfolio:
+    patch:
+      tags:
+      - ''
+      summary: Update Advisory Portfolio
+      description: This API updates a member's advisory portfolio, unsubscribing them from their current risk portfolio and re-subscribing them to the new one.
+      operationId: updatePortfolio
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocUpdateAdvisoryPortfolioRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseUpdateAdvisoryPortfolioResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-318: Account management type is not SELF_DIRECTED_ROBO
+
+            - GBL-387: currentRiskPortfolio does not match the member''s current portfolio on record
+
+            - GBL-388: Account has a rebalancing run in progress, please try again later
+
+            - GBL-389: newRiskPortfolio is the same as the member''s current risk portfolio
+
+            - GBL-390: newRiskPortfolio is not a valid or available risk portfolio
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseUpdateAdvisoryPortfolioResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseUpdateAdvisoryPortfolioResponse'
+  /investments/accounts/positions:
+    get:
+      tags:
+      - ''
+      summary: Get Account Positions
+      description: This API returns a list of all the equity positions related to an account
+      operationId: getAccountPositions
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAccountPositionsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /investments/accounts/positions/close:
+    post:
+      tags:
+      - ''
+      summary: Close All Positions
+      description: This API liquidates all currently held positions for a member's investment account. Once orders are filled, cash is swept back to the member's account.
+      operationId: closeAllPositions
+      requestBody:
+        description: Close all positions request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocCloseAllPositionsRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CloseAllPositionsDocModelResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-173: Investment account is not in an active status
+
+            - GBL-297: Member product is not currently active
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /investments/accounts/transactions:
+    get:
+      tags:
+      - ''
+      summary: Get Transactions
+      description: This API returns a list of all investment account transactions for a specified time frame. The member's pending orders are returned under the PENDING activity type, leading the first page and on that page only (the page requested without an offset), since the investment partner has no activity for an order until it fills. To page, pass the response's nextOffset back as the offset while hasMore is true - do not derive an offset from the returned rows, as the pending orders are not part of the partner's page cursor and their ids are rejected as an offset.
+      operationId: getInvestmentAccountTransactions
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: startDate
+        in: query
+        description: Start date of date range
+        required: false
+        schema:
+          type: string
+        example: '2022-03-20'
+      - name: endDate
+        in: query
+        description: End date of date range
+        required: false
+        schema:
+          type: string
+        example: '2022-03-25'
+      - name: limit
+        in: query
+        description: Maximum number of items to be returned per page.
+        required: false
+        schema:
+          type: integer
+          default: 25
+        example: 25
+      - name: offset
+        in: query
+        description: Page offset. This is the nextOffset returned by the previous page result.
+        required: false
+        schema:
+          type: string
+        example: 20260401000000000::1e8e81a2-77a5-4958-9c9b-7d8ffd04a75d
+      - name: direction
+        in: query
+        description: The direction of pagination (prev/next)
+        required: false
+        schema:
+          type: string
+        example: next
+      - name: activityTypes
+        in: query
+        description: Comma separated list of activity types to filter transactions by
+        required: false
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+        example: FILL,JNLC,FEE
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInvestmentAccountTransactionsModel'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /investments/disclosures:
+    get:
+      tags:
+      - ''
+      summary: Get Disclosures
+      description: Customers opening brokerage accounts must agree to a series of terms, disclosures, and documents, which differ based on the product experience and customer type. This API will return the disclosures URL.  The disclosures URL allows you to embed and link to the necessary disclosures and disclaimers for end-users to open an investment account. The disclaimers and disclosures are updated periodically automatically, avoiding the need to update your front-end when the language of various terms changes.
+      operationId: getDisclosuresUrl
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: productName
+        in: query
+        description: The name of the product
+        required: true
+        schema:
+          type: string
+        example: HSA_01
+      - name: citizenship
+        in: query
+        description: Country of citizenship
+        required: false
+        schema:
+          type: string
+        example: US
+      - name: country
+        in: query
+        description: Member`s residing country
+        required: false
+        schema:
+          type: string
+        example: US
+      - name: lang
+        in: query
+        description: Language of the member; en_US = English; zh_CN = Chinese; es_ES = Spanish; pt_BR = Portuguese
+        required: false
+        schema:
+          type: string
+          enum:
+          - en_US
+          - zh_CN
+          - es_ES
+          - pt_BR
+        example: en_US
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDisclosuresDocModel'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /investments/documents:
+    get:
+      tags:
+      - ''
+      summary: Get Investment Documents (List)
+      description: Returns a member's investment documents (statements, trade confirms, tax forms).
+      operationId: getInvestmentDocuments
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: documentType
+        in: query
+        description: Document type filter
+        required: false
+        schema:
+          type: string
+          enum:
+          - statement
+          - tax
+          - trade_confirmation
+          - all
+        example: all
+      - name: startDate
+        in: query
+        description: Start date of date range
+        required: false
+        schema:
+          type: string
+        example: '2022-03-20'
+      - name: endDate
+        in: query
+        description: End date of date range
+        required: false
+        schema:
+          type: string
+        example: '2022-03-25'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInvestmentDocumentsDocModel'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /investments/documents/download:
+    get:
+      tags:
+      - ''
+      summary: GET Investment Document PDF
+      description: Returns a PDF for the requested investment document.
+      operationId: getInvestmentDocumentDownloadUrl
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: documentId
+        in: query
+        description: Id of the document
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: eedefb56-b5f2-4ef5-9b6b-4a724215e271
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInvestmentDocumentDownloadDocModel'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /investments/fund-lineup:
+    get:
+      tags:
+      - ''
+      summary: Get Investment List
+      description: This API returns a list of active investments pre-determined by the RIA for a client org
+      operationId: getClientOrgInvestmentList
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetClientOrgInvestmentListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /investments/instruments:
+    get:
+      tags:
+      - ''
+      summary: Get Instrument List
+      description: This API returns the paginated list of instruments that are active, tradable and fractionable. The list can be narrowed with a search value, which is matched against the start of the instrument symbol or the start of any word in the security name.
+      operationId: getInstruments
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: searchValue
+        in: query
+        description: Narrows the list to the instruments whose symbol starts with this value, or whose security name contains a word starting with this value. Case insensitive.
+        required: false
+        schema:
+          type: string
+        example: app
+      - name: page
+        in: query
+        description: Page number to be returned. If not specified, default is 1.
+        required: false
+        schema:
+          type: integer
+          default: 1
+        example: 1
+      - name: pageSize
+        in: query
+        description: Maximum number of items to be returned per page. If not specified, default is 25.
+        required: false
+        schema:
+          type: integer
+          default: 25
+        example: 25
+      responses:
+        '200':
+          description: Ok
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseMetadataGetInstrumentsResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseMetadataGetInstrumentsResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseMetadataGetInstrumentsResponse'
+  /investments/instruments/chart:
+    get:
+      tags:
+      - ''
+      summary: Get Instrument Chart
+      description: This API returns historical bars (open, high, low, close) for a given instrument for a given time period.
+      operationId: getHistoricalBars
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: symbol
+        in: query
+        description: The ticker symbol of the instrument
+        required: true
+        schema:
+          type: string
+        example: AMZN
+      - name: compression
+        in: query
+        description: 'The compression number represents the time increments of the chart data
+
+          0 = Daily
+
+          1 = 1 minute
+
+          4 = 5 minutes
+
+          8 = 30 minutes
+
+          9 = 1 hour
+
+          10 = Weekly'
+        required: true
+        schema:
+          type: integer
+          enum:
+          - '0'
+          - '1'
+          - '4'
+          - '8'
+          - '9'
+          - '10'
+        example: 9
+      - name: startDate
+        in: query
+        description: The start date of the chart data; format should follow 2019-07-08 or 2019-07-08T00:00:00Z
+        required: false
+        schema:
+          type: string
+        example: '2019-07-08'
+      - name: endDate
+        in: query
+        description: The end date of the chart data; format should follow 2019-07-08 or 2019-07-08T00:00:00Z
+        required: false
+        schema:
+          type: string
+        example: '2019-07-08'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetChartDocModel'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /investments/instruments/details:
+    get:
+      tags:
+      - ''
+      summary: Get Instrument Details
+      description: This API returns the details for a particular instrument
+      operationId: getInstrumentDetails
+      parameters:
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: symbol
+        in: query
+        description: The ticker symbol of the instrument
+        required: true
+        schema:
+          type: string
+        example: AMZN
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInstrumentDetailsDocModel'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /investments/instruments/most-actives:
+    get:
+      tags:
+      - ''
+      summary: Get Most Active Stocks
+      description: This API returns the most active stocks ranked by either trading volume or trade count.
+      operationId: getMostActives
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: by
+        in: query
+        description: Ranking criterion.
+        required: false
+        schema:
+          type: string
+          default: volume
+          enum:
+          - volume
+          - trades
+      - name: top
+        in: query
+        description: Number of results to return.
+        required: false
+        schema:
+          type: integer
+          default: 10
+          maximum: 100
+          minimum: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseGetMostActivesResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseGetMostActivesResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseGetMostActivesResponse'
+  /investments/instruments/movers:
+    get:
+      tags:
+      - ''
+      summary: Get Market Movers
+      description: This API returns the top gainers and losers in the stocks market.
+      operationId: getMovers
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: top
+        in: query
+        description: Number of gainers and losers to return.
+        required: false
+        schema:
+          type: integer
+          default: 10
+          maximum: 50
+          minimum: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseGetMoversResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseGetMoversResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseGetMoversResponse'
+  /investments/instruments/quote:
+    get:
+      tags:
+      - ''
+      summary: Get Instrument Quote
+      description: This API returns a 15 minute delayed quote for one or more investment instruments.
+      operationId: getInstrumentsQuote
+      parameters:
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: symbols
+        in: query
+        description: The ticker symbol of the associated instrument. Multiple ticker symbols separated by a comma may also be used.
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+        example: AMZN
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetInstrumentQuoteResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /investments/orders:
+    get:
+      tags:
+      - ''
+      summary: Get Orders
+      description: This API returns all investment orders for a specific account.
+      operationId: getAccountOrders
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: productName
+        in: query
+        description: The name of the product
+        required: true
+        schema:
+          type: string
+        example: HSA_01
+      - name: accountType
+        in: query
+        description: Type of account
+        required: true
+        schema:
+          type: string
+        example: HSA
+      - name: sortValue
+        in: query
+        description: The property by which the response is sorted
+        required: false
+        schema:
+          type: string
+          default: creationDate
+          enum:
+          - creationDate
+          - updateDate
+          - lastExecutedDate
+          - fillAmount
+      - name: sortOrder
+        in: query
+        description: The sort direction
+        required: false
+        schema:
+          type: string
+          default: Descending
+          enum:
+          - Ascending
+          - Descending
+      - name: startDate
+        in: query
+        description: Start date of date range
+        required: false
+        schema:
+          type: string
+        example: '2022-03-20'
+      - name: endDate
+        in: query
+        description: End date of date range
+        required: false
+        schema:
+          type: string
+        example: '2022-03-25'
+      - name: page
+        in: query
+        description: Page number to be returned. If not specified, default is 1.
+        required: false
+        schema:
+          type: integer
+          default: 1
+        example: 1
+      - name: pageSize
+        in: query
+        description: Maximum number of items to be returned per page. If not specified, default is 25.
+        required: false
+        schema:
+          type: integer
+          default: 25
+        example: 25
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAccountInvestmentOrdersDocModelResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    post:
+      tags:
+      - ''
+      summary: Create Order
+      description: This API can be used to create an order to buy or sell a security.
+      operationId: createOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocMemberInvestmentOrderRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberInvestmentOrderResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-149: Instrument is not on the approved list of investments
+
+            - GBL-150: You are required to maintain a minimum balance in your account to invest
+
+            - GBL-151: You have insufficient funds in your account to complete your order
+
+            - GBL-155: Quantity cannot be specified for a BUY order
+
+            - GBL-156: Either quantity or amountCash is required for a SELL order
+
+            - GBL-173: Account is currently in an ineligible status
+
+            - GBL-230: There was an issue with your request, please try again
+
+            - GBL-297: Member product is not currently active
+
+            - GBL-372: Symbol must not be specified for an order on a Robo account
+
+            - GBL-373: Symbol is required
+
+            - GBL-395: Orders on a Robo account need to be greater than the minimum order amount
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    patch:
+      tags:
+      - ''
+      summary: Cancel Order
+      description: This API cancels a pending order.
+      operationId: patchCancelOrder
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: orderNumber
+        in: query
+        description: The unique order number that is human readable
+        required: true
+        schema:
+          type: string
+        example: GCZZ000027
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseMemberInvestmentOrder'
+        '400':
+          description: 'Bad request.
+
+            - GBL-230: There was an issue with your request, please try again
+
+            - GBL-365: Order cannot be cancelled from its current status
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /investments/portfolio:
+    get:
+      tags:
+      - ''
+      summary: Get Portfolio Details
+      description: This API returns the portfolio details associated with the given risk portfolio
+      operationId: getPortfolio
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: riskPortfolio
+        in: query
+        description: The risk portfolio (reference code name).
+        required: true
+        schema:
+          type: string
+        example: AGGRESSIVE
+      responses:
+        '200':
+          description: Ok
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponsePortfolio'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponsePortfolio'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponsePortfolio'
+  /investments/portfolio/list:
+    get:
+      tags:
+      - ''
+      summary: Get Portfolio List
+      description: This API returns all the portfolios available
+      operationId: getPortfolios
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      responses:
+        '200':
+          description: Ok
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseGetPortfoliosResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseGetPortfoliosResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/BaseResponseGetPortfoliosResponse'
+components:
+  schemas:
+    BaseMember:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    GetAccountInvestmentOrdersDocModelResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetInvestmentAccountOrdersResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetInvestmentAccountOrdersResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberOrders:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberOrderDTO'
+    MemberOrderDTO:
+      type: object
+      properties:
+        orderNumber:
+          type: string
+          description: The unique order number that is human readable
+          example: GCZZ000027
+        orderId:
+          type: string
+          format: uuid
+          description: A unique order identifier created when an order is placed
+          example: 40cd232c-4b42-469c-81d1-d04bf3e95b98
+        type:
+          type: string
+          description: 'The type of order that is being placed.  Possible values: MARKET, LIMIT, STOP, MARKET_IF_TOUCHED'
+          example: MARKET
+        side:
+          type: string
+          description: 'The side of the order: B - Buy or S - Sell'
+          example: S
+        status:
+          type: string
+          description: 'The current status of the order.
+
+            FILLED - The order was successfully completed; PARTIAL_FILL - The order was partially completed; REJECTED - The order was rejected; CANCELED - The order was cancelled; NEW - Recently created pending order; PENDING_CANCEL - Indicates an order is awaiting a cancellation response, but the order has already been sent for execution, so cancellation cannot be guaranteed at this point.'
+          example: FILLED
+        statusReason:
+          type: string
+          description: Description of the order status
+          example: Order quantity exceeds quantity available for sale
+        symbol:
+          type: string
+          description: The ticker symbol of the instrument
+          example: AMZN
+        averagePrice:
+          type: number
+          description: Average price of the security being transacted in the order
+          example: 33.63
+        totalOrderAmount:
+          type: number
+          description: Total amount paid for the order
+          example: 50
+        cumulativeQuantity:
+          type: number
+          description: The number of shares currently being transacted. Larger orders may execute in chunks, e.g. a BUY order of 1,000 shares may get filled in 5 executions of 200 orders.
+          example: 1.48676776
+        quantity:
+          type: number
+          description: Total number of shares the order is submitted for
+          example: 1.48676776
+        fees:
+          type: number
+          description: Cost of the order
+          example: 0
+        orderExpirationDatetime:
+          type: string
+          format: date-time
+          description: The date of expiration for a good-til-canceled order, in “YYYY-MM-DD” format. The order will be canceled if not executed by the market close on this date. If not set, a good-til-canceled Stop and MIT order will be assumed to expire 90 days after creation. If not set, a limit order will be considered GTD and will cancel at the end of the trading day.
+          example: '2024-03-20T20:00:00.000+00:00'
+        lastExecutedDatetime:
+          type: string
+          format: date-time
+          description: The date and time an order was last executed for the security
+          example: '2024-03-20T15:26:06.619+00:00'
+        lastPrice:
+          type: number
+          description: The most recent price at which a security was traded
+          example: 33.63
+        lastShares:
+          type: number
+          description: The most recent number of shares for which a security was traded
+          example: 0.48676776
+        lastMarket:
+          type: string
+          description: The most recent market at which a security was traded
+          example: DRVW
+        targetSettlementDate:
+          type: string
+          format: date-time
+          description: Date when the order is expected to settle
+          example: '2024-03-22'
+      required:
+      - orderNumber
+    GetInstrumentQuoteResponse:
+      type: object
+      properties:
+        quotes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Quote'
+    Quote:
+      type: object
+      properties:
+        symbol:
+          type: string
+          description: The ticker symbol of the instrument
+          example: AMZN
+        bidPrice:
+          type: number
+          description: The current price buyers are prepared to pay for a security
+          example: 180.03
+        bidSize:
+          type: integer
+          format: int32
+          description: The number of shares available at the bid price
+          example: 180.07
+        askPrice:
+          type: number
+          description: The current price sellers are prepared to sell a security
+          example: 100
+        askSize:
+          type: integer
+          format: int32
+          description: The number of shares available at the ask price
+          example: 80
+        timestamp:
+          type: string
+          format: date-time
+          description: The timestamp indicating when the quote was last updated (ISO 8601 format)
+          example: '2026-04-15T20:00:01.062839502Z'
+        changeAmount:
+          type: number
+          description: The absolute price change of the instrument compared to the previous close
+          example: -1.25
+        changePercent:
+          type: number
+          description: The percentage price change of the instrument compared to the previous close
+          example: -0.56
+        lastTrade:
+          type: number
+          description: The NBBO quote of the most recent trade
+          example: 180.02
+        change:
+          type: number
+          description: The percentage change in trade price relative to the previous days close
+          example: 0.29
+        open:
+          type: number
+          description: Most recent opening price of the instrument
+          example: 179.83
+        high:
+          type: number
+          description: The highest price in the current trading day
+          example: 181.7
+        low:
+          type: number
+          description: The lowest price in the current trading day
+          example: 179.26
+        close:
+          type: number
+          description: The close price populated after market close; price updates overnight if a corporate action occurs
+          example: 180.3547
+        priorClose:
+          type: number
+          description: The closing price of the current symbol for the prior trading day
+          example: 179.83
+        volume:
+          type: integer
+          format: int32
+          description: The total trading volume of the security for the current day in quantity of shares
+          example: 36830721
+        marketCondition:
+          type: string
+          description: The trading status of the symbol.  NORMAL = Symbol is trading normally; TRADING_HALT = Symbol is currently halted; UNKNOWN = Symbol has been placed on a restricted tag
+          enum:
+          - NORMAL
+          - UNKNOWN
+          - TRADING_HALT
+          example: NORMAL
+        dataProvider:
+          type: string
+          description: The exchange venue providing the quote
+          example: NYSE-BQT
+    FundamentalDataModel:
+      type: object
+      properties:
+        close:
+          type: number
+          description: The close price populated after market close; price updates overnight if a corporate action occurs
+          example: 180.3547
+        closePrior:
+          type: number
+          description: The instrument closing price of the prior trading day
+          example: 180.38
+        changeAmount:
+          type: number
+          description: The absolute price change of the instrument compared to the previous close
+          example: -1.25
+        changePercent:
+          type: number
+          description: The percentage price change of the instrument compared to the previous close
+          example: -0.56
+        openPrice:
+          type: number
+          description: Most recent opening price of the instrument
+          example: 180.17
+        bidPrice:
+          type: number
+          description: The current price buyers are prepared to pay for a security
+          example: 180.03
+        askPrice:
+          type: number
+          description: The current price sellers are prepared to sell a security
+          example: 180.07
+        lowPrice:
+          type: number
+          description: The lowest price in the current trading day
+          example: 179.26
+        highPrice:
+          type: number
+          description: The highest price in the current trading day
+          example: 181.7
+        fiftyTwoWeekLowPrice:
+          type: number
+          description: The lowest price of the instrument in the past 52 weeks
+          example: 96.29
+        fiftyTwoWeekHighPrice:
+          type: number
+          description: The highest price of the instrument in the past 52 weeks
+          example: 181.415
+        cumulativeVolume:
+          type: integer
+          format: int64
+          description: Cumulative Volume is a running total of daily trade volume. This measures the cumulative inflow and outflow of trading volume for the instrument. Measured in quantity of shares.
+          example: 36803707
+        marketCap:
+          type: integer
+          format: int64
+          description: The total market cap of the instrument measured in USD
+          example: 1867963000000
+        peRatio:
+          type: number
+          description: The Price-earnings ratio for the instrument
+          example: 62.2385
+        dividendYield:
+          type: number
+          description: The percentage of a company's share price that is paid out in dividends each year
+          example: 0
+        earningsPerShare:
+          type: number
+          description: The earnings per share of the instrument measured in USD. EPS is company's profit divided by the outstanding shares of its common stock.
+          example: 2.8894
+        sharesOutstanding:
+          type: integer
+          format: int64
+          description: The total shares outstanding for the instrument. Shares outstanding are all the shares of an instrument that have been authorized, issued and purchased by investors.
+          example: 9431872097
+        volumeMovingAverage10Day:
+          type: number
+          description: The volume moving average of the last 10 days for the instrument measured in quantity of shares
+          example: 35749866
+    GetInstrumentDetailsDocModel:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetInstrumentDetailsResponseDoc'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetInstrumentDetailsResponseDoc:
+      type: object
+      properties:
+        instrumentID:
+          type: string
+          format: uuid
+          description: A unique identifier for a specific instrument
+          example: 35d2d5d6-c1f7-4fdc-92f3-2f1c4da02028
+        symbol:
+          type: string
+          description: The ticker symbol of the instrument
+          example: AMZN
+        type:
+          type: string
+          description: Description of the type of instrument, such as ETF
+          enum:
+          - EQUITY
+          - ETN
+          - ETF
+          - ADR
+          - ALTERNATIVE_ASSET
+          - CRYPTO
+          example: ETN
+        name:
+          type: string
+          description: The official name of the company associated to the Instrument
+          example: Amazon.com Inc.
+        sector:
+          type: string
+          description: 'The type of industry sector the instrument is in.  Possible values are:  Energy, Basic Materials, Industrials, Consumer Discretionary, Consumer Staples, Health Care, Financial, Technology, Communication, Utilities, Real Estate'
+          example: Services
+        status:
+          type: string
+          description: The current status of the instrument.  ACTIVE = Available for purchase or sale; INACTIVE = Not available for buying or selling; CLOSE_ONLY = Available only for selling existing positions for this instrument; HALTED = Listed security has been halted
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - CLOSE_ONLY
+          - HALTED
+          example: ACTIVE
+        exchange:
+          type: string
+          description: The stock exchange the instrument is listed on
+          example: NSQ
+        image:
+          type: string
+          description: A publicly hosted image of the instruments logo
+          example: http://syscdn.drivewealth.net/images/symbols/amzn.png
+        url:
+          type: string
+          description: URL for the investor site of the instrument
+          example: https://www.amazon.com
+        tradable:
+          type: boolean
+          description: Whether the instrument can be traded
+          example: true
+        fractionable:
+          type: boolean
+          description: Whether the instrument supports fractional share trading
+          example: true
+        fundamentalDataModel:
+          $ref: '#/components/schemas/FundamentalDataModel'
+    ChartBar:
+      type: object
+      properties:
+        t:
+          type: string
+          format: date-time
+        o:
+          type: number
+        h:
+          type: number
+        l:
+          type: number
+        c:
+          type: number
+        v:
+          type: integer
+          format: int64
+    GetChartDocModel:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetChartResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetChartResponse:
+      type: object
+      properties:
+        symbol:
+          type: string
+          description: The ticker symbol of the instrument
+          example: AMZN
+        compression:
+          type: integer
+          format: int32
+          description: The compression number represents the time increments of the chart data
+          example: 9
+        startDate:
+          type: string
+          description: The start of the period the chart data was requested for
+          example: '2019-07-08T00:00:00Z'
+        endDate:
+          type: string
+          description: The end of the period the chart data was requested for, which is capped at the most recent available market data
+          example: '2019-07-08T23:59:59Z'
+        bars:
+          type: array
+          description: The bars of the chart, each one holding the open, high, low and close prices, the traded volume and the timestamp the bar starts at.
+          items:
+            $ref: '#/components/schemas/ChartBar'
+    InstrumentDTO:
+      type: object
+      properties:
+        symbol:
+          type: string
+          description: The ticker symbol of the instrument
+          example: AMZN
+        symbolName:
+          type: string
+          description: The official name of the company associated to the Instrument
+          example: Amazon.com Inc
+        symbolDescription:
+          type: string
+          description: A comprehensive description of the Instrument in English
+          example: symbol description
+        type:
+          type: string
+          description: Description of the type of instrument, such as ETF
+          example: EQUITY
+        assetClass:
+          type: string
+          description: A group of financial instruments that have similar financial characteristics
+          example: Stocks
+        subAssetClass:
+          type: string
+          description: A sub-asset class is a group of assets that share similar characteristics with each other, and also with the broader asset class it is part of
+          example: U.S. Stocks
+        category:
+          type: string
+          description: The classification of the sector related to the Instrument
+          example: High Yield
+    GetClientOrgInvestmentListResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        investmentList:
+          $ref: '#/components/schemas/InvestmentListDTO'
+    InvestmentListDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the investment list
+          example: cf82639c-e3b6-4d51-9871-1e452a2a0001
+        name:
+          type: string
+          description: Name of the investment list
+          example: Lynx instruments
+        description:
+          type: string
+          description: Description of the investment list
+          example: Lynx instruments
+        investmentListInstruments:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstrumentDTO'
+      required:
+      - id
+    DisclosureUrlResponse:
+      type: object
+      properties:
+        disclosureUrl:
+          type: string
+          description: The url of the disclosure document
+          example: www.disclosure.com
+      required:
+      - disclosureUrl
+    GetDisclosuresDocModel:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DisclosureUrlResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetInvestmentAccountTransactionsModel:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/InvestmentTransactionData'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    InvestmentTransactionData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberAccount:
+          $ref: '#/components/schemas/MemberAccount'
+        memberInvestmentTransactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberInvestmentTransaction'
+        hasMore:
+          type: boolean
+        nextOffset:
+          type: string
+    MemberAccount:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          description: The last four digits of the bank account number
+          example: 9118
+    MemberInvestmentTransaction:
+      type: object
+      properties:
+        activity_type:
+          type: string
+        activity_sub_type:
+          type: string
+        transaction_time:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        date:
+          type: string
+        type:
+          type: string
+        currency:
+          type: string
+        net_amount:
+          type: number
+        description:
+          type: string
+        price:
+          type: number
+        per_share_amount:
+          type: number
+        qty:
+          type: number
+        side:
+          type: string
+        symbol:
+          type: string
+        cusip:
+          type: string
+        group_id:
+          type: string
+        leaves_qty:
+          type: number
+        order_id:
+          type: string
+          format: uuid
+        order_number:
+          type: string
+        cum_qty:
+          type: number
+        order_status:
+          type: string
+        status:
+          type: string
+        id:
+          type: string
+    EquityPosition:
+      type: object
+      properties:
+        symbol:
+          type: string
+          description: The ticker symbol of the instrument
+          example: AMZN
+        symbolName:
+          type: string
+          description: The official name of the company associated to the Instrument
+          example: Amazon.com Inc
+        assetClass:
+          type: string
+          description: A group of financial instruments that have similar financial characteristics
+          example: Stocks
+        subAssetClass:
+          type: string
+          description: A sub-asset class is a group of assets that share similar characteristics with each other, and also with the broader asset class it is part of
+          example: U.S. Stocks
+        category:
+          type: string
+          description: The classification of the sector related to the Instrument
+          example: High Yield
+        instrumentID:
+          type: string
+          format: uuid
+          description: A unique identifier for a specific instrument
+          example: 35d2d5d6-c1f7-4fdc-92f3-2f1c4da02028
+        openQty:
+          type: number
+          description: Quantity of shares owned by the account
+          example: 31.65120151
+        costBasis:
+          type: number
+          description: Cost basis of the position
+          example: 975.98
+        marketValue:
+          type: number
+          description: Current market value of the position
+          example: 4540.36
+        side:
+          type: string
+          description: 'The side of the order: B - Buy or S - Sell'
+          enum:
+          - B
+          - S
+          example: B
+        priorClose:
+          type: number
+          description: The closing price of the current symbol for the prior trading day
+          example: 179.83
+        availableForTradingQty:
+          type: number
+          description: The quantity of the security available for sale
+          example: 31.65120151
+        availableQty:
+          type: number
+        avgPrice:
+          type: number
+          description: The average price of the position
+          example: 30.84
+        mktPrice:
+          type: number
+          description: The current market price of the position
+          example: 143.45
+        unrealizedPL:
+          type: number
+          description: Unrealized profit and loss for the position
+          example: 3564.38
+        unrealizedDayPLPercent:
+          type: number
+          description: Unrealized day profit and loss for the position in percent
+          example: -0.58
+        unrealizedDayPL:
+          type: number
+          description: Unrealized day profit and loss for the position
+          example: -26.59
+        changeToday:
+          type: number
+    GetAccountPositionsResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        tradingType:
+          type: string
+          description: The type of trading the account will participate in
+          enum:
+          - CASH
+          - MARGIN
+          example: CASH
+        updated:
+          type: string
+          description: Date and time of last update
+          example: '2023-10-10'
+        equityValue:
+          type: number
+          description: Current total market value of the account's open positions
+          example: 10116.44
+        equityPositions:
+          type: array
+          items:
+            $ref: '#/components/schemas/EquityPosition'
+    GetAccountPerformanceResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        startDate:
+          type: string
+          description: Start date of requested time frame of the accounts performance; format should follow 2019-07-08 or 2019-07-08T00:00:00Z
+          example: '2019-07-08'
+        endDate:
+          type: string
+          description: End date of requested time frame of the accounts performance; format should follow 2019-07-08 or 2019-07-08T00:00:00Z
+          example: '2019-07-08'
+        lastUpdated:
+          type: string
+          description: Date and time of last performance update
+          example: '2018-09-18T17:34:00.370Z'
+        performance:
+          type: array
+          items:
+            $ref: '#/components/schemas/PerformanceDTO'
+    PerformanceDTO:
+      type: object
+      properties:
+        realizedDayPL:
+          type: number
+          description: The actual profit or loss on the day in USD
+          example: 0
+        unrealizedDayPL:
+          type: number
+          description: Unrealized day profit and loss for the position
+          example: -26.59
+        cumRealizedPL:
+          type: number
+          description: The cumulative realized profit/loss from inception of account, each day adds to previous days
+          example: -0.01
+        date:
+          type: string
+          description: The date of the performance array values
+          example: '2018-03-22'
+        equity:
+          type: number
+          description: Invested equity (excluding cash) for this day (see performance.date). For Total Equity add performance equity and performance cash.
+          example: 115.88
+    BaseResponseInvestmentAccountBalanceResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/InvestmentAccountBalanceResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    InvestmentAccountBalanceResponse:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          description: The investment account number assigned by the brokerage partner
+          example: 928986898
+        status:
+          type: string
+          description: The status of the investment account
+          example: Account_Active
+        cash:
+          type: number
+          description: Total cash balance (settled and unsettled) held in the investment account
+          example: 1500.5
+        cashWithdrawable:
+          type: number
+          description: Settled cash currently available for withdrawal
+          example: 1200
+        cashTransferable:
+          type: number
+          description: Cash available to be transferred between accounts
+          example: 1000
+        buyingPower:
+          type: number
+          description: Total funds available to purchase securities
+          example: 1500.5
+        portfolioValue:
+          type: number
+          description: Total dollar value of all positions and cash held in the investment account
+          example: 12345.67
+        longMarketValue:
+          type: number
+          description: Current market value of all long positions held in the account
+          example: 10845.17
+        pendingTransferOut:
+          type: number
+          description: Cash amount currently in flight for an outgoing transfer
+          example: 250
+        pendingWithdrawalTotal:
+          type: number
+          description: Total withdrawal proceeds that have left the investment account but have not yet reached the member's HSA. Include this alongside the investment and HSA balances so the member's full balance is shown while the transfer is in progress. Zero when nothing is in transit
+          example: 250
+        pendingWithdrawals:
+          type: array
+          description: The individual withdrawals that make up pendingWithdrawalTotal, most recent first
+          items:
+            $ref: '#/components/schemas/PendingWithdrawal'
+    PendingWithdrawal:
+      type: object
+      properties:
+        date:
+          type: string
+          description: The date the withdrawal was recorded against the investment account
+          example: '2026-09-16'
+        transitDate:
+          type: string
+          description: The date the proceeds left the investment account and began transferring to the member's HSA
+          example: '2026-09-18'
+        amount:
+          type: number
+          description: The withdrawal amount currently in transit
+          example: 150
+    DocMemberInvestmentOrderRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/MemberInvestmentOrderRequest'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+    MemberInvestmentOrderDto:
+      type: object
+      properties:
+        orderType:
+          type: string
+          description: 'The type of order that is being placed.  Possible values: MARKET, LIMIT, STOP, MARKET_IF_TOUCHED'
+          example: MARKET
+        symbol:
+          type: string
+          description: The ticker symbol of the instrument
+          example: AMZN
+        side:
+          type: string
+          description: 'The side of the order: B - Buy or S - Sell'
+          example: B
+        quantity:
+          type: number
+          description: The order quantity in share amounts for all order types including fractional shares. Only required if amountCash is null.
+          example: 2
+        amountCash:
+          type: number
+          description: Order quantity in USD cash amount for "MARKET" and "STOP" order types. Only required if quantity is null.
+          example: 18
+        clientNotes:
+          type: string
+          description: Client facing notes that can be added to a request
+          example: Client facing notes that can be added to a request
+      required:
+      - orderType
+      - side
+    MemberInvestmentOrderRequest:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberInvestmentOrder:
+          $ref: '#/components/schemas/MemberInvestmentOrderDto'
+    InvestmentOrderDto:
+      type: object
+      properties:
+        orderID:
+          type: string
+          format: uuid
+          description: A unique identifier for the order
+          example: EF.418a5506-256c-4c3c-9d4d-f491522cf7f2
+        orderNo:
+          type: string
+          description: A human readable order identifier
+          example: EFXM000103
+      required:
+      - orderID
+      - orderNo
+    MemberInvestmentOrderResponse:
+      type: object
+      properties:
+        investmentOrder:
+          $ref: '#/components/schemas/InvestmentOrderDto'
+        investmentOrders:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvestmentOrderDto'
+    BaseMemberInvestmentOrder:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        orderNumber:
+          type: string
+    EodPositionDto:
+      type: object
+      properties:
+        symbol:
+          type: string
+        qty:
+          type: number
+        market_value:
+          type: number
+        unrealized_pl:
+          type: number
+    GetEodPositionResponse:
+      type: object
+      properties:
+        asOf:
+          type: string
+        accountId:
+          type: string
+          format: uuid
+        positions:
+          type: array
+          items:
+            $ref: '#/components/schemas/EodPositionDto'
+    GetInvestmentDocumentsDocModel:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetInvestmentDocumentsResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetInvestmentDocumentsResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvestmentDocumentDTO'
+    InvestmentDocumentDTO:
+      type: object
+      properties:
+        documentId:
+          type: string
+          description: Document UUID
+          example: f3a35e04-c896-4c90-9898-cdc4dc498a12
+        documentType:
+          type: string
+          description: 'Mapped document type: statement, tax, or trade_confirmation'
+          example: statement
+        date:
+          type: string
+          description: Document date (YYYY-MM-DD)
+          example: '2024-01-31'
+        displayName:
+          type: string
+          description: Human-readable document name
+          example: January 2024 Statement
+    GetInvestmentDocumentDownloadDocModel:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetInvestmentDocumentDownloadResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetInvestmentDocumentDownloadResponse:
+      type: object
+      properties:
+        documentId:
+          type: string
+          description: Id of the document
+          example: eedefb56-b5f2-4ef5-9b6b-4a724215e271
+        documentUrl:
+          type: string
+          description: Id of the document
+    BaseResponseGetMostActivesResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetMostActivesResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetMostActivesResponse:
+      type: object
+      properties:
+        mostActives:
+          type: array
+          items:
+            $ref: '#/components/schemas/MostActiveStock'
+        lastUpdated:
+          type: string
+    MostActiveStock:
+      type: object
+      properties:
+        symbol:
+          type: string
+        volume:
+          type: integer
+          format: int64
+        tradeCount:
+          type: integer
+          format: int64
+    BaseResponseGetMoversResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetMoversResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetMoversResponse:
+      type: object
+      properties:
+        marketType:
+          type: string
+        lastUpdated:
+          type: string
+        gainers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Mover'
+        losers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Mover'
+    Mover:
+      type: object
+      properties:
+        symbol:
+          type: string
+        percentChange:
+          type: number
+        change:
+          type: number
+        price:
+          type: number
+    BaseResponsePortfolio:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Portfolio'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    Portfolio:
+      type: object
+      properties:
+        id:
+          type: string
+        riskPortfolio:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+        cooldownDays:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        weights:
+          type: array
+          items:
+            $ref: '#/components/schemas/PortfolioWeight'
+        rebalanceConditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/RebalanceCondition'
+    PortfolioWeight:
+      type: object
+      properties:
+        type:
+          type: string
+        symbol:
+          type: string
+        percent:
+          type: number
+    RebalanceCondition:
+      type: object
+      properties:
+        type:
+          type: string
+        subType:
+          type: string
+        percent:
+          type: number
+        day:
+          type: string
+    BasePagination:
+      type: object
+      properties:
+        totalItems:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        page:
+          type: integer
+          format: int32
+    BaseResponseMetadataGetInstrumentsResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetInstrumentsResponse'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetInstrumentsResponse:
+      type: object
+      properties:
+        instruments:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstrumentDTO'
+    Metadata:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/BasePagination'
+    BaseResponseGetPortfoliosResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetPortfoliosResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetPortfoliosResponse:
+      type: object
+      properties:
+        portfolios:
+          type: array
+          items:
+            $ref: '#/components/schemas/Portfolio'
+    AdvisoryPortfolioDto:
+      type: object
+      properties:
+        currentRiskPortfolio:
+          type: string
+          description: Must match the member's current portfolio on record
+          example: AGGRESSIVE
+        newRiskPortfolio:
+          type: string
+          description: Target portfolio; must be valid portfolio
+          example: MODERATE
+      required:
+      - currentRiskPortfolio
+      - newRiskPortfolio
+    DocUpdateAdvisoryPortfolioRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/UpdateAdvisoryPortfolioRequest'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    UpdateAdvisoryPortfolioRequest:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        advisoryPortfolio:
+          $ref: '#/components/schemas/AdvisoryPortfolioDto'
+    BaseResponseUpdateAdvisoryPortfolioResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/UpdateAdvisoryPortfolioResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    UpdateAdvisoryPortfolioResponse:
+      type: object
+      properties:
+        riskPortfolio:
+          type: string
+          description: The new risk portfolio the member is now subscribed to
+          example: MODERATE
+    CloseAllPositionsRequest:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+    DocCloseAllPositionsRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CloseAllPositionsRequest'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    CloseAllPositionsDocModelResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CloseAllPositionsResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    CloseAllPositionsResponse:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        positions:
+          type: array
+          description: List of positions submitted for closure, each with its resulting order status
+          items:
+            $ref: '#/components/schemas/ClosePositionDto'
+    ClosePositionDto:
+      type: object
+      properties:
+        symbol:
+          type: string
+          description: The ticker symbol of the instrument
+          example: AMZN
+        status:
+          type: string
+          description: The resulting order status for this position. Pending = order submitted to broker awaiting fill; Failed = broker rejected the order; New = order created but not yet submitted
+          example: Pending
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-provenance:
+  method: searched
+  source: https://docs.lynx-fh.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.lynx-fh.com/reference/closeallpositions.md
+  - https://docs.lynx-fh.com/reference/createorder.md
+  - https://docs.lynx-fh.com/reference/getaccountorders.md
+  - https://docs.lynx-fh.com/reference/getaccountperformance.md
+  - https://docs.lynx-fh.com/reference/getaccountpositions.md
+  - https://docs.lynx-fh.com/reference/getclientorginvestmentlist.md
+  - https://docs.lynx-fh.com/reference/getdisclosuresurl.md
+  - https://docs.lynx-fh.com/reference/geteodaccountpositions.md
+  - https://docs.lynx-fh.com/reference/gethistoricalbars.md
+  - https://docs.lynx-fh.com/reference/getinstrumentdetails.md
+  - https://docs.lynx-fh.com/reference/getinstruments.md
+  - https://docs.lynx-fh.com/reference/getinstrumentsquote.md
+  - https://docs.lynx-fh.com/reference/getinvestmentaccountbalance.md
+  - https://docs.lynx-fh.com/reference/getinvestmentaccounttransactions.md
+  - https://docs.lynx-fh.com/reference/getinvestmentdocumentdownloadurl.md
+  - https://docs.lynx-fh.com/reference/getinvestmentdocuments.md
+  - https://docs.lynx-fh.com/reference/getmostactives.md
+  - https://docs.lynx-fh.com/reference/getmovers.md
+  - https://docs.lynx-fh.com/reference/getportfolio.md
+  - https://docs.lynx-fh.com/reference/getportfolios.md
+  - https://docs.lynx-fh.com/reference/patchcancelorder.md
+  - https://docs.lynx-fh.com/reference/updateportfolio.md
+  merge:
+    pages: 22
+    deduped: 86
+    conflicts_kept_first: 0

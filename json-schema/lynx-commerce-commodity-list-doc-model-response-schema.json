@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/lynx/main/json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json",
+  "title": "CommerceCommodityListDocModelResponse",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/lynx-commodity-api-openapi.yml#/components/schemas/CommerceCommodityListDocModelResponse",
+  "type": "object",
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/CommerceCommodityListResponse"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ResponseException"
+      }
+    }
+  },
+  "$defs": {
+    "BasePagination": {
+      "type": "object",
+      "properties": {
+        "totalItems": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "page": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "CommerceCommodityListResponse": {
+      "type": "object",
+      "properties": {
+        "commodities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CommodityListItemDto"
+          }
+        }
+      }
+    },
+    "CommodityListItemDto": {
+      "type": "object",
+      "properties": {
+        "sku": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "brand": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "catalogs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "eligibleProducts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fsaEligible": {
+          "type": "boolean"
+        },
+        "primaryImage": {
+          "type": "string"
+        },
+        "discountAmount": {
+          "type": "number"
+        },
+        "outOfStock": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Metadata": {
+      "type": "object",
+      "properties": {
+        "pagination": {
+          "$ref": "#/$defs/BasePagination"
+        }
+      }
+    },
+    "ResponseException": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "type": "string",
+          "description": "The GBL error code that is populated when the exceptionSource is SYSTEM"
+        },
+        "exceptionSource": {
+          "type": "string",
+          "description": "Characterizes the type of exception (JSON, SYSTEM, PARAMETER)"
+        },
+        "exceptionMessage": {
+          "type": "string",
+          "description": "Additional information about the exception"
+        }
+      }
+    }
+  }
+}
