@@ -1,0 +1,2975 @@
+openapi: 3.2.0
+info:
+  title: Lynx Commerce API
+  version: '"1.0"'
+  license:
+    name: LynxFH
+    url: http://lynx-fh.com
+  termsOfService: http://lynx-fh.com
+  description: 'Operations tagged Commerce across 2 of this provider''s published API definitions: lynx-commerce-order-api-openapi.yml, lynx-commodity-api-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://sandbox.lynx-fh.co
+security:
+- bearerAuth: []
+tags:
+- name: Commerce
+paths:
+  /commerce/cart/add:
+    post:
+      tags:
+      - Commerce
+      summary: Add to Cart
+      description: This API adds a commodity to a member’s cart.
+      operationId: addToCart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-134: ClientOrg is in Inactive state
+
+            - GBL-222: Client org must be enrolled in ECOMMERCE product to access this API
+
+            - GBL-174: Member is in Inactive state
+
+            - GBL-327: Product is unavailable due to current status
+
+            - GBL-210: SKU is in the client org exclusion list
+
+            - GBL-221: Unable to order, item is not in stock
+
+            - GBL-252: SKU is not eligible for this member or catalog
+
+            - GBL-217: SKU is already in member''s cart
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/cart/detail:
+    get:
+      tags:
+      - Commerce
+      summary: Get Cart Detail
+      description: This API returns the details for a specific cart.
+      operationId: getCartDetail
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCartDetailDocModelResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-134: ClientOrg is in Inactive state
+
+            - GBL-222: Client org must be enrolled in ECOMMERCE product to access this API
+
+            - GBL-174: Member is in Inactive state
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/cart/update:
+    put:
+      tags:
+      - Commerce
+      summary: Update Cart
+      description: This API updates a commodity in the member’s cart.
+      operationId: updateCart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CartResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-134: ClientOrg is in Inactive state
+
+            - GBL-222: Client org must be enrolled in ECOMMERCE product to access this API
+
+            - GBL-174: Member is in Inactive state
+
+            - GBL-221: Unable to order, item is not in stock
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/coupon:
+    delete:
+      tags:
+      - Commerce
+      summary: Delete coupon
+      description: This API removes a promotional coupon code from the member's current cart.
+      operationId: deleteCoupon
+      parameters:
+      - name: clientMemberId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: clientOrgName
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteCouponResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-134: ClientOrg is in Inactive state
+
+            - GBL-222: Client org must be enrolled in ECOMMERCE product to access this API
+
+            - GBL-174: Member is in Inactive state
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/coupon/validate:
+    post:
+      tags:
+      - Commerce
+      summary: Validate Coupon
+      description: This API validates a promotional coupon code against the member's current cart. Returns eligibility status and, if valid, a pricing preview with the calculated discount pre-tax.
+      operationId: validateCoupon
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateCouponRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateCouponResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-134: ClientOrg is in Inactive state
+
+            - GBL-222: Client org must be enrolled in ECOMMERCE product to access this API
+
+            - GBL-174: Member is in Inactive state
+
+            - GBL-219: Member''s cart is empty
+
+            - GBL-606: This coupon cannot be applied to your order
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/external-card:
+    delete:
+      tags:
+      - Commerce
+      summary: Delete External Card
+      description: This API deletes an external card of a member.
+      operationId: deleteExternalCard
+      parameters:
+      - name: clientOrgName
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: clientMemberId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: partnerId
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteExternalCardDocModelResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-134: ClientOrg is in Inactive state
+
+            - GBL-222: Client org must be enrolled in ECOMMERCE product to access this API
+
+            - GBL-174: Member is in Inactive state
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/external-card/list:
+    get:
+      tags:
+      - Commerce
+      summary: Get External Cards List
+      description: This API returns the list of external cards for a specific member.
+      operationId: getExternalCardsList
+      parameters:
+      - name: clientOrgName
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: clientMemberId
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetExternalCardsListDocModelResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-134: ClientOrg is in Inactive state
+
+            - GBL-222: Client org must be enrolled in ECOMMERCE product to access this API
+
+            - GBL-174: Member is in Inactive state
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/order:
+    post:
+      tags:
+      - Commerce
+      summary: Place Member E-commerce Order
+      description: The place member ecommerce order API is used to make an e-commerce order for a member.
+      operationId: postMemberEcommerceOrder
+      requestBody:
+        description: This is the member e-commerce order request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostMemberEcommerceOrderRequestDoc'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberEcommerceOrderResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-134: ClientOrg is in Inactive state
+
+            - GBL-222: Client org must be enrolled in ECOMMERCE product to access this API
+
+            - GBL-174: Member is in Inactive state
+
+            - GBL-173: Member account is not active or is expired
+
+            - GBL-200: Member account has a future dated effective date
+
+            - GBL-133: Insufficient funds in member account
+
+            - GBL-219: Member''s cart is empty
+
+            - GBL-273: Sales tax must be calculated before placing an order
+
+            - GBL-229: Amount requested exceeds the total order amount
+
+            - GBL-220: Total order amount exceeds amount requested
+
+            - GBL-249: SKU is out of stock
+
+            - GBL-327: Product is unavailable due to current status
+
+            - GBL-221: Unable to order, item is not in stock
+
+            - GBL-194: External card ID is not valid
+
+            - GBL-607: Coupon code does not match the coupon applied to the cart
+
+            - GBL-230: There was an issue with your request, please try again
+
+            - GBL-295: Unable to void transaction, nightly settlement has already occurred
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/order/detail:
+    get:
+      tags:
+      - Commerce
+      summary: Get Order Detail
+      description: This API returns detailed information for the specific order.
+      operationId: getOrderDetail
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: orderNumber
+        in: query
+        description: A unique order identifier created when an order is placed
+        required: true
+        schema:
+          type: string
+        example: ORD00000000004
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOrderDetailDocModelResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/order/list:
+    get:
+      tags:
+      - Commerce
+      summary: Get Orders List
+      description: This API returns the list of orders.
+      operationId: getOrdersList
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: false
+        schema:
+          type: string
+          default: ''
+        example: 3f50436491
+      - name: orderNumber
+        in: query
+        description: A unique order identifier created when an order is placed
+        required: false
+        schema:
+          type: string
+          default: ''
+        example: ORD00000000004
+      - name: page
+        in: query
+        description: Page number to be returned. If not specified, default is 1.
+        required: false
+        schema:
+          type: integer
+          default: 1
+        example: 1
+      - name: pageSize
+        in: query
+        description: Maximum number of items to be returned per page. If not specified, default is 25.
+        required: false
+        schema:
+          type: integer
+          default: 25
+        example: 25
+      - name: sortValue
+        in: query
+        description: The property by which the response is sorted
+        required: false
+        schema:
+          type: string
+          default: creationDate
+          enum:
+          - creationDate
+      - name: sortOrder
+        in: query
+        description: The sort direction
+        required: false
+        schema:
+          type: string
+          default: Descending
+          enum:
+          - Ascending
+          - Descending
+      - name: status
+        in: query
+        description: The status of the order
+        required: false
+        schema:
+          type: string
+          enum:
+          - New
+          - Processing
+          - Cancelled
+          - Delivered
+          - Returned
+      - name: startDate
+        in: query
+        description: Start date of date range
+        required: false
+        schema:
+          type: string
+        example: '2022-03-20'
+      - name: endDate
+        in: query
+        description: End date of date range
+        required: false
+        schema:
+          type: string
+        example: '2022-03-25'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetOrderListDocModelResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/order/purchase-history:
+    get:
+      tags:
+      - Commerce
+      summary: Get Purchase History Commodities
+      description: Returns a paginated list of commodities previously purchased by the member, including last purchase date and total quantity purchased.
+      operationId: getPurchaseHistory
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: false
+        schema:
+          type: string
+          default: ''
+        example: 3f50436491
+      - name: page
+        in: query
+        description: Page number to be returned. If not specified, default is 1.
+        required: false
+        schema:
+          type: integer
+          default: 1
+        example: 1
+      - name: pageSize
+        in: query
+        description: Maximum number of items to be returned per page. If not specified, default is 25.
+        required: false
+        schema:
+          type: integer
+          default: 25
+        example: 25
+      - name: sortBy
+        in: query
+        description: The property by which the response is sorted
+        required: false
+        schema:
+          type: string
+          default: lastPurchasedDate
+          enum:
+          - lastPurchasedDate
+          - totalQuantityPurchased
+      - name: sortOrder
+        in: query
+        description: The sort direction
+        required: false
+        schema:
+          type: string
+          default: Descending
+          enum:
+          - Ascending
+          - Descending
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchaseHistoryDocModelResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/order/replace:
+    post:
+      tags:
+      - Commerce
+      summary: Replace Item E-commerce Order
+      description: Allows a client to replace an item that may have been damaged or not delivered.
+      operationId: postCommerceReplace
+      requestBody:
+        description: This is the replace e-commerce order request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostReplaceEcommerceOrderRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReplaceOrderResponseModel'
+        '400':
+          description: 'Bad request.
+
+            - GBL-134: ClientOrg is in Inactive state
+
+            - GBL-222: Client org must be enrolled in ECOMMERCE product to access this API
+
+            - GBL-174: Member is in Inactive state
+
+            - GBL-232: Unable to request replacement for items ordered over the allowed number of days ago
+
+            - GBL-234: No item found with SKU in the original order
+
+            - GBL-231: Unable to replace items that are not in shipped or delivered status
+
+            - GBL-229: Replacement quantity exceeds the quantity originally ordered
+
+            - GBL-230: There was an issue with your request, please try again
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/order/tax:
+    put:
+      tags:
+      - Commerce
+      summary: Calculate Sales Tax
+      description: This API calculates the estimated taxes for a member’s order. Each of the items within the member’s cart will be returned with the sales tax amount required to be collected.
+      operationId: calculateSalesTax
+      requestBody:
+        description: This is the calculate sales tax request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutCommerceSalesTaxRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculateSalesTaxResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-134: ClientOrg is in Inactive state
+
+            - GBL-222: Client org must be enrolled in ECOMMERCE product to access this API
+
+            - GBL-174: Member is in Inactive state
+
+            - GBL-219: Member''s cart is empty
+
+            - GBL-230: There was an issue with your request, please try again
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/refund:
+    post:
+      tags:
+      - Commerce
+      summary: Submit E-Commerce Refund
+      description: Allows a member to submit a refund request for a recently completed e-commerce order.
+      operationId: postRefund
+      requestBody:
+        description: This is the post refund request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostEcommerceRefundRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberEcommerceOrderResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-134: ClientOrg is in Inactive state
+
+            - GBL-222: Client org must be enrolled in ECOMMERCE product to access this API
+
+            - GBL-174: Member is in Inactive state
+
+            - GBL-232: Unable to request refund for items ordered over the allowed number of days ago
+
+            - GBL-234: No item found with SKU in the order
+
+            - GBL-238: Item has already had a refund requested
+
+            - GBL-231: Unable to request refund for items not in shipped or delivered status
+
+            - GBL-235: Refund quantity exceeds the quantity ordered
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/refund/list:
+    get:
+      tags:
+      - Commerce
+      summary: Get E-Commerce Refund List
+      description: Allows a member to retrieve a list of their refund requests, including details such as the order number, item SKU, quantity, refund reason, status, and refund amount.
+      operationId: getMemberOrderRefundList
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: orderNumber
+        in: query
+        description: A unique order identifier created when an order is placed
+        required: false
+        schema:
+          type: string
+          default: ''
+        example: ORD00000000004
+      - name: page
+        in: query
+        description: Page number to be returned. If not specified, default is 1.
+        required: false
+        schema:
+          type: integer
+          default: 1
+        example: 1
+      - name: pageSize
+        in: query
+        description: Maximum number of items to be returned per page. If not specified, default is 25.
+        required: false
+        schema:
+          type: integer
+          default: 25
+        example: 25
+      - name: sortValue
+        in: query
+        description: The property by which the response is sorted
+        required: false
+        schema:
+          type: string
+          default: creationDate
+          enum:
+          - creationDate
+      - name: sortOrder
+        in: query
+        description: The sort direction
+        required: false
+        schema:
+          type: string
+          default: Descending
+          enum:
+          - Ascending
+          - Descending
+      - name: status
+        in: query
+        description: The status of the order
+        required: false
+        schema:
+          type: string
+          enum:
+          - Pending
+          - Refunded
+          - RefundDenied
+      - name: startDate
+        in: query
+        description: Start date of date range
+        required: false
+        schema:
+          type: string
+        example: '2022-03-20'
+      - name: endDate
+        in: query
+        description: End date of date range
+        required: false
+        schema:
+          type: string
+        example: '2022-03-25'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCommerceRefundListResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/catalog:
+    get:
+      tags:
+      - Commerce
+      summary: Get Client Org Commerce Catalog
+      description: The get client org commerce catalog API is used to get the commerce items for a client org.
+      operationId: getClientOrgCommerceCatalog
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: catalogName
+        in: query
+        description: The name of the catalog
+        required: true
+        schema:
+          type: string
+        example: HSA_Catalog
+      - name: categories
+        in: query
+        description: Pipe delimited list of commodity types
+        required: false
+        style: pipeDelimited
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+        example: Gloves|Socks
+      - name: brand
+        in: query
+        description: Brand of commodity
+        required: false
+        schema:
+          type: string
+        example: Apple
+      - name: searchValue
+        in: query
+        description: Search commodities by description, category, sku or brand
+        required: false
+        schema:
+          type: string
+        example: Antimicrobial
+      - name: sortValue
+        in: query
+        description: The property by which the response is sorted
+        required: false
+        schema:
+          type: string
+          enum:
+          - Price
+          - Description
+          - Trending
+          - Popular
+        example: Price
+      - name: sortOrder
+        in: query
+        description: The sort direction
+        required: false
+        schema:
+          type: string
+          enum:
+          - Descending
+          - Ascending
+        example: Descending
+      - name: page
+        in: query
+        description: Page number to be returned. If not specified, default is 1.
+        required: false
+        schema:
+          type: integer
+          default: 1
+        example: 1
+      - name: pageSize
+        in: query
+        description: Maximum number of items to be returned per page. If not specified, default is 25.
+        required: false
+        schema:
+          type: integer
+          default: 25
+        example: 25
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommerceCatalogResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/catalog/exclusion:
+    get:
+      tags:
+      - Commerce
+      summary: Get Client Org Exclusion List
+      description: The get client org exclusion list API is used to get the exclusions of what the client org can purchase through e-commerce.
+      operationId: getClientOrgExclusionList
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetClientOrgExclusionList'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    post:
+      tags:
+      - Commerce
+      summary: Add Client Org Exclusion
+      description: The add client org exclusion API is used to add exclusions to what members of the client org can purchase through e-commerce.
+      operationId: addClientOrgExclusions
+      requestBody:
+        description: This is the add client org exclusion request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientOrgExclusionListRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-274: Cannot add to Exclusion List, invalid exclusion type
+
+            - GBL-228: Exclusion already included in the list or commodity not found
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    delete:
+      tags:
+      - Commerce
+      summary: Delete Client Org Exclusion
+      description: The delete client org exclusion API is used to delete an item from the exclusion list of what members of the client org can purchase through e-commerce.
+      operationId: deleteClientOrgExclusions
+      requestBody:
+        description: This is the delete client org exclusion request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientOrgExclusionListRequest'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-210: The following exclusions are invalid or could not be found
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/catalog/field:
+    get:
+      tags:
+      - Commerce
+      summary: Get Category and Brand by Catalog
+      description: The get category and brand by catalog API is used to get filtering criteria for the shop online catalogs.
+      operationId: getCatalogField
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: catalogName
+        in: query
+        description: The name of the catalog
+        required: false
+        schema:
+          type: string
+        example: HSA_Catalog
+      - name: field
+        in: query
+        description: Field to get entries of
+        required: true
+        schema:
+          type: string
+          enum:
+          - category
+          - brand
+          - classification
+        example: category
+      - name: threshold
+        in: query
+        description: Minimum value of an entry to be returned
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+        example: 1
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: false
+        schema:
+          type: string
+        example: 3f50436491
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCatalogFieldResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-289: Invalid field, unable to search by the provided field value
+
+            - GBL-605: Member does not have any active products
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: 'Not found.
+
+            - GBL-350: Member not found with clientMemberId in clientOrgName
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/catalog/list:
+    get:
+      tags:
+      - Commerce
+      summary: Get Member Catalogs
+      description: Returns the catalogs available to the member for online purchases.
+      operationId: getProductClientOrgCatalogs
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: false
+        schema:
+          type: string
+        example: 3f50436491
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCatalogFieldResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: 'Not found.
+
+            - GBL-350: Member not found with clientMemberId in clientOrgName
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/classification:
+    get:
+      tags:
+      - Commerce
+      summary: Get Classifications
+      description: Get classifications for a client org or member
+      operationId: getClassifications
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: false
+        schema:
+          type: string
+        example: 3f50436491
+      - name: productName
+        in: query
+        description: The name of the product
+        required: false
+        schema:
+          type: string
+        example: HSA_01
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MemberViewCommerceClassificationDto'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/commodity/detail:
+    get:
+      tags:
+      - Commerce
+      summary: Get Commodity Detail
+      description: This API returns the details for a specific commodity.
+      operationId: getCommodityDetail
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: sku
+        in: query
+        description: Stock Keeping Unit
+        required: true
+        schema:
+          type: string
+        example: 1008194_EA
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCommodityDetailDocModelResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-327: Product is unavailable due to current status
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/commodity/facets:
+    get:
+      tags:
+      - Commerce
+      summary: Get Catalog Facets
+      description: Returns the category and brand filter facets with counts, scoped to the current classification, search and cross-selection context so each option's count matches the commodity list the grid would return.
+      operationId: getCommodityFacets
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: false
+        schema:
+          type: string
+        example: 3f50436491
+      - name: catalogName
+        in: query
+        description: The name of the catalog
+        required: false
+        schema:
+          type: string
+        example: HSA_Catalog
+      - name: classificationName
+        in: query
+        description: Lynx custom category groupings
+        required: false
+        schema:
+          type: string
+        example: Summer Sale
+      - name: categories
+        in: query
+        description: Pipe delimited list of commodity types
+        required: false
+        style: pipeDelimited
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+        example: Gloves|Socks
+      - name: brands
+        in: query
+        description: Brand of commodity
+        required: false
+        style: pipeDelimited
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+        example: Apple
+      - name: searchValue
+        in: query
+        description: Search commodities by description, category, sku or brand
+        required: false
+        schema:
+          type: string
+        example: Antimicrobial
+      - name: product
+        in: query
+        description: The name of the product
+        required: false
+        schema:
+          type: string
+        example: HSA_01
+      - name: categoryThreshold
+        in: query
+        description: Minimum number of products for a category to appear in the facet
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: brandThreshold
+        in: query
+        description: Minimum number of products for a brand to appear in the facet
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommerceCatalogFacetsResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-354: Classification name does not exist or is not available
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+  /commerce/commodity/list:
+    get:
+      tags:
+      - Commerce
+      summary: Get Commerce Commodities
+      description: The get commerce commodities API is used to get the commerce items for a client org.
+      operationId: getCommerceCommodityList
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: false
+        schema:
+          type: string
+        example: 3f50436491
+      - name: catalogName
+        in: query
+        description: The name of the catalog
+        required: false
+        schema:
+          type: string
+        example: HSA_Catalog
+      - name: classificationName
+        in: query
+        description: Lynx custom category groupings
+        required: false
+        schema:
+          type: string
+        example: Summer Sale
+      - name: categories
+        in: query
+        description: Pipe delimited list of commodity types
+        required: false
+        style: pipeDelimited
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+        example: Gloves|Socks
+      - name: brands
+        in: query
+        description: Brand of commodity
+        required: false
+        style: pipeDelimited
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+        example: Apple
+      - name: searchValue
+        in: query
+        description: Search commodities by description, category, sku or brand
+        required: false
+        schema:
+          type: string
+        example: Antimicrobial
+      - name: product
+        in: query
+        description: The name of the product
+        required: false
+        schema:
+          type: string
+        example: HSA_01
+      - name: sortValue
+        in: query
+        description: The property by which the response is sorted
+        required: false
+        schema:
+          type: string
+          enum:
+          - Price
+          - Description
+          - Trending
+          - Popular
+        example: Price
+      - name: sortOrder
+        in: query
+        description: The sort direction
+        required: false
+        schema:
+          type: string
+          enum:
+          - Descending
+          - Ascending
+        example: Descending
+      - name: page
+        in: query
+        description: Page number to be returned. If not specified, default is 1.
+        required: false
+        schema:
+          type: integer
+          default: 1
+        example: 1
+      - name: pageSize
+        in: query
+        description: Maximum number of items to be returned per page. If not specified, default is 25.
+        required: false
+        schema:
+          type: integer
+          default: 25
+        example: 25
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommerceCommodityListDocModelResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-354: Classification name does not exist or is not available
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+    servers:
+    - url: https://sandbox.lynx-fh.co
+components:
+  schemas:
+    CartResponse:
+      type: object
+      properties:
+        commerceCommodity:
+          $ref: '#/components/schemas/BaseCartItemDto'
+    GetCartDetailDocModelResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetCartDetailResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    ExternalCardRequestDtoDoc:
+      type: object
+      properties:
+        id:
+          type: string
+          description: A unique identifier for the external card transaction, provided by the card partner. TrustCommerce gives back a transaction id, ProHealth the auth code of the pre-authorization it verified
+          example: 038-0447548957
+        amount:
+          type: number
+          description: Amount charged to card
+          example: 40.75
+        partnerOrgName:
+          type: string
+          description: The card partner the transaction was captured with, ProHealth or TrustCommerce
+          example: TrustCommerce
+      required:
+      - amount
+      - id
+      - partnerOrgName
+    CalculateSalesTaxResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        shipToAddress:
+          $ref: '#/components/schemas/BaseAddress'
+        salesTaxAmount:
+          type: number
+        memberCart:
+          type: array
+          items:
+            $ref: '#/components/schemas/SalesTaxCartDetailDto'
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    CalculateSalesTaxRequestDto:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        shipToAddress:
+          $ref: '#/components/schemas/BaseAddress'
+    CartItemDiscountDto:
+      type: object
+      properties:
+        sku:
+          type: string
+        retailPrice:
+          type: number
+        quantity:
+          type: integer
+          format: int32
+        discountAmount:
+          type: number
+        discountedAmount:
+          type: number
+    BaseAddress:
+      type: object
+      properties:
+        line1:
+          type: string
+          description: The first line of the address
+          example: 10
+        line2:
+          type: string
+          description: The (optional) second line of the address
+          example: address line2
+        city:
+          type: string
+          description: Address city
+          example: Boston
+        stateProvince:
+          type: string
+          description: 2-Character address state or province
+          example: MA
+        country:
+          type: string
+          description: Address country
+          example: US
+        postalCode:
+          type: string
+          description: Address zip code
+          example: 02119
+        postalCodeExtension:
+          type: string
+          description: Address zip code extension
+          example: '0123'
+      required:
+      - city
+      - country
+      - line1
+      - postalCode
+      - stateProvince
+    CommerceOrderDetailDto:
+      type: object
+      properties:
+        orderNumber:
+          type: string
+          description: A unique order identifier created when an order is placed
+          example: ORD00000000004
+        status:
+          type: string
+          description: The status of the order
+          example: NEW
+        orderDatetime:
+          type: string
+          format: date-time
+          description: The date and time the order was placed
+          example: '2024-10-10T10:00:00.000'
+        expectedDeliveryDatetime:
+          type: string
+          format: date-time
+          description: The expected delivery date and time of the order
+          example: '2024-10-10T10:00:00.000'
+        totalAmount:
+          type: number
+          description: The total cost of the order
+          example: 100
+        member:
+          $ref: '#/components/schemas/MemberDto'
+        shipToAddress:
+          $ref: '#/components/schemas/BaseAddress'
+        memberCommerceOrderLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommerceOrderLineDto'
+        shippingAmount:
+          type: number
+          description: The shipping cost of the order
+          example: 2
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommerceOrderAccountDto'
+        cards:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalCardDto'
+        coupon:
+          $ref: '#/components/schemas/BaseCouponRedemptionDto'
+      required:
+      - orderNumber
+    ReplaceEcommerceOrderRequestDto:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberCommerceOrder:
+          $ref: '#/components/schemas/BaseCommerceOrderDto'
+        memberCommerceOrderLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReplaceOrderLineDto'
+        replaceReason:
+          type: string
+        shipToAddress:
+          $ref: '#/components/schemas/BaseAddress'
+        emailAddress:
+          type: string
+          description: Email address - any notifications will be sent to this email address
+          example: john@doe.com
+        phoneNumber:
+          type: string
+          description: 10-Digit phone number
+          example: 5089188736
+      required:
+      - emailAddress
+      - phoneNumber
+    ValidateCouponRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ValidateCouponData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    CartRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CartRequestData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    CommerceOrderDto:
+      type: object
+      properties:
+        orderNumber:
+          type: string
+          description: A unique order identifier created when an order is placed
+          example: ORD00000000004
+        status:
+          type: string
+          description: The status of the order
+          example: NEW
+        orderDatetime:
+          type: string
+          format: date-time
+          description: The date and time the order was placed
+          example: '2024-10-10T10:00:00.000'
+        expectedDeliveryDatetime:
+          type: string
+          format: date-time
+          description: The expected delivery date and time of the order
+          example: '2024-10-10T10:00:00.000'
+        totalAmount:
+          type: number
+          description: The total cost of the order
+          example: 100
+        member:
+          $ref: '#/components/schemas/MemberDto'
+        shipToAddress:
+          $ref: '#/components/schemas/BaseAddress'
+        memberCommerceOrderLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommerceOrderLineDto'
+      required:
+      - orderNumber
+    ReplaceCommerceOrderResponse:
+      type: object
+      properties:
+        ecommerceOrder:
+          $ref: '#/components/schemas/BaseCommerceOrderDto'
+    GetOrderDetailResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberCommerceOrder:
+          $ref: '#/components/schemas/CommerceOrderDetailDto'
+    GetExternalCardsListResponse:
+      type: object
+      properties:
+        externalCards:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalCardDto'
+    DeleteCouponResponse:
+      type: object
+      properties:
+        coupon:
+          $ref: '#/components/schemas/ValidateCouponDto'
+    DeleteExternalCardDocModelResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/DeleteExternalCardResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetRefundedListLinesDto:
+      type: object
+      properties:
+        sku:
+          type: string
+        refundReason:
+          type: string
+        refundStatus:
+          type: string
+        refundAmount:
+          type: number
+        refundQuantity:
+          type: integer
+          format: int32
+        requestDate:
+          type: string
+          format: date-time
+    MemberEcommerceOrderResponse:
+      type: object
+      properties:
+        ecommerceOrder:
+          $ref: '#/components/schemas/BaseCommerceOrderDto'
+    DeleteExternalCardResponse:
+      type: object
+      properties:
+        memberExternalCard:
+          $ref: '#/components/schemas/BaseExternalCardDto'
+    GetCommerceRefundListResponse:
+      type: object
+      properties:
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberCommerceOrders:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetRefundedListOrdersDto'
+    DiscountDto:
+      type: object
+      properties:
+        preTaxSubtotal:
+          type: number
+        discountAmount:
+          type: number
+        postDiscountSubtotal:
+          type: number
+        itemDiscounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItemDiscountDto'
+    PostMemberEcommerceOrderRequestDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/MemberEcommerceOrderRequestDtoDoc'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    MemberEcommerceOrderRequestDtoDoc:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberAccounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberAccountAmountDto'
+        externalCards:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalCardRequestDtoDoc'
+        emailAddress:
+          type: string
+          description: Email address - any notifications will be sent to this email address
+          example: john@doe.com
+        phoneNumber:
+          type: string
+          description: 10-Digit phone number
+          example: 5089188736
+      required:
+      - emailAddress
+      - phoneNumber
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetExternalCardsListDocModelResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetExternalCardsListResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    PostReplaceEcommerceOrderRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ReplaceEcommerceOrderRequestDto'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+    EcommerceRefundRequestDto:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberCommerceOrder:
+          $ref: '#/components/schemas/BaseCommerceOrderDto'
+        memberCommerceOrderLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseCartItemDto'
+        refundReason:
+          type: string
+          description: Reason for refunding an item
+          enum:
+          - Never Received
+          - Damaged Good
+          - Wrong Item
+          - Other
+          example: Never Received
+      required:
+      - refundReason
+    MemberAccountAmountDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the bank account
+          example: 6ae73974-2bd1-0f0d-7316-bbfff8cdc91b
+        amount:
+          type: number
+      required:
+      - id
+    BaseCartItemDto:
+      type: object
+      properties:
+        sku:
+          type: string
+          description: Stock Keeping Unit
+          example: 1008194_EA
+        quantity:
+          type: integer
+          format: int32
+          description: The quantity for this item.
+          example: 3
+    ValidateCouponData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        couponCode:
+          type: string
+          description: Member-facing coupon code ("COUPON10%"). Used as the lookup key for validation and discount calculation.
+          example: WELCOME10
+      required:
+      - couponCode
+    GetOrderListDocModelResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetOrderListResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetOrderListResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        memberCommerceOrders:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommerceOrderDto'
+    PostEcommerceRefundRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/EcommerceRefundRequestDto'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    CommerceOrderAccountDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier
+          example: cf82639c-e3b6-4d51-9871-1e452a2a0001
+        amount:
+          type: number
+          description: The amount of the transaction
+          example: 100
+        displayName:
+          type: string
+          description: The display name of the product
+          example: HSA
+    PurchaseHistoryCommodityDto:
+      type: object
+      properties:
+        commodityId:
+          type: string
+          format: uuid
+        sku:
+          type: string
+        name:
+          type: string
+        primaryImageUrl:
+          type: string
+        retailPrice:
+          type: number
+        lastPurchasedDate:
+          type: string
+          format: date
+        totalQuantityPurchased:
+          type: integer
+          format: int32
+        outOfStock:
+          type: boolean
+    PurchaseHistoryDocModelResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PurchaseHistoryResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetRefundedListOrdersDto:
+      type: object
+      properties:
+        orderNumber:
+          type: string
+          description: A unique order identifier created when an order is placed
+          example: ORD00000000004
+        orderDatetime:
+          type: string
+          format: date-time
+          description: A unique order identifier created when an order is placed
+          example: ORD00000000004
+        memberCommerceOrderLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/GetRefundedListLinesDto'
+    CommerceOrderLineDto:
+      type: object
+      properties:
+        quantity:
+          type: integer
+          format: int32
+          description: The quantity for this item.
+          example: 3
+        sku:
+          type: string
+          description: Stock Keeping Unit
+          example: 1008194_EA
+        status:
+          type: string
+          description: The status of the order line
+          example: NEW
+        trackingNumber:
+          type: string
+          description: Tracking information for E-Commerce Order
+          example: 1Z659820004934324081
+        expectedDeliveryDatetime:
+          type: string
+          format: date-time
+          description: The expected delivery date and time of the order
+          example: '2024-10-10T10:00:00.000'
+        retailPrice:
+          type: number
+          description: Price of commodity
+          example: 9.99
+        salesTax:
+          type: number
+          description: The total sales tax for this item.
+          example: 1
+        primaryImage:
+          type: string
+          description: Primary image for the commodity
+          example: https://imgcdn.mckesson.com/CumulusWeb/Images/Original_Image/476343.jpg
+        commodityTitle:
+          type: string
+          description: Title of the commodity
+          example: GoodSense Antacid Tablets
+        commodityDescription:
+          type: string
+          description: Description of the commodity
+          example: Calcium Carbonate, 500 mg
+        trackingUrl:
+          type: string
+          description: Tracking url for E-Commerce Order
+          example: www.lorem.com?trackingNumber=1Z659820004934324081
+    GetOrderDetailDocModelResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetOrderDetailResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    BaseExternalCardDto:
+      type: object
+      properties:
+        partnerId:
+          type: string
+          description: External card identifier with the partner
+          example: 111111
+    CartRequestData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        commerceCommodity:
+          $ref: '#/components/schemas/BaseCartItemDto'
+    BaseMember:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+    ValidateCouponResponse:
+      type: object
+      properties:
+        coupon:
+          $ref: '#/components/schemas/ValidateCouponDto'
+        pricingDiscount:
+          $ref: '#/components/schemas/DiscountDto'
+    PurchaseHistoryResponse:
+      type: object
+      properties:
+        commerceCommodityItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/PurchaseHistoryCommodityDto'
+    CartDetailDto:
+      type: object
+      properties:
+        sku:
+          type: string
+          description: Stock Keeping Unit
+          example: 1008194_EA
+        merchantDescription:
+          type: string
+          description: Description of the commodity
+          example: McKesson Vinyl Exam Glove, Small, Clear
+        quantity:
+          type: integer
+          format: int32
+          description: Indicates if commodity is low inventory
+        retailPrice:
+          type: number
+          description: Price of commodity
+          example: 9.99
+        salesTaxAmount:
+          type: number
+          description: The total sales tax for this item.
+          example: 1
+        primaryImage:
+          type: string
+          description: Long description of Commodity
+        eligibleProducts:
+          type: array
+          description: Long description of Commodity
+          items:
+            type: string
+        discountAmount:
+          type: number
+          description: Discount Amount
+        availableQuantity:
+          type: integer
+          format: int32
+          description: Number of commodity available for sale
+    MemberDto:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        firstName:
+          type: string
+          description: First name
+          example: John
+        lastName:
+          type: string
+          description: Last name
+          example: Smith
+      required:
+      - clientMemberId
+    ReplaceOrderResponseModel:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ReplaceCommerceOrderResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    BaseCouponRedemptionDto:
+      type: object
+      properties:
+        code:
+          type: string
+        discountAmount:
+          type: number
+    ValidateCouponDto:
+      type: object
+      properties:
+        code:
+          type: string
+    SalesTaxCartDetailDto:
+      type: object
+      properties:
+        sku:
+          type: string
+          description: Stock Keeping Unit
+          example: 1008194_EA
+        merchantDescription:
+          type: string
+          description: Description of the commodity
+          example: McKesson Vinyl Exam Glove, Small, Clear
+        quantity:
+          type: integer
+          format: int32
+          description: Indicates if commodity is low inventory
+        retailPrice:
+          type: number
+          description: Price of commodity
+          example: 9.99
+        salesTaxAmount:
+          type: number
+          description: The total sales tax for this item.
+          example: 1
+        primaryImage:
+          type: string
+          description: Long description of Commodity
+        eligibleProducts:
+          type: array
+          description: Long description of Commodity
+          items:
+            type: string
+        discountAmount:
+          type: number
+          description: Discount Amount
+        availableQuantity:
+          type: integer
+          format: int32
+          description: Number of commodity available for sale
+        retailPriceAfterDiscount:
+          type: number
+    GetCartDetailResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        shipToAddress:
+          $ref: '#/components/schemas/BaseAddress'
+        couponCode:
+          type: string
+        memberCart:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartDetailDto'
+    PutCommerceSalesTaxRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CalculateSalesTaxRequestDto'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    ReplaceOrderLineDto:
+      type: object
+      properties:
+        sku:
+          type: string
+        quantity:
+          type: integer
+          format: int32
+    BaseCommerceOrderDto:
+      type: object
+      properties:
+        orderNumber:
+          type: string
+          description: A unique order identifier created when an order is placed
+          example: ORD00000000004
+      required:
+      - orderNumber
+    ExternalCardDto:
+      type: object
+      properties:
+        partnerId:
+          type: string
+          description: External card identifier with the partner
+          example: 111111
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the external card
+          example: c5bb2efc-bc0f-4970-8821-8f853e0fc1ae
+        lastFour:
+          type: string
+          description: Last four digits of the card number
+          example: 1234
+        expiration:
+          type: string
+          description: Expiration date of the card
+          example: 01/01
+        brand:
+          type: string
+          description: Brand of the card
+          example: Visa
+        addDatetime:
+          type: string
+          format: date-time
+          description: Date and time of add
+          example: '2023-04-24 18:20:12.629221'
+    GetCommodityDetailDocModelResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetCommodityDetailResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    ActiveIngredientDto:
+      type: object
+      properties:
+        ingredientName:
+          type: string
+          description: Active ingredients in a commodity
+    CommodityDto:
+      type: object
+      properties:
+        sku:
+          type: string
+          description: Stock Keeping Unit
+          example: 1008194_EA
+        description:
+          type: string
+          description: Description of the commodity
+          example: McKesson Vinyl Exam Glove, Small, Clear
+        category:
+          type: string
+          description: Pipe delimited list of commodity types
+          example: Gloves|Socks
+        brand:
+          type: string
+          description: Brand of commodity
+          example: Apple
+        price:
+          type: number
+          description: Price of commodity
+          example: 9.99
+        quantity:
+          type: integer
+          format: int32
+          description: Number of commodity available for sale
+          example: 145
+        fsaEligible:
+          type: boolean
+          description: Indicates if commodity is FSA eligible
+        primaryImage:
+          type: string
+          description: Display image for commodity
+          example: https://imgcdn.mckesson.com/CumulusWeb/Images/Original_Image/476343.jpg
+    ExclusionDto:
+      type: object
+      properties:
+        exclusionType:
+          type: string
+          description: Type of exclusions that are being added
+          example: SKU
+        exclusionValue:
+          type: string
+          description: Item to be excluded from commerce availability
+          example: 111111_AA
+    GetCatalogFieldResponse:
+      type: object
+      properties:
+        field:
+          type: string
+        list:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldItemDto'
+    FieldItemDto:
+      type: object
+      properties:
+        name:
+          type: string
+        count:
+          type: integer
+          format: int32
+    CommodityImageDto:
+      type: object
+      properties:
+        referenceNumber:
+          type: string
+          description: Commodity image reference number
+        imageUrl:
+          type: string
+          description: Commodity image URL
+        primaryIndicator:
+          type: boolean
+          description: Primary Indicator
+    Metadata:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/BasePagination'
+    ClientOrgExclusionListRequestDto:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        exclusionType:
+          type: string
+          description: Type of exclusions that are being added
+          enum:
+          - SKU
+          - Brand
+          - Category
+          example: SKU
+        exclusions:
+          type: array
+          description: Item to be excluded from commerce availability
+          example: 111111_AA
+          items:
+            type: string
+    BaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    CommodityDetailDto:
+      type: object
+      properties:
+        sku:
+          type: string
+          description: Stock Keeping Unit
+          example: 1008194_EA
+        description:
+          type: string
+          description: Description of the commodity
+          example: McKesson Vinyl Exam Glove, Small, Clear
+        category:
+          type: string
+          description: Pipe delimited list of commodity types
+          example: Gloves|Socks
+        brand:
+          type: string
+          description: Brand of commodity
+          example: Apple
+        price:
+          type: number
+          description: Price of commodity
+          example: 9.99
+        quantity:
+          type: integer
+          format: int32
+          description: Number of commodity available for sale
+          example: 145
+        fsaEligible:
+          type: boolean
+          description: Indicates if commodity is FSA eligible
+        upcNumber:
+          type: string
+          description: Universal Product Code
+        uom:
+          type: string
+          description: Unit of Measurement
+        lowInventoryIndicator:
+          type: boolean
+          description: Indicates if commodity is low inventory
+        supplierDescription:
+          type: string
+          description: Supplier description of commodity
+        longDescription:
+          type: string
+          description: Long description of Commodity
+        invoiceDescription:
+          type: string
+          description: Invoice description of commodity
+        manufacturerName:
+          type: string
+          description: Manufacturer name of commodity
+        manufacturerNumber:
+          type: string
+          description: Manufacturer number of commodity
+        application:
+          type: string
+          description: Application of commodity
+        shippingWidth:
+          type: number
+          description: Shipping width of commodity
+        shippingWeight:
+          type: number
+          description: Shipping weight of commodity
+        shippingDepth:
+          type: number
+          description: Shipping depth of commodity
+        shippingHeight:
+          type: number
+          description: Shipping height of commodity
+        uomWeight:
+          type: string
+          description: Type of weight for commodity
+        quantityPerSell:
+          type: integer
+          format: int32
+          description: Quantity per commodity
+        hierarchy:
+          type: string
+          description: Hierarchy for a commodity
+        discontinuedDate:
+          type: string
+          format: date-time
+          description: Date a commodity was discontinued
+        stockStatus:
+          type: string
+          description: Stock status for commodity
+        velocity:
+          type: string
+          description: Indicates how quickly a commodity sells
+        returnableItem:
+          type: boolean
+          description: Indicates if commodity is a returnable item
+        californiaProp65:
+          type: boolean
+          description: Indicates if commodity is subject to California Prop 65
+        commodityImages:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommodityImageDto'
+        activeIngredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActiveIngredientDto'
+        capacity:
+          type: string
+          description: Amount of storage for a commodity
+          example: 1250
+        volume:
+          type: string
+          description: Quantity/Size of the commodity
+          example: 25
+        retailFeatures:
+          type: string
+          description: Describes a commodity’s features and use cases
+          example: 'Temporarily relieves symptoms due to hay fever or other upper respiratory allergies: runny nose; sneezing; itchy, watery eyes; itching of the nose or throat'
+        fasteningType:
+          type: string
+          description: Indicates the method used to secure the adult diaper.
+          example: Refastenable Tabs
+        adultDiaperSize:
+          type: string
+          description: Specifies the labeled size of the adult diaper.
+          example: Large
+        sizingRange:
+          type: string
+          description: Provides the waist/hip measurement range that the diaper fits.
+          example: 45
+        size:
+          type: string
+          description: Specifies the designated size name for the product, which helps identify the fit.
+          example: Large
+        manualOverrideImage:
+          type: string
+          description: Commodity image URL
+        discountAmount:
+          type: number
+          description: Discount Amount
+        outOfStock:
+          type: boolean
+          description: Indicates the commodity holds less than the configured inventory buffer and cannot be ordered
+    CommerceCatalogFacetsResponse:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldItemDto'
+        brands:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldItemDto'
+    MemberViewCommerceClassificationDto:
+      type: object
+      properties:
+        classificationName:
+          type: string
+        displayImage:
+          type: string
+        displayName:
+          type: string
+        effectiveDate:
+          type: string
+          format: date-time
+        expirationDate:
+          type: string
+          format: date-time
+        defaultIndicator:
+          type: boolean
+        category:
+          type: string
+        classificationId:
+          type: string
+          format: uuid
+        productNames:
+          type: array
+          items:
+            type: string
+    CommerceCatalogResponse:
+      type: object
+      properties:
+        catalog:
+          $ref: '#/components/schemas/CatalogDto'
+    GetCommodityDetailResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        commodityDetail:
+          $ref: '#/components/schemas/CommodityDetailDto'
+    CommerceCommodityListDocModelResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CommerceCommodityListResponse'
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    CommerceCommodityListResponse:
+      type: object
+      properties:
+        commodities:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommodityListItemDto'
+    GetClientOrgExclusionList:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        exclusions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExclusionDto'
+    ClientOrgExclusionListRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ClientOrgExclusionListRequestDto'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    CommodityListItemDto:
+      type: object
+      properties:
+        sku:
+          type: string
+        category:
+          type: string
+        brand:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+          format: int32
+        catalogs:
+          type: array
+          items:
+            type: string
+        eligibleProducts:
+          type: array
+          items:
+            type: string
+        fsaEligible:
+          type: boolean
+        primaryImage:
+          type: string
+        discountAmount:
+          type: number
+        outOfStock:
+          type: boolean
+    CatalogDto:
+      type: object
+      properties:
+        catalogName:
+          type: string
+        commodities:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommodityDto'
+    BasePagination:
+      type: object
+      properties:
+        totalItems:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        page:
+          type: integer
+          format: int32
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- lynx-commerce-order-api-openapi.yml
+- lynx-commodity-api-openapi.yml
+x-provenance:
+  method: searched
+  source: https://docs.lynx-fh.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.lynx-fh.com/reference/getaccounttransfers.md
+  - https://docs.lynx-fh.com/reference/getallfboaccountbalances.md
+  - https://docs.lynx-fh.com/reference/getbalance.md
+  - https://docs.lynx-fh.com/reference/getclientorgaccountnumber.md
+  - https://docs.lynx-fh.com/reference/getclientorgaccounts.md
+  - https://docs.lynx-fh.com/reference/getmemberaccountnumber.md
+  - https://docs.lynx-fh.com/reference/postaccounttransfer.md
+  - https://docs.lynx-fh.com/reference/updateaccountstatus.md
+  - https://docs.lynx-fh.com/reference/updatememberaccount.md
+  merge:
+    pages: 9
+    deduped: 40
+    conflicts_kept_first: 0

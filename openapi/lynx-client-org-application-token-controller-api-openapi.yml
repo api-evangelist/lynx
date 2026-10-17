@@ -1,0 +1,178 @@
+openapi: 3.2.0
+info:
+  title: CLIENT ORG MANAGEMENT Client Org Application Token…
+  description: These API's are used to manage client org information
+  termsOfService: http://lynx-fh.com
+  license:
+    name: LynxFH
+    url: http://lynx-fh.com
+  version: '"1.0"'
+servers:
+- url: https://sandbox.lynx-fh.co
+security:
+- bearerAuth: []
+tags:
+- name: client-org-application-token-controller
+paths:
+  /clients/application-token:
+    post:
+      tags:
+      - client-org-application-token-controller
+      summary: Generate Client Org Application Token
+      description: Generates a new API token for a specific application associated with a client organization.
+      operationId: generateApplicationToken
+      requestBody:
+        description: This is the client org application token request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientOrgApplicationTokenRequestDoc'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientOrgApplicationTokenResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+components:
+  schemas:
+    ClientOrgApplicationTokenRequestDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ClientOrgApplicationTokenRequest'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+    ApplicationTokenDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the client application token
+          example: Client Token
+        scopes:
+          type: array
+          description: List of permissions granted to application token
+          example: read:members, write:members
+          items:
+            type: string
+      required:
+      - name
+      - scopes
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    ClientOrgApplicationTokenResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        clientId:
+          type: string
+          description: Unique identifier for your application token
+        clientSecret:
+          type: string
+          description: String used to generate tokens for API endpoints
+        scopes:
+          type: string
+          description: List of permissions granted to application token
+      required:
+      - clientId
+    ClientOrgApplicationTokenRequest:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+        childClientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The name of the child client organization
+          example: Health_Plan_ABC_Division_Child
+        applicationToken:
+          $ref: '#/components/schemas/ApplicationTokenDto'
+          description: Client application token
+      required:
+      - applicationToken
+      - clientOrg
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-provenance:
+  method: searched
+  source: https://docs.lynx-fh.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.lynx-fh.com/reference/addclientorgwebhookurl.md
+  - https://docs.lynx-fh.com/reference/deleteclientorgwebhookurl.md
+  - https://docs.lynx-fh.com/reference/generateapplicationtoken.md
+  - https://docs.lynx-fh.com/reference/getclientorgapplications.md
+  - https://docs.lynx-fh.com/reference/getclientorgplansummary.md
+  - https://docs.lynx-fh.com/reference/getclientorgsubscribedevents.md
+  - https://docs.lynx-fh.com/reference/getclientorgsubstantiationmodel.md
+  - https://docs.lynx-fh.com/reference/getclientorgwebhookurls.md
+  - https://docs.lynx-fh.com/reference/patchclientorgsubstantiationmodel.md
+  - https://docs.lynx-fh.com/reference/updateclientorgsubscribedevents.md
+  merge:
+    pages: 10
+    deduped: 36
+    conflicts_kept_first: 0

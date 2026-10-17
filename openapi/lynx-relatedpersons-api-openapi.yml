@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: RELATED PERSON API
+  title: RELATED PERSON Relatedpersons API
   description: These API's are used to manage related persons information.
   termsOfService: http://lynx-fh.com
   license:
@@ -11,11 +11,13 @@ servers:
 - url: https://sandbox.lynx-fh.co
 security:
 - bearerAuth: []
+tags:
+- name: Relatedpersons
 paths:
   /relatedpersons:
     post:
       tags:
-      - ''
+      - Relatedpersons
       summary: Add Related Person
       description: The Add Related Person API is used to add a related person to an existing member.
       operationId: addNewRelatedPerson
@@ -54,7 +56,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     delete:
       tags:
-      - ''
+      - Relatedpersons
       summary: Delete Related Person
       description: This API will allow you to delete a related person from a member.
       operationId: deleteRelatedPerson
@@ -109,7 +111,7 @@ paths:
   /relatedpersons/addresses:
     put:
       tags:
-      - ''
+      - Relatedpersons
       summary: Update Related Person Addresses
       description: Updates the addresses for a related person (identified by clientMemberId and client org).
       operationId: updateRelatedPersonAddresses
@@ -142,7 +144,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     delete:
       tags:
-      - ''
+      - Relatedpersons
       summary: Delete Related Person Address
       description: This API will allow you to delete a related person address.
       operationId: deleteRelatedPersonAddress
@@ -200,7 +202,7 @@ paths:
   /relatedpersons/allocation-percentage:
     patch:
       tags:
-      - ''
+      - Relatedpersons
       summary: Update Beneficiaries Allocation Percentage
       description: This API will allow you to update the allocation percentage of a member's beneficiaries.
       operationId: updateAllocationPercentage
@@ -242,7 +244,7 @@ paths:
   /relatedpersons/details:
     get:
       tags:
-      - ''
+      - Relatedpersons
       summary: Get Related Person Details
       description: Retrieves detailed information for the related person identified by the incoming clientMemberId, clientOrgName and relatedPersonId.
       operationId: getRelatedPersonDetails
@@ -291,7 +293,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     patch:
       tags:
-      - ''
+      - Relatedpersons
       summary: Update Related Person
       description: This API will allow you to update related person detail information.
       operationId: updateRelatedPersonDetails
@@ -329,9 +331,9 @@ paths:
   /relatedpersons/emails:
     put:
       tags:
-      - ''
+      - Relatedpersons
       summary: Update Related Person Emails
-      description: 'Updates the email address(es) for a related person (identified by clientMemberId and client org). '
+      description: Updates the email address(es) for a related person (identified by clientMemberId and client org).
       operationId: putRelatedPersonEmails
       requestBody:
         content:
@@ -362,7 +364,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     delete:
       tags:
-      - ''
+      - Relatedpersons
       summary: Delete Related Person Email
       description: This API will allow you to delete a related person email address.
       operationId: deleteRelatedPersonEmail
@@ -420,7 +422,7 @@ paths:
   /relatedpersons/list:
     get:
       tags:
-      - ''
+      - Relatedpersons
       summary: Get Related Persons Summary
       description: Retrieves the summary list of related persons for a given member of a client organization
       operationId: getRelatedPersonsByMember
@@ -484,7 +486,7 @@ paths:
   /relatedpersons/phones:
     put:
       tags:
-      - ''
+      - Relatedpersons
       summary: Update Related Person Phones
       description: Updates the phone numbers for a related person (identified by clientMemberId and client org).
       operationId: updateRelatedPersonPhones
@@ -517,7 +519,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     delete:
       tags:
-      - ''
+      - Relatedpersons
       summary: Delete Related Person Phone
       description: This API will allow you to delete a related person phone number.
       operationId: deleteRelatedPersonPhone
@@ -574,24 +576,91 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
 components:
   schemas:
-    BaseMember:
+    EmailRelatedPersonData:
       type: object
       properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-      required:
-      - clientMemberId
-    ClientOrgDto:
-      type: object
-      properties:
-        name:
-          type: string
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
           description: The name of the client organization
           example: Health_Plan_ABC_Division
+        member:
+          $ref: '#/components/schemas/BaseMember'
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        relatedPerson:
+          $ref: '#/components/schemas/RelatedPersonEmailDto'
+          description: The related person which will be associated to the member
       required:
-      - name
+      - clientOrg
+      - member
+      - relatedPerson
+    RelatedPersonDto:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: First name
+          example: John
+        lastName:
+          type: string
+          description: Last name
+          example: Smith
+        middleName:
+          type: string
+          description: Middle name
+          example: Paul
+        namePrefix:
+          type: string
+          description: Prefix for the name
+          example: Doctor
+        nameSuffix:
+          type: string
+          description: Suffix for the name
+          example: Jr.
+        type:
+          type: string
+          description: The type of related person
+          example: Beneficiary
+        beneficiaryType:
+          type: string
+          description: The type of beneficiary
+          example: Primary
+        allocationPercentage:
+          type: number
+          description: The percentage allocated to the beneficiary
+          example: 100
+        relationshipType:
+          type: string
+          description: Relationship type to member
+          example: Child
+        dateOfBirth:
+          type: string
+          format: date-time
+          description: Date of birth
+          example: '1969-03-02'
+        ssn:
+          type: string
+          description: Social Security Number
+          example: '033764347'
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressDto'
+        emails:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailDto'
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhoneDto'
+      required:
+      - dateOfBirth
+      - firstName
+      - lastName
+      - relationshipType
+      - ssn
+      - type
     PhoneDto:
       type: object
       properties:
@@ -624,6 +693,227 @@ components:
       required:
       - countryCode
       - phoneNumber
+    GetRelatedPersonsResponseDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetRelatedPersonsResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    PatchRelatedPersonRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PatchData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+      required:
+      - data
+      - idempotency
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    PatchBeneficiariesAllocationPercentageRequestData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+        member:
+          $ref: '#/components/schemas/BaseMember'
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        beneficiaryType:
+          type: string
+          default: Primary
+          description: The type of beneficiary
+          enum:
+          - Primary
+          - Contingent
+        relatedPersons:
+          type: array
+          description: List of related persons of the given beneficiary type of a member
+          items:
+            $ref: '#/components/schemas/RelatedPersonWithAllocationPercentage'
+      required:
+      - beneficiaryType
+      - clientOrg
+      - member
+      - relatedPersons
+    AddData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+        member:
+          $ref: '#/components/schemas/BaseMember'
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        relatedPerson:
+          $ref: '#/components/schemas/AddRelatedPerson'
+          description: The related person which will be associated to the member
+        beneficiaries:
+          type: array
+          example:
+          - id: b7d24dcf-4362-4e65-88aa-af959aef623c
+            allocationPercentage: '90'
+          - id: new
+            allocationPercentage: '10'
+          items:
+            $ref: '#/components/schemas/RelatedPersonWithAllocationPercentage'
+      required:
+      - clientOrg
+      - member
+      - relatedPerson
+    RelatedPersonResponse:
+      type: object
+      properties:
+        relatedPerson:
+          $ref: '#/components/schemas/BaseRelatedPerson'
+    PatchData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+        member:
+          $ref: '#/components/schemas/BaseMember'
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        relatedPerson:
+          $ref: '#/components/schemas/PatchRelatedPerson'
+          description: The related person which will be associated to the member
+      required:
+      - clientOrg
+      - member
+      - relatedPerson
+    GetRelatedPersonsResponse:
+      type: object
+      properties:
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        relatedPersons:
+          type: array
+          items:
+            $ref: '#/components/schemas/RelatedPersonSummaryDto'
+    RelatedPersonPhonesDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the related person
+          example: 3d3bdad9-21e0-47bc-becd-b4872c0e8bf9
+        phones:
+          type: array
+          example:
+          - countryCode: '1'
+            phoneNumber: '5089188736'
+            phoneExtension: 344
+            typeDescription: Cell
+            primaryIndicator: true
+          items:
+            $ref: '#/components/schemas/PhoneDto'
+      required:
+      - id
+      - phones
+    RelatedPersonWithAllocationPercentage:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the related person
+          example: 3d3bdad9-21e0-47bc-becd-b4872c0e8bf9
+        allocationPercentage:
+          type: number
+          description: The percentage allocated to the beneficiary
+          example: 100
+      required:
+      - allocationPercentage
+      - id
+    GetRelatedPersonDetailsResponseDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetRelatedPersonDetailResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    UpdateRelatedPersonPhonesRequestDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/UpdateRelatedPersonPhonesRequest'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    RelatedPersonSummaryDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+          description: First name
+          example: John
+        lastName:
+          type: string
+          description: Last name
+          example: Smith
+        status:
+          type: string
+          description: The status of the related person
+          example: NEW
+        relationshipType:
+          type: string
+          description: Relationship type to member
+          example: Child
+        type:
+          type: string
+          description: The type of related person
+          example: Beneficiary
+        beneficiaryType:
+          type: string
+          description: The type of beneficiary
+          example: Primary
+        allocationPercentage:
+          type: number
+          description: The percentage allocated to the beneficiary
+          example: 100
+        creationDate:
+          type: string
+          format: date-time
+          description: Date when the related person was created
+          example: '2018-03-22'
+        updateDate:
+          type: string
+          format: date-time
+          description: Date when the related person was updated
+          example: '2018-03-22'
+      required:
+      - relationshipType
+      - type
+      - updateDate
     ResponseException:
       type: object
       properties:
@@ -646,27 +936,76 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResponseException'
-    EmailDto:
+    Idempotency:
       type: object
       properties:
-        type:
+        idempotencyKey:
           type: string
-          description: Auto-generated type for the email address
-          example: Email1
-        typeDescription:
-          type: string
-          description: Client-defined description for the email address
-          example: Personal
-        emailAddress:
-          type: string
-          description: Email address - any notifications will be sent to this email address
-          example: john@doe.com
-        primaryIndicator:
-          type: boolean
-          description: Determines whether this is a primary email address
-          example: true
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+    PatchBeneficiariesAllocationPercentageRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PatchBeneficiariesAllocationPercentageRequestData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
       required:
-      - emailAddress
+      - data
+      - idempotency
+    BaseRelatedPerson:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the related person
+          example: 3d3bdad9-21e0-47bc-becd-b4872c0e8bf9
+      required:
+      - id
+    EmailRelatedPersonRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/EmailRelatedPersonData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+      required:
+      - data
+      - idempotency
+    RelatedPersonAddressesDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the related person
+          example: 3d3bdad9-21e0-47bc-becd-b4872c0e8bf9
+        addresses:
+          type: array
+          example:
+          - typeDescription: Home
+            name: John Smith
+            attentionCareOf: Care/of John Smith
+            line3: line3
+            line4: line4
+            pobox: P.O. box 21345
+            county: Norfolk
+            line1: 10 Miller Street
+            line2: line2
+            city: Boston
+            stateProvince: MA
+            country: US
+            postalCode: 02119
+            postalCodeExtension: '0123'
+            primaryIndicator: true
+          items:
+            $ref: '#/components/schemas/AddressDto'
+      required:
+      - addresses
+      - id
     AddressDto:
       type: object
       properties:
@@ -753,31 +1092,43 @@ components:
       - line1
       - postalCode
       - stateProvince
-    GetRelatedPersonDetailResponse:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        relatedPerson:
-          $ref: '#/components/schemas/RelatedPersonDto'
-      required:
-      - clientOrg
-    GetRelatedPersonDetailsResponseDoc:
+    PatchBeneficiariesAllocationPercentageResponseDoc:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/GetRelatedPersonDetailResponse'
+          $ref: '#/components/schemas/PatchBeneficiariesAllocationPercentageResponse'
         exceptions:
           type: array
           items:
             $ref: '#/components/schemas/ResponseException'
-    RelatedPersonDto:
+    EmailDto:
       type: object
       properties:
+        type:
+          type: string
+          description: Auto-generated type for the email address
+          example: Email1
+        typeDescription:
+          type: string
+          description: Client-defined description for the email address
+          example: Personal
+        emailAddress:
+          type: string
+          description: Email address - any notifications will be sent to this email address
+          example: john@doe.com
+        primaryIndicator:
+          type: boolean
+          description: Determines whether this is a primary email address
+          example: true
+      required:
+      - emailAddress
+    PatchRelatedPerson:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the related person
+          example: 3d3bdad9-21e0-47bc-becd-b4872c0e8bf9
         firstName:
           type: string
           description: First name
@@ -798,31 +1149,24 @@ components:
           type: string
           description: Suffix for the name
           example: Jr.
-        type:
-          type: string
-          description: The type of related person
-          example: Beneficiary
-        beneficiaryType:
-          type: string
-          description: The type of beneficiary
-          example: Primary
-        allocationPercentage:
-          type: number
-          description: The percentage allocated to the beneficiary
-          example: 100
         relationshipType:
           type: string
           description: Relationship type to member
+          enum:
+          - Child
+          - Spouse
+          - Other
           example: Child
         dateOfBirth:
           type: string
-          format: date-time
           description: Date of birth
           example: '1969-03-02'
         ssn:
           type: string
-          description: Social Security Number
+          description: Social Security Number - either SSN or passport are required
           example: '033764347'
+        type:
+          type: string
         addresses:
           type: array
           items:
@@ -835,139 +1179,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PhoneDto'
-      required:
-      - dateOfBirth
-      - firstName
-      - lastName
-      - relationshipType
-      - ssn
-      - type
-    GetRelatedPersonsResponse:
-      type: object
-      properties:
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        relatedPersons:
-          type: array
-          items:
-            $ref: '#/components/schemas/RelatedPersonSummaryDto'
-    GetRelatedPersonsResponseDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/GetRelatedPersonsResponse'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    RelatedPersonSummaryDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        firstName:
-          type: string
-          description: First name
-          example: John
-        lastName:
-          type: string
-          description: Last name
-          example: Smith
-        status:
-          type: string
-          description: The status of the related person
-          example: NEW
-        relationshipType:
-          type: string
-          description: Relationship type to member
-          example: Child
-        type:
-          type: string
-          description: The type of related person
-          example: Beneficiary
         beneficiaryType:
           type: string
-          description: The type of beneficiary
-          example: Primary
-        allocationPercentage:
-          type: number
-          description: The percentage allocated to the beneficiary
-          example: 100
-        creationDate:
-          type: string
-          format: date-time
-          description: Date when the related person was created
-          example: '2018-03-22'
-        updateDate:
-          type: string
-          format: date-time
-          description: Date when the related person was updated
-          example: '2018-03-22'
-      required:
-      - relationshipType
-      - type
-      - updateDate
-    Idempotency:
-      type: object
-      properties:
-        idempotencyKey:
-          type: string
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-    BaseRelatedPerson:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier for the related person
-          example: 3d3bdad9-21e0-47bc-becd-b4872c0e8bf9
       required:
       - id
-    RelatedPersonResponse:
-      type: object
-      properties:
-        relatedPerson:
-          $ref: '#/components/schemas/BaseRelatedPerson'
-    RelatedPersonResponseDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/RelatedPersonResponse'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    AddData:
+    UpdateRelatedPersonAddressesRequest:
       type: object
       properties:
         clientOrg:
           $ref: '#/components/schemas/ClientOrgDto'
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
         member:
           $ref: '#/components/schemas/BaseMember'
-          description: Unique client-side identifier for the member
-          example: 3f50436491
         relatedPerson:
-          $ref: '#/components/schemas/AddRelatedPerson'
-          description: The related person which will be associated to the member
-        beneficiaries:
-          type: array
-          example:
-          - id: b7d24dcf-4362-4e65-88aa-af959aef623c
-            allocationPercentage: '90'
-          - id: new
-            allocationPercentage: '10'
-          items:
-            $ref: '#/components/schemas/RelatedPersonWithAllocationPercentage'
-      required:
-      - clientOrg
-      - member
-      - relatedPerson
+          $ref: '#/components/schemas/RelatedPersonAddressesDto'
     AddRelatedPerson:
       type: object
       properties:
@@ -1065,6 +1289,13 @@ components:
       - lastName
       - relationshipType
       - type
+    PatchBeneficiariesAllocationPercentageResponse:
+      type: object
+      properties:
+        relatedPersons:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseRelatedPerson'
     RelatedPersonRequest:
       type: object
       properties:
@@ -1075,197 +1306,16 @@ components:
       required:
       - data
       - idempotency
-    RelatedPersonWithAllocationPercentage:
+    BaseMember:
       type: object
       properties:
-        id:
+        clientMemberId:
           type: string
-          description: Unique identifier for the related person
-          example: 3d3bdad9-21e0-47bc-becd-b4872c0e8bf9
-        allocationPercentage:
-          type: number
-          description: The percentage allocated to the beneficiary
-          example: 100
-      required:
-      - allocationPercentage
-      - id
-    PatchData:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-        member:
-          $ref: '#/components/schemas/BaseMember'
           description: Unique client-side identifier for the member
           example: 3f50436491
-        relatedPerson:
-          $ref: '#/components/schemas/PatchRelatedPerson'
-          description: The related person which will be associated to the member
       required:
-      - clientOrg
-      - member
-      - relatedPerson
-    PatchRelatedPerson:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique identifier for the related person
-          example: 3d3bdad9-21e0-47bc-becd-b4872c0e8bf9
-        firstName:
-          type: string
-          description: First name
-          example: John
-        lastName:
-          type: string
-          description: Last name
-          example: Smith
-        middleName:
-          type: string
-          description: Middle name
-          example: Paul
-        namePrefix:
-          type: string
-          description: Prefix for the name
-          example: Doctor
-        nameSuffix:
-          type: string
-          description: Suffix for the name
-          example: Jr.
-        relationshipType:
-          type: string
-          description: Relationship type to member
-          enum:
-          - Child
-          - Spouse
-          - Other
-          example: Child
-        dateOfBirth:
-          type: string
-          description: Date of birth
-          example: '1969-03-02'
-        ssn:
-          type: string
-          description: Social Security Number - either SSN or passport are required
-          example: '033764347'
-        type:
-          type: string
-        addresses:
-          type: array
-          items:
-            $ref: '#/components/schemas/AddressDto'
-        emails:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmailDto'
-        phones:
-          type: array
-          items:
-            $ref: '#/components/schemas/PhoneDto'
-        beneficiaryType:
-          type: string
-      required:
-      - id
-    PatchRelatedPersonRequest:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/PatchData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-      required:
-      - data
-      - idempotency
-    PatchBeneficiariesAllocationPercentageRequest:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/PatchBeneficiariesAllocationPercentageRequestData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    PatchBeneficiariesAllocationPercentageRequestData:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-        member:
-          $ref: '#/components/schemas/BaseMember'
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-        beneficiaryType:
-          type: string
-          default: Primary
-          description: The type of beneficiary
-          enum:
-          - Primary
-          - Contingent
-        relatedPersons:
-          type: array
-          description: List of related persons of the given beneficiary type of a member
-          items:
-            $ref: '#/components/schemas/RelatedPersonWithAllocationPercentage'
-      required:
-      - beneficiaryType
-      - clientOrg
-      - member
-      - relatedPersons
-    PatchBeneficiariesAllocationPercentageResponse:
-      type: object
-      properties:
-        relatedPersons:
-          type: array
-          items:
-            $ref: '#/components/schemas/BaseRelatedPerson'
-    PatchBeneficiariesAllocationPercentageResponseDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/PatchBeneficiariesAllocationPercentageResponse'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    RelatedPersonAddressesDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier for the related person
-          example: 3d3bdad9-21e0-47bc-becd-b4872c0e8bf9
-        addresses:
-          type: array
-          example:
-          - typeDescription: Home
-            name: John Smith
-            attentionCareOf: Care/of John Smith
-            line3: line3
-            line4: line4
-            pobox: P.O. box 21345
-            county: Norfolk
-            line1: 10 Miller Street
-            line2: line2
-            city: Boston
-            stateProvince: MA
-            country: US
-            postalCode: 02119
-            postalCodeExtension: '0123'
-            primaryIndicator: true
-          items:
-            $ref: '#/components/schemas/AddressDto'
-      required:
-      - addresses
-      - id
-    UpdateRelatedPersonAddressesRequest:
+      - clientMemberId
+    UpdateRelatedPersonPhonesRequest:
       type: object
       properties:
         clientOrg:
@@ -1273,7 +1323,7 @@ components:
         member:
           $ref: '#/components/schemas/BaseMember'
         relatedPerson:
-          $ref: '#/components/schemas/RelatedPersonAddressesDto'
+          $ref: '#/components/schemas/RelatedPersonPhonesDto'
     UpdateRelatedPersonAddressesRequestDoc:
       type: object
       properties:
@@ -1286,34 +1336,24 @@ components:
       required:
       - data
       - idempotency
-    EmailRelatedPersonData:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-        member:
-          $ref: '#/components/schemas/BaseMember'
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-        relatedPerson:
-          $ref: '#/components/schemas/RelatedPersonEmailDto'
-          description: The related person which will be associated to the member
-      required:
-      - clientOrg
-      - member
-      - relatedPerson
-    EmailRelatedPersonRequest:
+    DeleteRelatedPersonResponseDoc:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/EmailRelatedPersonData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-      required:
-      - data
-      - idempotency
+          $ref: '#/components/schemas/BaseMember'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    RelatedPersonResponseDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/RelatedPersonResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
     RelatedPersonEmailDto:
       type: object
       properties:
@@ -1333,57 +1373,19 @@ components:
       required:
       - emails
       - id
-    RelatedPersonPhonesDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier for the related person
-          example: 3d3bdad9-21e0-47bc-becd-b4872c0e8bf9
-        phones:
-          type: array
-          example:
-          - countryCode: '1'
-            phoneNumber: '5089188736'
-            phoneExtension: 344
-            typeDescription: Cell
-            primaryIndicator: true
-          items:
-            $ref: '#/components/schemas/PhoneDto'
-      required:
-      - id
-      - phones
-    UpdateRelatedPersonPhonesRequest:
+    GetRelatedPersonDetailResponse:
       type: object
       properties:
         clientOrg:
           $ref: '#/components/schemas/ClientOrgDto'
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
         member:
           $ref: '#/components/schemas/BaseMember'
         relatedPerson:
-          $ref: '#/components/schemas/RelatedPersonPhonesDto'
-    UpdateRelatedPersonPhonesRequestDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/UpdateRelatedPersonPhonesRequest'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+          $ref: '#/components/schemas/RelatedPersonDto'
       required:
-      - data
-      - idempotency
-    DeleteRelatedPersonResponseDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/BaseMember'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
+      - clientOrg
   securitySchemes:
     bearerAuth:
       type: http

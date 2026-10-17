@@ -1,0 +1,512 @@
+openapi: 3.2.0
+info:
+  title: MEMBER MANAGEMENT Member Expense Controller API
+  description: These API's are used to manage member informations
+  termsOfService: http://lynx-fh.com
+  license:
+    name: LynxFH
+    url: http://lynx-fh.com
+  version: '"1.0"'
+servers:
+- url: https://sandbox.lynx-fh.co
+security:
+- bearerAuth: []
+tags:
+- name: member-expense-controller
+paths:
+  /members/expense:
+    patch:
+      tags:
+      - member-expense-controller
+      summary: Update Expense
+      description: Allow members to edit expenses for tracking purposes.
+      operationId: updateMemberExpense
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchMemberExpenseDataDoc'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberExpenseResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-278: Expense date cannot be a future date
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /members/expense/receipt:
+    delete:
+      tags:
+      - member-expense-controller
+      summary: Delete Expense Receipt
+      description: Delete Expense Receipt.
+      operationId: deleteMemberExpenseReceipt
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: expenseNumber
+        in: query
+        description: Expense Number
+        required: true
+        schema:
+          type: string
+        example: EXPEN00000001
+      - name: receiptId
+        in: query
+        description: Id
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberExpenseResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /members/expense/receipts:
+    post:
+      tags:
+      - member-expense-controller
+      summary: Upload Receipts to Expense
+      description: Allow members to upload receipts to expense
+      operationId: addExpenseReceipts
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                data:
+                  $ref: '#/components/schemas/MemberExpenseReceiptDoc'
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+              required:
+              - data
+              - files
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddReceiptResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+  /members/expenses:
+    get:
+      tags:
+      - member-expense-controller
+      summary: Get Member Expenses
+      description: Retrieves a paginated list of expenses for a member. Supports filtering and sorting by expense date.
+      operationId: getMemberExpenses
+      parameters:
+      - name: clientOrgName
+        in: query
+        description: The name of the client organization
+        required: true
+        schema:
+          type: string
+        example: Health_Plan_ABC_Division
+      - name: clientMemberId
+        in: query
+        description: Unique client-side identifier for the member
+        required: true
+        schema:
+          type: string
+        example: 3f50436491
+      - name: memberAccountId
+        in: query
+        description: MemberAccount Id
+        required: false
+        schema:
+          type: string
+          format: uuid
+        example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      - name: sortValue
+        in: query
+        description: The property by which the response is sorted
+        required: false
+        schema:
+          type: string
+          default: expenseDate
+          enum:
+          - expenseDate
+          - amount
+      - name: sortOrder
+        in: query
+        description: The sort direction
+        required: false
+        schema:
+          type: string
+          default: Descending
+          enum:
+          - Ascending
+          - Descending
+      - name: pageNumber
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: pageSize
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 25
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMemberExpenseResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+components:
+  schemas:
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+    ExpenseItemResponse:
+      type: object
+      properties:
+        expenseNumber:
+          type: string
+        expenseDate:
+          type: string
+          format: date-time
+        amount:
+          type: number
+        description:
+          type: string
+        merchantName:
+          type: string
+        expenseCategory:
+          type: string
+        receipts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReceiptData'
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionData'
+    ReceiptData:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Id
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+        s3Path:
+          type: string
+          description: s3 path to the file
+          example: /client/clientOrgName/Member/Client_Member_id/Receipt/id
+      required:
+      - id
+      - s3Path
+    AddReceiptResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        expenseNumber:
+          type: string
+        receipts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReceiptData'
+      required:
+      - clientOrg
+      - expenseNumber
+      - member
+      - receipts
+    MemberExpenseResponse:
+      type: object
+      properties:
+        expenseNumber:
+          type: string
+          description: Expense Number
+          example: EXPEN00000001
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+      - expenseNumber
+    TransactionData:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Id
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+        referenceIdentifier:
+          type: string
+          description: Transaction Reference Identifier
+          example: T12345678
+      required:
+      - id
+      - referenceIdentifier
+    BaseMember:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+    MemberExpenseReceiptData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        expenseNumber:
+          type: string
+          description: Expense Number
+          example: EXPEN00000001
+      required:
+      - clientOrg
+      - expenseNumber
+      - member
+    GetMemberExpenseResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        expenses:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExpenseItemResponse'
+      required:
+      - clientOrg
+      - member
+    MemberExpenseReceiptDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/MemberExpenseReceiptData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    PatchMemberExpenseDataDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PatchMemberExpenseData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    PatchExpenseData:
+      type: object
+      properties:
+        merchantName:
+          type: string
+          description: Name of merchant accepting the original transaction
+          example: MTA VENDING MACHINES
+        expenseDate:
+          type: string
+          description: Date of Expense
+          example: '2024-01-01'
+        amount:
+          type: number
+          description: Expense Amout
+          example: 12.3
+        expenseCategory:
+          type: string
+          description: Expense Category
+          enum:
+          - Medical
+          - Rx
+          - Dental
+          - Vision
+          - Other
+          example: Rx
+        description:
+          type: string
+          description: Expense Description
+          example: General checkup
+        expenseNumber:
+          type: string
+          description: Expense Number
+          example: EXPEN00000001
+      required:
+      - expenseNumber
+    PatchMemberExpenseData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        expense:
+          $ref: '#/components/schemas/PatchExpenseData'
+      required:
+      - clientOrg
+      - expense
+      - member
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-provenance:
+  method: searched
+  source: https://docs.lynx-fh.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.lynx-fh.com/reference/accountdetails.md
+  - https://docs.lynx-fh.com/reference/addexpensereceipts.md
+  - https://docs.lynx-fh.com/reference/creatememberexpense.md
+  - https://docs.lynx-fh.com/reference/deletemember.md
+  - https://docs.lynx-fh.com/reference/deletememberaddress.md
+  - https://docs.lynx-fh.com/reference/deletememberemail.md
+  - https://docs.lynx-fh.com/reference/deletememberexpensereceipt.md
+  - https://docs.lynx-fh.com/reference/deletememberphone.md
+  - https://docs.lynx-fh.com/reference/getmemberdetails.md
+  - https://docs.lynx-fh.com/reference/getmemberexpenses.md
+  - https://docs.lynx-fh.com/reference/getmembersummariesbyclientorg.md
+  - https://docs.lynx-fh.com/reference/getstatus.md
+  - https://docs.lynx-fh.com/reference/membertransfer.md
+  - https://docs.lynx-fh.com/reference/updatememberaddresses.md
+  - https://docs.lynx-fh.com/reference/updatememberdetails.md
+  - https://docs.lynx-fh.com/reference/updatememberemails.md
+  - https://docs.lynx-fh.com/reference/updatememberexpense.md
+  - https://docs.lynx-fh.com/reference/updatememberphones.md
+  - https://docs.lynx-fh.com/reference/updatememberstatus.md
+  merge:
+    pages: 19
+    deduped: 98
+    conflicts_kept_first: 0

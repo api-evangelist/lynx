@@ -1,0 +1,222 @@
+openapi: 3.2.0
+info:
+  title: MEMBER MANAGEMENT Expense API
+  description: These API's are used to manage member informations
+  termsOfService: http://lynx-fh.com
+  license:
+    name: LynxFH
+    url: http://lynx-fh.com
+  version: '"1.0"'
+servers:
+- url: https://sandbox.lynx-fh.co
+security:
+- bearerAuth: []
+tags:
+- name: Expense
+paths:
+  /members/expense:
+    post:
+      tags:
+      - Expense
+      summary: Create Expense
+      description: Allow members to log expenses for tracking purposes.
+      operationId: createMemberExpense
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostMemberExpenseDataDoc'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberExpenseResponse'
+        '400':
+          description: 'Bad request.
+
+            - GBL-278: Expense date cannot be a future date
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+        '401':
+          description: Not authorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionBaseResponse'
+components:
+  schemas:
+    PostExpenseData:
+      type: object
+      properties:
+        merchantName:
+          type: string
+          description: Name of merchant accepting the original transaction
+          example: MTA VENDING MACHINES
+        expenseDate:
+          type: string
+          description: Date of Expense
+          example: '2024-01-01'
+        amount:
+          type: number
+          description: Expense Amout
+          example: 12.3
+        expenseCategory:
+          type: string
+          description: Expense Category
+          enum:
+          - Medical
+          - Rx
+          - Dental
+          - Vision
+          - Other
+          example: Rx
+        description:
+          type: string
+          description: Expense Description
+          example: General checkup
+      required:
+      - amount
+      - expenseDate
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+    MemberAccountIdDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the bank account
+          example: 6ae73974-2bd1-0f0d-7316-bbfff8cdc91b
+      required:
+      - id
+    MemberExpenseResponse:
+      type: object
+      properties:
+        expenseNumber:
+          type: string
+          description: Expense Number
+          example: EXPEN00000001
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+      - expenseNumber
+    PostMemberExpenseData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberAccount:
+          $ref: '#/components/schemas/MemberAccountIdDto'
+        expense:
+          $ref: '#/components/schemas/PostExpenseData'
+      required:
+      - clientOrg
+      - expense
+      - member
+      - memberAccount
+    BaseMember:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    PostMemberExpenseDataDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PostMemberExpenseData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-provenance:
+  method: searched
+  source: https://docs.lynx-fh.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.lynx-fh.com/reference/accountdetails.md
+  - https://docs.lynx-fh.com/reference/addexpensereceipts.md
+  - https://docs.lynx-fh.com/reference/creatememberexpense.md
+  - https://docs.lynx-fh.com/reference/deletemember.md
+  - https://docs.lynx-fh.com/reference/deletememberaddress.md
+  - https://docs.lynx-fh.com/reference/deletememberemail.md
+  - https://docs.lynx-fh.com/reference/deletememberexpensereceipt.md
+  - https://docs.lynx-fh.com/reference/deletememberphone.md
+  - https://docs.lynx-fh.com/reference/getmemberdetails.md
+  - https://docs.lynx-fh.com/reference/getmemberexpenses.md
+  - https://docs.lynx-fh.com/reference/getmembersummariesbyclientorg.md
+  - https://docs.lynx-fh.com/reference/getstatus.md
+  - https://docs.lynx-fh.com/reference/membertransfer.md
+  - https://docs.lynx-fh.com/reference/updatememberaddresses.md
+  - https://docs.lynx-fh.com/reference/updatememberdetails.md
+  - https://docs.lynx-fh.com/reference/updatememberemails.md
+  - https://docs.lynx-fh.com/reference/updatememberexpense.md
+  - https://docs.lynx-fh.com/reference/updatememberphones.md
+  - https://docs.lynx-fh.com/reference/updatememberstatus.md
+  merge:
+    pages: 19
+    deduped: 98
+    conflicts_kept_first: 0

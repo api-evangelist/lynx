@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: COPAY MANAGEMENT SERVICE API
+  title: MANAGEMENT SERVICE Copay API
   description: '"Copay Management API"'
   termsOfService: http://lynx-fh.com
   license:
@@ -11,11 +11,13 @@ servers:
 - url: https://sandbox.lynx-fh.co
 security:
 - bearerAuth: []
+tags:
+- name: Copay
 paths:
   /copay/groups:
     get:
       tags:
-      - ''
+      - Copay
       summary: Get All Client Org Copay Groups
       description: This API is used to view a list of copay groups that have been configured for a client organization.
       operationId: getCopayGroupsByClientOrg
@@ -50,7 +52,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     post:
       tags:
-      - ''
+      - Copay
       summary: Client Org Copay Group
       description: This API is used to set up one or more copay amounts that when a transaction associated with a set of MCCs aligns with that dollar amount it will automatically set the transaction to substantiated.
       operationId: create
@@ -91,7 +93,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     put:
       tags:
-      - ''
+      - Copay
       summary: Client Org Copay Group
       description: This API is used to update a copay group.
       operationId: replace
@@ -130,7 +132,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     patch:
       tags:
-      - ''
+      - Copay
       summary: Client Org Copay Group
       description: This API is used to update the effective and expiration dates of a copay group or add one or more copay amounts to a copay group category.
       operationId: edit
@@ -171,7 +173,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     delete:
       tags:
-      - ''
+      - Copay
       summary: Delete Client Org Copay Group Amount
       description: This API is used to delete a copay amount from a client organization copay group category.
       operationId: deleteCopayGroupAmount
@@ -241,7 +243,7 @@ paths:
   /copay/groups/detail:
     get:
       tags:
-      - ''
+      - Copay
       summary: Get Client Org Copay Group Detail
       description: This API is used to view details of a copay group that has been configured for a client organization.
       operationId: getCopayGroupDetail
@@ -284,15 +286,6 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
 components:
   schemas:
-    ClientOrgDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-      required:
-      - name
     Idempotency:
       type: object
       properties:
@@ -300,28 +293,31 @@ components:
           type: string
           description: Unique identifier that represents the operation
           example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-    ExceptionBaseResponse:
+    ClientOrgCopayGroupPatchData:
       type: object
       properties:
-        data:
-          type: object
-          description: 'null'
-        exceptions:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        copayGroupId:
+          type: string
+          format: uuid
+          description: UUID of the client organization copay group
+          example: 3d3bdad9-21e0-47bc-becd-b4872c0e8bf9
+        effectiveDate:
+          type: string
+          description: Beginning effective date of the copay group
+          example: '2025-01-01'
+        expirationDate:
+          type: string
+          description: Ending effective date of the copay group
+          example: '2025-12-31'
+        copayList:
           type: array
           items:
-            $ref: '#/components/schemas/ResponseException'
-    ResponseException:
-      type: object
-      properties:
-        errorCode:
-          type: string
-          description: The GBL error code that is populated when the exceptionSource is SYSTEM
-        exceptionSource:
-          type: string
-          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
-        exceptionMessage:
-          type: string
-          description: Additional information about the exception
+            $ref: '#/components/schemas/CopayItem'
+      required:
+      - clientOrg
+      - copayGroupId
     CopayGetItem:
       type: object
       properties:
@@ -335,41 +331,6 @@ components:
         expirationDate:
           type: string
           description: A fixed amount (for example, $15) you pay for a covered health care service, usually when you receive the service. The amount can vary by the type of covered health care service.
-    CopayGroupGetData:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        copayGroups:
-          type: array
-          items:
-            $ref: '#/components/schemas/CopayGetItem'
-      required:
-      - clientOrg
-      - copayGroups
-    DocCopayGroupGetRequest:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/CopayGroupGetData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    CopayAmountItem:
-      type: object
-      properties:
-        category:
-          type: string
-          description: Type of covered health care service, such as Doctor Office Visit, Urgent Care Visit, Prescription, Physical Therapy, Mental Health Therapy, Hospital Visit, Emergency Room Visit, Dental, Hearing, Vision, and Lab Services
-          example: Prescription
-        amount:
-          type: number
-          description: A fixed amount (for example, $15) you pay for a covered health care service, usually when you receive the service. The amount can vary by the type of covered health care service.
-          example: 15
     CopayGroupData:
       type: object
       properties:
@@ -389,17 +350,6 @@ components:
             $ref: '#/components/schemas/CopayAmountItem'
       required:
       - copayList
-    CopayGroupGetDetail:
-      type: object
-      properties:
-        copayGroup:
-          $ref: '#/components/schemas/CopayGroupData'
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-      required:
-      - clientOrg
     CopayItem:
       type: object
       properties:
@@ -426,13 +376,41 @@ components:
       required:
       - amount
       - category
-    CopayCreateResponse:
+    CopayAmountItem:
       type: object
       properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        copayGroup:
-          $ref: '#/components/schemas/CopayGroup'
+        category:
+          type: string
+          description: Type of covered health care service, such as Doctor Office Visit, Urgent Care Visit, Prescription, Physical Therapy, Mental Health Therapy, Hospital Visit, Emergency Room Visit, Dental, Hearing, Vision, and Lab Services
+          example: Prescription
+        amount:
+          type: number
+          description: A fixed amount (for example, $15) you pay for a covered health care service, usually when you receive the service. The amount can vary by the type of covered health care service.
+          example: 15
+    DocClientOrgCopayGroupEditRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ClientOrgCopayGroupPatchData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    DocCopayGroupGetRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CopayGroupGetData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
     CopayGroup:
       type: object
       properties:
@@ -463,6 +441,45 @@ components:
       - copayList
       - effectiveDate
       - expirationDate
+    CopayGroupGetData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        copayGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/CopayGetItem'
+      required:
+      - clientOrg
+      - copayGroups
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    CopayCreateResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        copayGroup:
+          $ref: '#/components/schemas/CopayGroup'
+    CopayGroupGetDetail:
+      type: object
+      properties:
+        copayGroup:
+          $ref: '#/components/schemas/CopayGroupData'
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - clientOrg
     DocClientOrgCopayGroupCreateRequest:
       type: object
       properties:
@@ -475,43 +492,28 @@ components:
       required:
       - data
       - idempotency
-    ClientOrgCopayGroupPatchData:
+    ResponseException:
       type: object
       properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        copayGroupId:
+        errorCode:
           type: string
-          format: uuid
-          description: UUID of the client organization copay group
-          example: 3d3bdad9-21e0-47bc-becd-b4872c0e8bf9
-        effectiveDate:
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
           type: string
-          description: Beginning effective date of the copay group
-          example: '2025-01-01'
-        expirationDate:
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
           type: string
-          description: Ending effective date of the copay group
-          example: '2025-12-31'
-        copayList:
-          type: array
-          items:
-            $ref: '#/components/schemas/CopayItem'
-      required:
-      - clientOrg
-      - copayGroupId
-    DocClientOrgCopayGroupEditRequest:
+          description: Additional information about the exception
+    ExceptionBaseResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/ClientOrgCopayGroupPatchData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
   securitySchemes:
     bearerAuth:
       type: http

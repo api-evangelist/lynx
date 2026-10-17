@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: CLIENT ORG MANAGEMENT API
+  title: CLIENT ORG MANAGEMENT Clients API
   description: These API's are used to manage client org information
   termsOfService: http://lynx-fh.com
   license:
@@ -11,46 +11,13 @@ servers:
 - url: https://sandbox.lynx-fh.co
 security:
 - bearerAuth: []
+tags:
+- name: Clients
 paths:
-  /clients/application-token:
-    post:
-      tags:
-      - client-org-application-token-controller
-      summary: Generate Client Org Application Token
-      description: Generates a new API token for a specific application associated with a client organization.
-      operationId: generateApplicationToken
-      requestBody:
-        description: This is the client org application token request body
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ClientOrgApplicationTokenRequestDoc'
-        required: true
-      responses:
-        '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ClientOrgApplicationTokenResponse'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionBaseResponse'
-        '401':
-          description: Not authorized
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionBaseResponse'
   /clients/applications:
     get:
       tags:
-      - ''
+      - Clients
       summary: Get Client Org Applications
       description: Retrieves a list of all applications associated with a specific client organization.
       operationId: getClientOrgApplications
@@ -86,7 +53,7 @@ paths:
   /clients/events:
     get:
       tags:
-      - ''
+      - Clients
       summary: Get Client Org Subscribed Events
       description: Retrieves ALL subscribed events for a client organization
       operationId: getClientOrgSubscribedEvents
@@ -111,7 +78,7 @@ paths:
           description: Not found
     put:
       tags:
-      - ''
+      - Clients
       summary: Update Client Org Subscribed Events
       description: Updates the subscribed events for a client organization.
       operationId: updateClientOrgSubscribedEvents
@@ -146,7 +113,7 @@ paths:
   /clients/plans/list:
     get:
       tags:
-      - ''
+      - Clients
       summary: Get Client Org Plan Summary
       description: Retrieves a list of all plans and associated products and card packages for a request client organization and all child client organizations.
       operationId: getClientOrgPlanSummary
@@ -233,8 +200,8 @@ paths:
   /clients/substantiation-model:
     patch:
       tags:
-      - ''
-      summary: ' Client Org Substantiation Model'
+      - Clients
+      summary: Client Org Substantiation Model
       description: This API is used to update auto-substantiation rules and customize the substantiation notification workflow stages, including the method and frequency of notifications.
       operationId: patchClientOrgSubstantiationModel
       requestBody:
@@ -279,7 +246,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     get:
       tags:
-      - ''
+      - Clients
       summary: Client Org Substantiation Model
       description: This API is used to view auto-substantiation rules and substantiation notification workflow stages, including the method and frequency of notifications.
       operationId: getClientOrgSubstantiationModel
@@ -315,7 +282,7 @@ paths:
   /clients/webhooks:
     get:
       tags:
-      - ''
+      - Clients
       summary: Get WebHook URLs
       description: Retrieves ALL configuration values for a client organization for the webhooks
       operationId: getClientOrgWebHookUrls
@@ -340,7 +307,7 @@ paths:
           description: Not found
     post:
       tags:
-      - ''
+      - Clients
       summary: Add WebHook URL
       description: Adds a configuration webhook URL for a client organization
       operationId: addClientOrgWebHookUrl
@@ -363,7 +330,7 @@ paths:
           description: Not found
     delete:
       tags:
-      - ''
+      - Clients
       summary: Delete WebHook URL
       description: Deletes the webhook URL configuration values for a client organization
       operationId: deleteClientOrgWebHookUrl
@@ -405,6 +372,107 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
 components:
   schemas:
+    ClientOrgDocumentDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier (UUID) for the uploaded business document.
+          example: e5fa0a77-27f5-4df3-9f14-a3d8d19ec264
+        type:
+          type: string
+          description: Type of document requested.
+          example: ID verification
+        status:
+          type: string
+          description: Status of document.
+          example: Awaiting_Documents
+        statusReason:
+          type: string
+          description: The current status of the document
+          example: Required
+    ClientOrgSubscribedEventDto:
+      type: object
+      properties:
+        eventName:
+          type: string
+          description: Name of the event
+          example: Transaction Created
+        eventType:
+          type: string
+          description: Type of the event
+          example: lynx.transactionCreated
+        subscribed:
+          type: boolean
+          description: Event subscribed
+          example: true
+        disabled:
+          type: boolean
+          description: Event disabled
+          example: false
+      required:
+      - eventType
+      - subscribed
+    ClientOrgCardSubprogramDetailsDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the plan
+          example: Health Plan ABC HSA Plan
+        partnerId:
+          type: string
+          description: Internal identifier for the plan
+          example: 12345
+        binType:
+          type: string
+          description: Internal identifier assigned by the card-issuing financial institution for the type of the Bank Identification Number (BIN)
+          example: BHM
+        status:
+          type: string
+          description: The current status of the plan.
+          example: Pending
+        statusReason:
+          type: string
+          description: The reason for a particular status
+          example: HSA rejected due to lack of documentation
+        creationDate:
+          type: string
+          format: date-time
+          description: Date when the record was created
+          example: '2024-10-10'
+        updateDate:
+          type: string
+          format: date-time
+          description: Date when the record was last updated
+          example: '2024-10-10'
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductNameDto'
+        cardPackages:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardPackageDetailsDto'
+    Data:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrg'
+        clientOrgWebHook:
+          $ref: '#/components/schemas/WebHook'
+    WebHook:
+      type: object
+      properties:
+        url:
+          type: string
+        encryptionIndicator:
+          type: boolean
+        deliveryMode:
+          type: string
+          enum:
+          - AtLeastOnce
+          - AtMostOnce
     ClientOrgDto:
       type: object
       properties:
@@ -414,6 +482,139 @@ components:
           example: Health_Plan_ABC_Division
       required:
       - name
+    GetClientOrgPlanSummaryResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        clientOrgs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientOrgPlanSummaryDto'
+    PatchClientOrgSubstantiationModelResponse:
+      type: object
+      properties:
+        clientOrgName:
+          type: string
+          description: The name of the client organization
+          example: Lorem
+        enabled:
+          type: boolean
+          description: Indicates whether the client organization substantiation model is enabled.  If the substantiation model is not enabled, no substantiation will be performed and no notifications will be generated
+          example: true
+      required:
+      - clientOrgName
+      - enabled
+    CardPackageDetailsDto:
+      type: object
+      properties:
+        clientOrgCardPackageId:
+          type: string
+          format: uuid
+        name:
+          type: string
+          description: The name of the card package
+          example: Health Plan ABC Blue Card
+        partnerId:
+          type: string
+          description: Internal identifier for the card package
+          example: 12345
+        binType:
+          type: string
+          description: Internal identifier assigned by the card-issuing financial institution for the type of the Bank Identification Number (BIN)
+          example: BHM
+        virtualCardIndicator:
+          type: boolean
+          description: Indicates whether this is a virtual card package
+          example: 'False'
+        prin:
+          type: string
+        beginAgent:
+          type: integer
+          format: int32
+        endAgent:
+          type: integer
+          format: int32
+        status:
+          type: string
+        statusReason:
+          type: string
+        cardPackageId:
+          type: string
+          format: uuid
+    ClientOrgSubstantiationModelStageDto:
+      type: object
+      properties:
+        stageCode:
+          type: string
+          description: Abbreviation for the substantiation stage; PNDS1=Pending - Stage 1, PNDS2=Pending - Stage 2, PNDS3=Pending - Stage 3, PNDS4=Pending - Stage 4, PMIS1=Pending More Info - Stage 1, PMIS2=Pending More Info - Stage 2, PMIS3=Pending More Info - Stage 3, PMIS4=Pending More Info - Stage 4, IELS1=Ineligible - Stage 1, IELS2=Ineligible - Stage 2, IELS3=Ineligible - Stage 3, IELS4=Ineligible - Stage 4
+          enum:
+          - PNDS1
+          - PNDS2
+          - PNDS3
+          - PNDS4
+          - PMIS1
+          - PMIS2
+          - PMIS3
+          - PMIS4
+          - IELS1
+          - IELS2
+          - IELS3
+          - IELS4
+          - PNDAR
+          - PMIAR
+          - IELPR
+          - AUTO
+          example: PNDS1
+        stageName:
+          type: string
+          description: Substantiation stage name
+          example: Pending - Stage 1
+        daysInStage:
+          type: integer
+          format: int32
+          description: Number of days a transaction will remain in the substantiation stage before moving to the next stage; a substantiation notification is generated when a transaction is moved into a new stage and not at the end of a stage.  If the Block Account Indicator is true for the stage, then Days in Stage must be 0.
+          example: 15
+        blockAccountIndicator:
+          type: boolean
+          description: Indicates whether the account/purse associated to the transaction should be blocked when a transaction is moved into this stage; standard configuration default is false, except for all end stages, PNDS4, PMIS4, and IELS4, which are a default of true
+          example: false
+        sendEmailIndicator:
+          type: boolean
+          description: Indicates whether an email notification is sent, provided the member has an email address on file, when a transaction is moved into this stage; standard configuration default is false
+          example: true
+        sendEventIndicator:
+          type: boolean
+          description: Indicates whether a webhook is sent when a transaction is moved into this stage; standard configuration default is true
+          example: true
+      required:
+      - blockAccountIndicator
+      - daysInStage
+      - sendEmailIndicator
+      - sendEventIndicator
+      - stageCode
+      - stageName
+    ClientOrgPlanSummaryDto:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgPlanDto'
+        plans:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientOrgCardSubprogramDetailsDto'
+    ClientOrgSubstantiationModelRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ClientOrgSubstantiationModelData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
     ClientOrgWebHookDto:
       type: object
       properties:
@@ -436,63 +637,45 @@ components:
           format: date-time
       required:
       - id
-    ClientOrgWebHooks:
+    ClientOrgSubstantiationModelStageData:
       type: object
       properties:
-        clientOrgWebHooks:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClientOrgWebHookDto'
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-    ClientOrg:
-      type: object
-      properties:
-        name:
+        stageCode:
           type: string
-    Data:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrg'
-        clientOrgWebHook:
-          $ref: '#/components/schemas/WebHook'
-    Idempotency:
-      type: object
-      properties:
-        idempotencyKey:
-          type: string
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-    WebHook:
-      type: object
-      properties:
-        url:
-          type: string
-        encryptionIndicator:
-          type: boolean
-        deliveryMode:
-          type: string
+          description: Abbreviation for the substantiation stage; PNDS1=Pending - Stage 1, PNDS2=Pending - Stage 2, PNDS3=Pending - Stage 3, PNDS4=Pending - Stage 4, PMIS1=Pending More Info - Stage 1, PMIS2=Pending More Info - Stage 2, PMIS3=Pending More Info - Stage 3, PMIS4=Pending More Info - Stage 4, IELS1=Ineligible - Stage 1, IELS2=Ineligible - Stage 2, IELS3=Ineligible - Stage 3, IELS4=Ineligible - Stage 4
           enum:
-          - AtLeastOnce
-          - AtMostOnce
-    WebHookRequest:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Data'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-    ExceptionBaseResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          description: 'null'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
+          - PNDS1
+          - PNDS2
+          - PNDS3
+          - PNDS4
+          - PMIS1
+          - PMIS2
+          - PMIS3
+          - PMIS4
+          - IELS1
+          - IELS2
+          - IELS3
+          - IELS4
+          example: PNDS1
+        daysInStage:
+          type: integer
+          format: int32
+          description: Number of days a transaction will remain in the substantiation stage before moving to the next stage; a substantiation notification is generated when a transaction is moved into a new stage and not at the end of a stage.  If the Block Account Indicator is true for the stage, then Days in Stage must be 0.
+          example: 15
+        blockAccountIndicator:
+          type: boolean
+          description: Indicates whether the account/purse associated to the transaction should be blocked when a transaction is moved into this stage; standard configuration default is false, except for all end stages, PNDS4, PMIS4, and IELS4, which are a default of true
+          example: false
+        sendEmailIndicator:
+          type: boolean
+          description: Indicates whether an email notification is sent, provided the member has an email address on file, when a transaction is moved into this stage; standard configuration default is false
+          example: true
+        sendEventIndicator:
+          type: boolean
+          description: Indicates whether a webhook is sent when a transaction is moved into this stage; standard configuration default is true
+          example: true
+      required:
+      - stageCode
     ResponseException:
       type: object
       properties:
@@ -505,6 +688,113 @@ components:
         exceptionMessage:
           type: string
           description: Additional information about the exception
+    ClientOrgWebHooks:
+      type: object
+      properties:
+        clientOrgWebHooks:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientOrgWebHookDto'
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetClientOrgSubscribedEventsResponse:
+      type: object
+      properties:
+        clientOrgSubscribedEvents:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientOrgSubscribedEventDto'
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+    ProductNameDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the product
+          example: HSA_01
+      required:
+      - name
+    PartnerOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Partner orgnaization name
+          example: Bank Name
+    ClientOrgSubstantiationModelData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The name of the client organization
+          example: Lorem
+        enabled:
+          type: boolean
+          description: Indicates whether the client organization substantiation model is enabled.  If the substantiation model is not enabled, no substantiation will be performed and no notifications will be generated
+          example: true
+        copayIndicator:
+          type: boolean
+          description: Indicates whether the copay auto-substantiation method should be utilized; default is false
+          example: false
+        recurringExpenseIndicator:
+          type: boolean
+          description: Indicates whether the recurring expense auto-substantiation method should be utilized; default is false
+          example: false
+        carrierClaimsIndicator:
+          type: boolean
+          description: Indicates whether a carrier claims file will be transmitted to be used for the substantiation of medical and dental claims; default is false
+          example: false
+        pbmIndicator:
+          type: boolean
+          description: Indicates whether a PBM file will be transmitted to be used for the substantiation of prescription transactions; default is false
+          example: false
+        deMinimisIndicator:
+          type: boolean
+          description: Indicates whether a de minimis amount should be enabled where if a transaction is equal to or less than that dollar amount, it will automatically be substantiated; default is false
+          example: false
+        deMinimisAmount:
+          type: number
+          description: Dollar amount to automatically substantiate if de minimis functionality is enabled; default is $25
+          example: 25
+        useDefaultConfigurationIndicator:
+          type: boolean
+          description: Indicates whether the parent client organization substantiation model should be utilized instead of defining a custom configuration for a child client organization.  If this is the root level client organization, this should be set to false and Stage Detail is required, else substantiation will not be utilized and no substantiation actions will occur.  If this is a child client organization and a custom configuration is needed, this should be set to false and Stage Detail is required
+          example: false
+        stages:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientOrgSubstantiationModelStageData'
+      required:
+      - clientOrg
+    ClientOrgPlanDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+        partnerId:
+          type: string
+          description: Internal identifier for the client organization
+          example: 12345
     ClientOrgApplicationDto:
       type: object
       properties:
@@ -556,368 +846,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ClientOrgApplicationDto'
-    ClientOrgDocumentDto:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique identifier (UUID) for the uploaded business document.
-          example: e5fa0a77-27f5-4df3-9f14-a3d8d19ec264
-        type:
-          type: string
-          description: Type of document requested.
-          example: ID verification
-        status:
-          type: string
-          description: Status of document.
-          example: Awaiting_Documents
-        statusReason:
-          type: string
-          description: The current status of the document
-          example: Required
-    PartnerOrgDto:
+    ClientOrg:
       type: object
       properties:
         name:
           type: string
-          description: Partner orgnaization name
-          example: Bank Name
-    ClientOrgSubscribedEventDto:
-      type: object
-      properties:
-        eventName:
-          type: string
-          description: Name of the event
-          example: Transaction Created
-        eventType:
-          type: string
-          description: Type of the event
-          example: lynx.transactionCreated
-        subscribed:
-          type: boolean
-          description: Event subscribed
-          example: true
-        disabled:
-          type: boolean
-          description: Event disabled
-          example: false
-      required:
-      - eventType
-      - subscribed
-    GetClientOrgSubscribedEventsResponse:
-      type: object
-      properties:
-        clientOrgSubscribedEvents:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClientOrgSubscribedEventDto'
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-    ClientOrgSubscribedEventsRequest:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-        clientOrgSubscribedEvents:
-          type: array
-          description: List of client org events to subscribe to or unsubscribe from. "eventName" and "disabled" fields will be ignored.
-          example:
-            eventType: lynx.transactionCreated
-            subscribed: true
-          items:
-            $ref: '#/components/schemas/ClientOrgSubscribedEventDto'
-      required:
-      - clientOrg
-      - clientOrgSubscribedEvents
-    ApplicationTokenDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the client application token
-          example: Client Token
-        scopes:
-          type: array
-          description: List of permissions granted to application token
-          example: read:members, write:members
-          items:
-            type: string
-      required:
-      - name
-      - scopes
-    ClientOrgApplicationTokenRequest:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-        childClientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-          description: The name of the child client organization
-          example: Health_Plan_ABC_Division_Child
-        applicationToken:
-          $ref: '#/components/schemas/ApplicationTokenDto'
-          description: Client application token
-      required:
-      - applicationToken
-      - clientOrg
-    ClientOrgApplicationTokenRequestDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ClientOrgApplicationTokenRequest'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    ClientOrgApplicationTokenResponse:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        clientId:
-          type: string
-          description: Unique identifier for your application token
-        clientSecret:
-          type: string
-          description: String used to generate tokens for API endpoints
-        scopes:
-          type: string
-          description: List of permissions granted to application token
-      required:
-      - clientId
-    CardPackageDetailsDto:
-      type: object
-      properties:
-        clientOrgCardPackageId:
-          type: string
-          format: uuid
-        name:
-          type: string
-          description: The name of the card package
-          example: Health Plan ABC Blue Card
-        partnerId:
-          type: string
-          description: Internal identifier for the card package
-          example: 12345
-        binType:
-          type: string
-          description: Internal identifier assigned by the card-issuing financial institution for the type of the Bank Identification Number (BIN)
-          example: BHM
-        virtualCardIndicator:
-          type: boolean
-          description: Indicates whether this is a virtual card package
-          example: 'False'
-        prin:
-          type: string
-        beginAgent:
-          type: integer
-          format: int32
-        endAgent:
-          type: integer
-          format: int32
-        status:
-          type: string
-        statusReason:
-          type: string
-        cardPackageId:
-          type: string
-          format: uuid
-    ClientOrgCardSubprogramDetailsDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the plan
-          example: Health Plan ABC HSA Plan
-        partnerId:
-          type: string
-          description: Internal identifier for the plan
-          example: 12345
-        binType:
-          type: string
-          description: Internal identifier assigned by the card-issuing financial institution for the type of the Bank Identification Number (BIN)
-          example: BHM
-        status:
-          type: string
-          description: The current status of the plan.
-          example: Pending
-        statusReason:
-          type: string
-          description: The reason for a particular status
-          example: HSA rejected due to lack of documentation
-        creationDate:
-          type: string
-          format: date-time
-          description: Date when the record was created
-          example: '2024-10-10'
-        updateDate:
-          type: string
-          format: date-time
-          description: Date when the record was last updated
-          example: '2024-10-10'
-        products:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProductNameDto'
-        cardPackages:
-          type: array
-          items:
-            $ref: '#/components/schemas/CardPackageDetailsDto'
-    ClientOrgPlanDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-        partnerId:
-          type: string
-          description: Internal identifier for the client organization
-          example: 12345
-    ClientOrgPlanSummaryDto:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgPlanDto'
-        plans:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClientOrgCardSubprogramDetailsDto'
-    GetClientOrgPlanSummaryResponse:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        clientOrgs:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClientOrgPlanSummaryDto'
-    ProductNameDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the product
-          example: HSA_01
-      required:
-      - name
-    ClientOrgSubstantiationModelData:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-          description: The name of the client organization
-          example: Lorem
-        enabled:
-          type: boolean
-          description: Indicates whether the client organization substantiation model is enabled.  If the substantiation model is not enabled, no substantiation will be performed and no notifications will be generated
-          example: true
-        copayIndicator:
-          type: boolean
-          description: Indicates whether the copay auto-substantiation method should be utilized; default is false
-          example: false
-        recurringExpenseIndicator:
-          type: boolean
-          description: Indicates whether the recurring expense auto-substantiation method should be utilized; default is false
-          example: false
-        carrierClaimsIndicator:
-          type: boolean
-          description: Indicates whether a carrier claims file will be transmitted to be used for the substantiation of medical and dental claims; default is false
-          example: false
-        pbmIndicator:
-          type: boolean
-          description: Indicates whether a PBM file will be transmitted to be used for the substantiation of prescription transactions; default is false
-          example: false
-        deMinimisIndicator:
-          type: boolean
-          description: Indicates whether a de minimis amount should be enabled where if a transaction is equal to or less than that dollar amount, it will automatically be substantiated; default is false
-          example: false
-        deMinimisAmount:
-          type: number
-          description: Dollar amount to automatically substantiate if de minimis functionality is enabled; default is $25
-          example: 25
-        useDefaultConfigurationIndicator:
-          type: boolean
-          description: Indicates whether the parent client organization substantiation model should be utilized instead of defining a custom configuration for a child client organization.  If this is the root level client organization, this should be set to false and Stage Detail is required, else substantiation will not be utilized and no substantiation actions will occur.  If this is a child client organization and a custom configuration is needed, this should be set to false and Stage Detail is required
-          example: false
-        stages:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClientOrgSubstantiationModelStageData'
-      required:
-      - clientOrg
-    ClientOrgSubstantiationModelRequest:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ClientOrgSubstantiationModelData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    ClientOrgSubstantiationModelStageData:
-      type: object
-      properties:
-        stageCode:
-          type: string
-          description: Abbreviation for the substantiation stage; PNDS1=Pending - Stage 1, PNDS2=Pending - Stage 2, PNDS3=Pending - Stage 3, PNDS4=Pending - Stage 4, PMIS1=Pending More Info - Stage 1, PMIS2=Pending More Info - Stage 2, PMIS3=Pending More Info - Stage 3, PMIS4=Pending More Info - Stage 4, IELS1=Ineligible - Stage 1, IELS2=Ineligible - Stage 2, IELS3=Ineligible - Stage 3, IELS4=Ineligible - Stage 4
-          enum:
-          - PNDS1
-          - PNDS2
-          - PNDS3
-          - PNDS4
-          - PMIS1
-          - PMIS2
-          - PMIS3
-          - PMIS4
-          - IELS1
-          - IELS2
-          - IELS3
-          - IELS4
-          example: PNDS1
-        daysInStage:
-          type: integer
-          format: int32
-          description: Number of days a transaction will remain in the substantiation stage before moving to the next stage; a substantiation notification is generated when a transaction is moved into a new stage and not at the end of a stage.  If the Block Account Indicator is true for the stage, then Days in Stage must be 0.
-          example: 15
-        blockAccountIndicator:
-          type: boolean
-          description: Indicates whether the account/purse associated to the transaction should be blocked when a transaction is moved into this stage; standard configuration default is false, except for all end stages, PNDS4, PMIS4, and IELS4, which are a default of true
-          example: false
-        sendEmailIndicator:
-          type: boolean
-          description: Indicates whether an email notification is sent, provided the member has an email address on file, when a transaction is moved into this stage; standard configuration default is false
-          example: true
-        sendEventIndicator:
-          type: boolean
-          description: Indicates whether a webhook is sent when a transaction is moved into this stage; standard configuration default is true
-          example: true
-      required:
-      - stageCode
-    PatchClientOrgSubstantiationModelResponse:
-      type: object
-      properties:
-        clientOrgName:
-          type: string
-          description: The name of the client organization
-          example: Lorem
-        enabled:
-          type: boolean
-          description: Indicates whether the client organization substantiation model is enabled.  If the substantiation model is not enabled, no substantiation will be performed and no notifications will be generated
-          example: true
-      required:
-      - clientOrgName
-      - enabled
     ClientOrgSubstantiationModelDto:
       type: object
       properties:
@@ -974,58 +907,31 @@ components:
       - pbmIndicator
       - recurringExpenseIndicator
       - useDefaultConfigurationIndicator
-    ClientOrgSubstantiationModelStageDto:
+    WebHookRequest:
       type: object
       properties:
-        stageCode:
-          type: string
-          description: Abbreviation for the substantiation stage; PNDS1=Pending - Stage 1, PNDS2=Pending - Stage 2, PNDS3=Pending - Stage 3, PNDS4=Pending - Stage 4, PMIS1=Pending More Info - Stage 1, PMIS2=Pending More Info - Stage 2, PMIS3=Pending More Info - Stage 3, PMIS4=Pending More Info - Stage 4, IELS1=Ineligible - Stage 1, IELS2=Ineligible - Stage 2, IELS3=Ineligible - Stage 3, IELS4=Ineligible - Stage 4
-          enum:
-          - PNDS1
-          - PNDS2
-          - PNDS3
-          - PNDS4
-          - PMIS1
-          - PMIS2
-          - PMIS3
-          - PMIS4
-          - IELS1
-          - IELS2
-          - IELS3
-          - IELS4
-          - PNDAR
-          - PMIAR
-          - IELPR
-          - AUTO
-          example: PNDS1
-        stageName:
-          type: string
-          description: Substantiation stage name
-          example: Pending - Stage 1
-        daysInStage:
-          type: integer
-          format: int32
-          description: Number of days a transaction will remain in the substantiation stage before moving to the next stage; a substantiation notification is generated when a transaction is moved into a new stage and not at the end of a stage.  If the Block Account Indicator is true for the stage, then Days in Stage must be 0.
-          example: 15
-        blockAccountIndicator:
-          type: boolean
-          description: Indicates whether the account/purse associated to the transaction should be blocked when a transaction is moved into this stage; standard configuration default is false, except for all end stages, PNDS4, PMIS4, and IELS4, which are a default of true
-          example: false
-        sendEmailIndicator:
-          type: boolean
-          description: Indicates whether an email notification is sent, provided the member has an email address on file, when a transaction is moved into this stage; standard configuration default is false
-          example: true
-        sendEventIndicator:
-          type: boolean
-          description: Indicates whether a webhook is sent when a transaction is moved into this stage; standard configuration default is true
-          example: true
+        data:
+          $ref: '#/components/schemas/Data'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+    ClientOrgSubscribedEventsRequest:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+        clientOrgSubscribedEvents:
+          type: array
+          description: List of client org events to subscribe to or unsubscribe from. "eventName" and "disabled" fields will be ignored.
+          example:
+            eventType: lynx.transactionCreated
+            subscribed: true
+          items:
+            $ref: '#/components/schemas/ClientOrgSubscribedEventDto'
       required:
-      - blockAccountIndicator
-      - daysInStage
-      - sendEmailIndicator
-      - sendEventIndicator
-      - stageCode
-      - stageName
+      - clientOrg
+      - clientOrgSubscribedEvents
   securitySchemes:
     bearerAuth:
       type: http

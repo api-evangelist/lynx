@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: CARD MANAGEMENT API
+  title: CARD MANAGEMENT Cards API
   description: These API's are used to manage card related operations
   termsOfService: http://lynx-fh.com
   license:
@@ -11,11 +11,13 @@ servers:
 - url: https://sandbox.lynx-fh.co
 security:
 - bearerAuth: []
+tags:
+- name: Cards
 paths:
   /cards/activate:
     post:
       tags:
-      - ''
+      - Cards
       summary: Activate Card
       description: Activates a card, making it available for transactions.
       operationId: activateCard
@@ -71,7 +73,7 @@ paths:
   /cards/card:
     post:
       tags:
-      - ''
+      - Cards
       summary: Request Primary Member Card
       description: Create an additional card for an existing member, and associate to existing member accounts. The API takes an existing primary member card proxy number as input. The package name for the new card is also required.
       operationId: createMemberCard
@@ -115,7 +117,7 @@ paths:
   /cards/card-requests:
     get:
       tags:
-      - ''
+      - Cards
       summary: Get Card Requests
       description: This API returns a list of card requests.
       operationId: getCardRequests
@@ -204,7 +206,7 @@ paths:
   /cards/close:
     post:
       tags:
-      - ''
+      - Cards
       summary: Close Card
       description: Closes a card which has the effect of shutting down a card
       operationId: closeCard
@@ -262,7 +264,7 @@ paths:
   /cards/dependent:
     post:
       tags:
-      - ''
+      - Cards
       summary: Request Dependent Card
       description: This API is used to request a card for an existing dependent, such as a spouse or child, and associate to an existing member account.
       operationId: createDependentCard
@@ -304,7 +306,7 @@ paths:
   /cards/details:
     get:
       tags:
-      - ''
+      - Cards
       summary: Get Card Details
       description: Retrieves details of a specific card owned by the member, for the incoming cardProxy, clientMemberId and clientOrgName.
       operationId: getCard
@@ -354,7 +356,7 @@ paths:
   /cards/freeze:
     post:
       tags:
-      - ''
+      - Cards
       summary: Freeze Card
       description: Freezes, or temporarily suspends, the card which prevents authorization requests from being accepted and disables any operations that can occur on the card. Previously authorized transactions will settle to the account.
       operationId: freezeCard
@@ -410,7 +412,7 @@ paths:
   /cards/list:
     get:
       tags:
-      - ''
+      - Cards
       summary: Get All Cards
       description: Retrieves details of all cards owned by the member, for the incoming clientMemberId, productName and clientOrgName
       operationId: getCards
@@ -460,7 +462,7 @@ paths:
   /cards/reissue:
     post:
       tags:
-      - ''
+      - Cards
       summary: Reissue Card
       description: Reissue an existing card that is in a lost/stolen status. The lost/stolen card will be assigned a “Replaced” status and a new card number and card proxy will be generated for the reissued card.
       operationId: reIssue
@@ -500,7 +502,7 @@ paths:
   /cards/replace:
     post:
       tags:
-      - ''
+      - Cards
       summary: Replace Card
       description: Provisions a replacement debit card and sends the replacement to the provided shipping address (optional). If the shipping address is not provided in the API, the card is shipped to the primary address on file.
       operationId: replaceCard
@@ -544,7 +546,7 @@ paths:
   /cards/report-lost:
     post:
       tags:
-      - ''
+      - Cards
       summary: Report Card Lost
       description: Reports a card as lost/stolen - the card status is updated to 'Lost' and the card is set to inactive. An automated email is sent to the card holder, notifying them about the change in status. An (optional) event is generated to the client organization about the change in card status.
       operationId: reportLost
@@ -600,7 +602,7 @@ paths:
   /cards/report-stolen:
     post:
       tags:
-      - ''
+      - Cards
       summary: Report Card Stolen
       description: Reports a card as lost/stolen - the card status is updated to 'Lost' and the card is set to inactive. An automated email is sent to the card holder, notifying them about the change in status. An (optional) event is generated to the client organization about the change in card status.
       operationId: reportStolen
@@ -656,7 +658,7 @@ paths:
   /cards/status:
     put:
       tags:
-      - ''
+      - Cards
       summary: Update Card Status
       description: This API allows a client to update a card status.
       operationId: setCardStatus
@@ -698,7 +700,7 @@ paths:
   /cards/unfreeze:
     post:
       tags:
-      - ''
+      - Cards
       summary: Unfreeze Card
       description: Unfreezes a frozen card, making it available for transactions. The card is set to an 'Active' state
       operationId: unfreezeCard
@@ -751,46 +753,22 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
 components:
   schemas:
-    BaseMember:
+    CardStatusRequest:
       type: object
       properties:
-        clientMemberId:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberCard:
+          $ref: '#/components/schemas/MemberCardIdDto'
+        status:
           type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
       required:
-      - clientMemberId
-    ClientOrgDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-      required:
-      - name
-    ExceptionBaseResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          description: 'null'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    ResponseException:
-      type: object
-      properties:
-        errorCode:
-          type: string
-          description: The GBL error code that is populated when the exceptionSource is SYSTEM
-        exceptionSource:
-          type: string
-          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
-        exceptionMessage:
-          type: string
-          description: Additional information about the exception
+      - clientOrg
+      - member
+      - memberCard
+      - status
     BaseMemberCard:
       type: object
       properties:
@@ -903,36 +881,70 @@ components:
       - status
       - statusReason
       - type
-    CardDesignDto:
+    Data:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrg'
+        member:
+          $ref: '#/components/schemas/Member'
+        memberCard:
+          $ref: '#/components/schemas/MemberCard'
+    GetCardRequestsResponseDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GetCardRequestsResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    ClientOrgDto:
       type: object
       properties:
         name:
           type: string
-          description: The name of design used for the card
-          example: Acme
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
       required:
       - name
-    GetMemberCardsResponse:
+    BaseAddress:
       type: object
       properties:
-        member:
-          $ref: '#/components/schemas/BaseMember'
-          description: Object describing the member
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        memberAccountCards:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberAccountCardDto'
-    MemberAccountCardDto:
-      type: object
-      properties:
-        memberAccounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberAccountDto'
-        memberCard:
-          $ref: '#/components/schemas/BaseMemberCard'
+        line1:
+          type: string
+          description: The first line of the address
+          example: 10
+        line2:
+          type: string
+          description: The (optional) second line of the address
+          example: address line2
+        city:
+          type: string
+          description: Address city
+          example: Boston
+        stateProvince:
+          type: string
+          description: 2-Character address state or province
+          example: MA
+        country:
+          type: string
+          description: Address country
+          example: US
+        postalCode:
+          type: string
+          description: Address zip code
+          example: 02119
+        postalCodeExtension:
+          type: string
+          description: Address zip code extension
+          example: '0123'
+      required:
+      - city
+      - country
+      - line1
+      - postalCode
+      - stateProvince
     MemberAccountDto:
       type: object
       properties:
@@ -958,24 +970,11 @@ components:
           format: date-time
           description: Date when the account expires for the member
           example: '2024-10-10'
-    GetCardDetailsResponseDoc:
+    MemberCardResponse:
       type: object
       properties:
-        data:
-          $ref: '#/components/schemas/MemberAndMemberCardDto'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    MemberAndMemberCardDto:
-      type: object
-      properties:
-        member:
-          $ref: '#/components/schemas/BaseMember'
         memberCard:
-          $ref: '#/components/schemas/BaseMemberCard'
-      required:
-      - member
+          $ref: '#/components/schemas/MemberCardIdDto'
     CardRequestDto:
       type: object
       properties:
@@ -1050,45 +1049,15 @@ components:
           type: string
           description: Pull type for processing
           example: Daily
-    GetCardRequestsResponse:
+    CardDesignDto:
       type: object
       properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        cardRequest:
-          type: array
-          items:
-            $ref: '#/components/schemas/CardRequestDto'
-    GetCardRequestsResponseDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/GetCardRequestsResponse'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    CardStatusDto:
-      type: object
-      properties:
-        status:
+        name:
           type: string
-          description: Status of card
-        statusReason:
-          type: string
-          description: The reason for a particular status
-        cardLastFour:
-          type: string
-          description: Last four digits of the card number
-    MemberCardStatus:
-      type: object
-      properties:
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        memberCardStatus:
-          $ref: '#/components/schemas/CardStatusDto'
+          description: The name of design used for the card
+          example: Acme
+      required:
+      - name
     MemberCardStatusResponseDoc:
       type: object
       properties:
@@ -1098,59 +1067,69 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResponseException'
-    Idempotency:
+    ReissueCardRequestDoc:
       type: object
       properties:
-        idempotencyKey:
-          type: string
+        data:
+          $ref: '#/components/schemas/ReissueCardRequest'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
           description: Unique identifier that represents the operation
           example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-    MemberCardIdDto:
+      required:
+      - data
+      - idempotency
+    Member:
       type: object
       properties:
-        cardProxy:
+        clientMemberId:
           type: string
-          description: Card identifier (this was returned when the card was created)
-          example: 5263218885395
+          description: Unique client-side identifier for the member
+          example: 3f50436491
       required:
-      - cardProxy
-    BaseAddress:
+      - clientMemberId
+    DocPostDependentCardRequest:
       type: object
       properties:
-        line1:
-          type: string
-          description: The first line of the address
-          example: 10
-        line2:
-          type: string
-          description: The (optional) second line of the address
-          example: address line2
-        city:
-          type: string
-          description: Address city
-          example: Boston
-        stateProvince:
-          type: string
-          description: 2-Character address state or province
-          example: MA
-        country:
-          type: string
-          description: Address country
-          example: US
-        postalCode:
-          type: string
-          description: Address zip code
-          example: 02119
-        postalCodeExtension:
-          type: string
-          description: Address zip code extension
-          example: '0123'
+        data:
+          $ref: '#/components/schemas/DependentCardRequest'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
       required:
-      - city
-      - country
-      - line1
-      - postalCode
-      - stateProvince
+      - data
+      - idempotency
+    CardResponseDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/MemberCardResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    MemberAccountCardDto:
+      type: object
+      properties:
+        memberAccounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberAccountDto'
+        memberCard:
+          $ref: '#/components/schemas/BaseMemberCard'
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
     DependentCardRequest:
       type: object
       properties:
@@ -1166,6 +1145,35 @@ components:
       - clientOrg
       - member
       - memberCard
+    ReplaceCardRequest:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberCard:
+          $ref: '#/components/schemas/MemberCardRushDeliveryDto'
+        address:
+          $ref: '#/components/schemas/BaseAddress'
+        cardPackageName:
+          type: string
+          description: The name of the card package.  If no value is passed, the most recently updated card package will be used by default.
+          example: Health Plan ABC Blue Card
+      required:
+      - clientOrg
+      - member
+      - memberCard
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
     DependentRushDeliveryDto:
       type: object
       properties:
@@ -1186,105 +1194,61 @@ components:
           example: true
       required:
       - id
-    DocPostDependentCardRequest:
+    MemberCardStatus:
       type: object
       properties:
-        data:
-          $ref: '#/components/schemas/DependentCardRequest'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberCardStatus:
+          $ref: '#/components/schemas/CardStatusDto'
+    GetCardRequestsResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        cardRequest:
+          type: array
+          items:
+            $ref: '#/components/schemas/CardRequestDto'
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
           description: Unique identifier that represents the operation
           example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    PostDependentCardResponse:
+    CardStatusDto:
       type: object
       properties:
-        memberCard:
-          $ref: '#/components/schemas/MemberCardIdDto'
-        dependentCard:
-          $ref: '#/components/schemas/MemberCardIdDto'
-      required:
-      - dependentCard
-      - memberCard
-    MemberCardRushDeliveryDto:
+        status:
+          type: string
+          description: Status of card
+        statusReason:
+          type: string
+          description: The reason for a particular status
+        cardLastFour:
+          type: string
+          description: Last four digits of the card number
+    MemberCardIdDto:
       type: object
       properties:
         cardProxy:
           type: string
           description: Card identifier (this was returned when the card was created)
           example: 5263218885395
-        rushDelivery:
-          type: boolean
-          description: Indicates whether to ship the card via express mail; if omitted, default is false to ship first class mail
-          example: true
-        waiveRushDeliveryFee:
-          type: boolean
-          description: Flag to waive rush delivery fee
-          example: true
       required:
       - cardProxy
-    CardResponseDoc:
+    MemberAndMemberCardDto:
       type: object
       properties:
-        data:
-          $ref: '#/components/schemas/MemberCardResponse'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    MemberCardResponse:
-      type: object
-      properties:
-        memberCard:
-          $ref: '#/components/schemas/MemberCardIdDto'
-    ReissueCardRequest:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
         member:
           $ref: '#/components/schemas/BaseMember'
         memberCard:
-          $ref: '#/components/schemas/MemberCardRushDeliveryDto'
-        address:
-          $ref: '#/components/schemas/BaseAddress'
+          $ref: '#/components/schemas/BaseMemberCard'
       required:
-      - clientOrg
       - member
-      - memberCard
-    ReissueCardRequestDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ReissueCardRequest'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    ReplaceCardRequest:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        memberCard:
-          $ref: '#/components/schemas/MemberCardRushDeliveryDto'
-        address:
-          $ref: '#/components/schemas/BaseAddress'
-        cardPackageName:
-          type: string
-          description: The name of the card package.  If no value is passed, the most recently updated card package will be used by default.
-          example: Health Plan ABC Blue Card
-      required:
-      - clientOrg
-      - member
-      - memberCard
     ReplaceCardRequestDoc:
       type: object
       properties:
@@ -1297,6 +1261,48 @@ components:
       required:
       - data
       - idempotency
+    MemberCardRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Data'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    GetCardDetailsResponseDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/MemberAndMemberCardDto'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetMemberCardsResponse:
+      type: object
+      properties:
+        member:
+          $ref: '#/components/schemas/BaseMember'
+          description: Object describing the member
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        memberAccountCards:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberAccountCardDto'
+    BaseMember:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
     ClientOrg:
       type: object
       properties:
@@ -1306,24 +1312,16 @@ components:
           example: Health_Plan_ABC_Division
       required:
       - name
-    Data:
+    PostDependentCardResponse:
       type: object
       properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrg'
-        member:
-          $ref: '#/components/schemas/Member'
         memberCard:
-          $ref: '#/components/schemas/MemberCard'
-    Member:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
+          $ref: '#/components/schemas/MemberCardIdDto'
+        dependentCard:
+          $ref: '#/components/schemas/MemberCardIdDto'
       required:
-      - clientMemberId
+      - dependentCard
+      - memberCard
     MemberCard:
       type: object
       properties:
@@ -1342,18 +1340,38 @@ components:
       required:
       - cardPackageName
       - cardProxy
-    MemberCardRequest:
+    ReissueCardRequest:
       type: object
       properties:
-        data:
-          $ref: '#/components/schemas/Data'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberCard:
+          $ref: '#/components/schemas/MemberCardRushDeliveryDto'
+        address:
+          $ref: '#/components/schemas/BaseAddress'
       required:
-      - data
-      - idempotency
+      - clientOrg
+      - member
+      - memberCard
+    MemberCardRushDeliveryDto:
+      type: object
+      properties:
+        cardProxy:
+          type: string
+          description: Card identifier (this was returned when the card was created)
+          example: 5263218885395
+        rushDelivery:
+          type: boolean
+          description: Indicates whether to ship the card via express mail; if omitted, default is false to ship first class mail
+          example: true
+        waiveRushDeliveryFee:
+          type: boolean
+          description: Flag to waive rush delivery fee
+          example: true
+      required:
+      - cardProxy
     CardStatusChangeRequest:
       type: object
       properties:
@@ -1366,22 +1384,6 @@ components:
       required:
       - data
       - idempotency
-    CardStatusRequest:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        memberCard:
-          $ref: '#/components/schemas/MemberCardIdDto'
-        status:
-          type: string
-      required:
-      - clientOrg
-      - member
-      - memberCard
-      - status
   securitySchemes:
     bearerAuth:
       type: http

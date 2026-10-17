@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: EXTERNAL NOTIFICATION API
+  title: EXTERNAL NOTIFICATION Externalnotifications API
   description: These API's are used to manage Member Alerts
   termsOfService: http://lynx-fh.com
   license:
@@ -11,11 +11,13 @@ servers:
 - url: https://sandbox.lynx-fh.co
 security:
 - bearerAuth: []
+tags:
+- name: Externalnotifications
 paths:
   /externalnotifications/notifications/clientOrgNotification:
     get:
       tags:
-      - ''
+      - Externalnotifications
       operationId: getClientOrgNotificationConfiguration
       parameters:
       - name: clientOrgName
@@ -39,15 +41,15 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/BaseResponseClientOrgNotificationConfigurationData'
+      summary: Get client org notification configuration
+      x-summary-source: derived
     post:
       tags:
-      - ''
+      - Externalnotifications
       summary: Configure Member Notification
       description: 'This API creates notifications triggered based on specified parameters,
 
-        providing message details, recipients, and triggers for the notification
-
-        '
+        providing message details, recipients, and triggers for the notification'
       operationId: createClientOrgNotificationConfig
       requestBody:
         content:
@@ -100,9 +102,17 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     patch:
       tags:
-      - ''
+      - Externalnotifications
       summary: Update Configured Member Notification
-      description: "   This API allows for elements of an existing notification to be updated\n   so future triggers of notifications are appropriate.\n   Patched notifications will not impact notifications that have already\n   been received by members. Only the elements passed will be updated for\n   the notification\n"
+      description: 'This API allows for elements of an existing notification to be updated
+
+        so future triggers of notifications are appropriate.
+
+        Patched notifications will not impact notifications that have already
+
+        been received by members. Only the elements passed will be updated for
+
+        the notification'
       operationId: patchClientOrgNotificationConfig
       requestBody:
         content:
@@ -155,7 +165,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     delete:
       tags:
-      - ''
+      - Externalnotifications
       summary: Delete Configured Member Notification
       description: This API is used to delete a notification that has been configured for my member population.
       operationId: deleteClientOrgNotificationConfig
@@ -198,7 +208,7 @@ paths:
   /externalnotifications/notifications/clientOrgNotification/detail:
     get:
       tags:
-      - ''
+      - Externalnotifications
       summary: Client Org Configured Notification Detail
       description: This API allows you to retrieve detailed information on member notifications associated with your client organization
       operationId: getClientOrgNotificationConfigurationById
@@ -233,7 +243,7 @@ paths:
   /externalnotifications/notifications/clientOrgNotification/list:
     get:
       tags:
-      - ''
+      - Externalnotifications
       summary: All Client Org Configured Notification
       description: This API returns all Notification that have been configured for your client organization.
       operationId: getAllClientOrgNotificationConfigs
@@ -283,7 +293,7 @@ paths:
   /externalnotifications/notifications/memberNotification:
     patch:
       tags:
-      - ''
+      - Externalnotifications
       summary: Update Member Notification Status
       description: This API is used to update the status of a member's notification.
       operationId: updateMemberNotificationStatus
@@ -317,11 +327,9 @@ paths:
   /externalnotifications/notifications/memberNotification/count:
     get:
       tags:
-      - ''
+      - Externalnotifications
       summary: Unread Member Notification Count
-      description: 'This API returns a count of all Member Notifications that have not been read for a given member.
-
-        '
+      description: This API returns a count of all Member Notifications that have not been read for a given member.
       operationId: getUnreadMemberNotificationsCount
       parameters:
       - name: clientOrgName
@@ -362,11 +370,9 @@ paths:
   /externalnotifications/notifications/memberNotification/list:
     get:
       tags:
-      - ''
+      - Externalnotifications
       summary: All Member Notifications
-      description: 'This API returns all Member Notifications that have been delivered for a given member.
-
-        '
+      description: This API returns all Member Notifications that have been delivered for a given member.
       operationId: getAllMemberNotifications
       parameters:
       - name: clientOrgName
@@ -431,7 +437,7 @@ paths:
   /externalnotifications/notifications/sendNotification:
     post:
       tags:
-      - ''
+      - Externalnotifications
       summary: Trigger Adhoc Notification
       description: This API will trigger a client configured notification to the requested members
       operationId: sendNotification
@@ -468,6 +474,56 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
 components:
   schemas:
+    NotificationData:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique id for the notification.
+          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+        status:
+          type: string
+          description: If set to Unread the response will return only unread notifications, if set to read will return only read notifications, if left null will return all notifications
+          example: Unread
+      required:
+      - id
+      - status
+    BaseResponseClientOrgNotificationConfigurationData:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ClientOrgNotificationConfigurationData'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    ClientOrgNotificationConfigurationResponseData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        name:
+          type: string
+          description: Unique name within a client org that identifies the notification
+          example: New Form
+        trigger:
+          type: string
+          description: Indicates if the notification is triggered by a date or an event via webhook.
+          example: Scheduled
+      required:
+      - clientOrg
+    PostClientOrgNotificationConfigurationRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ClientOrgNotificationConfigurationData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
     ClientOrgDto:
       type: object
       properties:
@@ -477,37 +533,17 @@ components:
           example: Health_Plan_ABC_Division
       required:
       - name
-    ExceptionBaseResponse:
+    ClientOrgNotificationConfigurationsData:
       type: object
       properties:
-        data:
-          type: object
-          description: 'null'
-        exceptions:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        notifications:
           type: array
           items:
-            $ref: '#/components/schemas/ResponseException'
-    ResponseException:
-      type: object
-      properties:
-        errorCode:
-          type: string
-          description: The GBL error code that is populated when the exceptionSource is SYSTEM
-        exceptionSource:
-          type: string
-          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
-        exceptionMessage:
-          type: string
-          description: Additional information about the exception
-    BaseMember:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
+            $ref: '#/components/schemas/ClientOrgNotificationConfigurationData'
       required:
-      - clientMemberId
+      - clientOrg
     MemberNotificationData:
       type: object
       properties:
@@ -538,6 +574,96 @@ components:
       required:
       - id
       - status
+    AdHocNotificationResponse:
+      type: object
+      properties:
+        response:
+          type: string
+      required:
+      - response
+    ClientOrgNotificationConfigurationResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ClientOrgNotificationConfigurationResponseData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    AdHocNotificationRequestData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        name:
+          type: string
+          description: Unique name within a client org that identifies the notification
+          example: New Form
+        clientMemberIds:
+          type: array
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+          items:
+            type: string
+      required:
+      - clientOrg
+      - name
+    AdHocNotificationRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AdHocNotificationRequestData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+    PatchClientOrgNotificationConfigurationRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ClientOrgNotificationConfigurationData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
     MemberNotificationsData:
       type: object
       properties:
@@ -552,6 +678,52 @@ components:
       required:
       - clientOrg
       - member
+    PatchMemberNotificationsData:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        notification:
+          $ref: '#/components/schemas/NotificationData'
+      required:
+      - clientOrg
+      - member
+      - notification
+    PatchMemberNotificationStatusResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PatchMemberNotificationsData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    BaseMember:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+    PatchMemberNotificationStatusRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PatchMemberNotificationsData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
     ClientOrgNotificationConfigurationData:
       type: object
       properties:
@@ -611,172 +783,6 @@ components:
       required:
       - clientOrg
       - notificationId
-    BaseResponseClientOrgNotificationConfigurationData:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ClientOrgNotificationConfigurationData'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    ClientOrgNotificationConfigurationsData:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        notifications:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClientOrgNotificationConfigurationData'
-      required:
-      - clientOrg
-    AdHocNotificationRequest:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/AdHocNotificationRequestData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    AdHocNotificationRequestData:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        name:
-          type: string
-          description: Unique name within a client org that identifies the notification
-          example: New Form
-        clientMemberIds:
-          type: array
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-          items:
-            type: string
-      required:
-      - clientOrg
-      - name
-    Idempotency:
-      type: object
-      properties:
-        idempotencyKey:
-          type: string
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-    AdHocNotificationResponse:
-      type: object
-      properties:
-        response:
-          type: string
-      required:
-      - response
-    PostClientOrgNotificationConfigurationRequest:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ClientOrgNotificationConfigurationData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    ClientOrgNotificationConfigurationResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ClientOrgNotificationConfigurationResponseData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    ClientOrgNotificationConfigurationResponseData:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        name:
-          type: string
-          description: Unique name within a client org that identifies the notification
-          example: New Form
-        trigger:
-          type: string
-          description: Indicates if the notification is triggered by a date or an event via webhook.
-          example: Scheduled
-      required:
-      - clientOrg
-    PatchClientOrgNotificationConfigurationRequest:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/ClientOrgNotificationConfigurationData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    NotificationData:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique id for the notification.
-          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
-        status:
-          type: string
-          description: If set to Unread the response will return only unread notifications, if set to read will return only read notifications, if left null will return all notifications
-          example: Unread
-      required:
-      - id
-      - status
-    PatchMemberNotificationStatusRequest:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/PatchMemberNotificationsData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    PatchMemberNotificationsData:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        notification:
-          $ref: '#/components/schemas/NotificationData'
-      required:
-      - clientOrg
-      - member
-      - notification
-    PatchMemberNotificationStatusResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/PatchMemberNotificationsData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
   securitySchemes:
     bearerAuth:
       type: http

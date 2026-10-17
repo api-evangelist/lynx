@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: TAGS API
+  title: Tags API
   description: These API's are used to manage tags
   termsOfService: http://lynx-fh.com
   license:
@@ -11,11 +11,13 @@ servers:
 - url: https://sandbox.lynx-fh.co
 security:
 - bearerAuth: []
+tags:
+- name: Tags
 paths:
   /tags:
     post:
       tags:
-      - ''
+      - Tags
       summary: Add Tags
       description: This API will add tags, which are optional meta data values, for a type of resource, such as member or transaction.
       operationId: addTag
@@ -52,7 +54,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     delete:
       tags:
-      - ''
+      - Tags
       summary: Delete a Tag
       description: This API will allow you to delete a tag. Returns an empty data container when successful or exceptions when the request failed.
       operationId: deleteTag
@@ -116,7 +118,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     patch:
       tags:
-      - ''
+      - Tags
       summary: Update Tags API
       description: Update Existing Tags on a Resource.
       operationId: patchTag
@@ -154,7 +156,7 @@ paths:
   /tags/list:
     get:
       tags:
-      - ''
+      - Tags
       summary: Get Tags
       description: Returns a list of tags for a type of resource, such as member or transaction.
       operationId: getTags
@@ -208,52 +210,18 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
 components:
   schemas:
-    ClientOrgDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-      required:
-      - name
-    TagDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Constant used to define the metadata within a key-value pair
-        value:
-          type: string
-          description: Variable belonging to the metadata within a key-value pair
-        type:
-          type: string
-          description: Additional client-defined qualifier that may be used to further classify the key-value pair
-      required:
-      - name
-      - value
-    ResponseException:
-      type: object
-      properties:
-        errorCode:
-          type: string
-          description: The GBL error code that is populated when the exceptionSource is SYSTEM
-        exceptionSource:
-          type: string
-          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
-        exceptionMessage:
-          type: string
-          description: Additional information about the exception
-    ExceptionBaseResponse:
+    PatchTagRequestDoc:
       type: object
       properties:
         data:
-          type: object
-          description: 'null'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
+          $ref: '#/components/schemas/PatchTagRequestDtoDoc'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
     GetTagsResponse:
       type: object
       properties:
@@ -274,15 +242,6 @@ components:
       required:
       - resourceId
       - resourceType
-    GetTagsResponseDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/GetTagsResponse'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
     Idempotency:
       type: object
       properties:
@@ -322,20 +281,38 @@ components:
       required:
       - resourceId
       - resourceType
-    PostTagResponse:
+    TagDto:
       type: object
       properties:
-        tag:
-          $ref: '#/components/schemas/PostTagResponseDto'
-    PostTagResponseDoc:
+        name:
+          type: string
+          description: Constant used to define the metadata within a key-value pair
+        value:
+          type: string
+          description: Variable belonging to the metadata within a key-value pair
+        type:
+          type: string
+          description: Additional client-defined qualifier that may be used to further classify the key-value pair
+      required:
+      - name
+      - value
+    TagDtoDoc:
       type: object
       properties:
-        data:
-          $ref: '#/components/schemas/PostTagResponse'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
+        name:
+          type: string
+          description: Constant used to define the metadata within a key-value pair
+          example: Chronic Condition
+        value:
+          type: string
+          description: Variable belonging to the metadata within a key-value pair
+          example: Diabetes
+        type:
+          type: string
+          description: Additional client-defined qualifier that may be used to further classify the key-value pair
+          example: Health Condition
+      required:
+      - name
     PostTagResponseDto:
       type: object
       properties:
@@ -350,6 +327,15 @@ components:
       required:
       - resourceId
       - resourceType
+    PostTagResponseDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PostTagResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
     BaseResponse:
       type: object
       properties:
@@ -359,18 +345,51 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResponseException'
-    PatchTagRequestDoc:
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    GetTagsResponseDoc:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/PatchTagRequestDtoDoc'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
+          $ref: '#/components/schemas/GetTagsResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    PostTagResponse:
+      type: object
+      properties:
+        tag:
+          $ref: '#/components/schemas/PostTagResponseDto'
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
     PatchTagRequestDtoDoc:
       type: object
       properties:
@@ -391,23 +410,6 @@ components:
       required:
       - resourceId
       - resourceType
-    TagDtoDoc:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Constant used to define the metadata within a key-value pair
-          example: Chronic Condition
-        value:
-          type: string
-          description: Variable belonging to the metadata within a key-value pair
-          example: Diabetes
-        type:
-          type: string
-          description: Additional client-defined qualifier that may be used to further classify the key-value pair
-          example: Health Condition
-      required:
-      - name
   securitySchemes:
     bearerAuth:
       type: http

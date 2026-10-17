@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: MEMBER MANAGEMENT API
+  title: MEMBER MANAGEMENT Members API
   description: These API's are used to manage member informations
   termsOfService: http://lynx-fh.com
   license:
@@ -11,11 +11,13 @@ servers:
 - url: https://sandbox.lynx-fh.co
 security:
 - bearerAuth: []
+tags:
+- name: Members
 paths:
   /members/account:
     get:
       tags:
-      - ''
+      - Members
       summary: Get Member Account Details
       description: 'Retrieves account details for the member identified by the incoming clientMemberId and clientOrgName. Note that the member could have more than one account; therefore, an array of account objects is returned. Possible account statuses: Account_Active, Closed, Frozen, New.'
       operationId: accountDetails
@@ -58,7 +60,7 @@ paths:
   /members/addresses:
     put:
       tags:
-      - ''
+      - Members
       summary: Update Member Addresses
       description: Updates addresses for a member (identified by clientMemberId). Attributes that are supplied in the request body are saved for the member.
       operationId: updateMemberAddresses
@@ -95,7 +97,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     delete:
       tags:
-      - ''
+      - Members
       summary: Delete Member Address
       description: This API will allow you to delete a member address.
       operationId: deleteMemberAddress
@@ -149,7 +151,7 @@ paths:
   /members/details:
     get:
       tags:
-      - ''
+      - Members
       summary: Get Member Details
       description: Retrieves detailed information for the member identified by the incoming clientMemberId and clientOrgName.
       operationId: getMemberDetails
@@ -199,7 +201,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     patch:
       tags:
-      - ''
+      - Members
       summary: Update Member Details
       description: Updates details for a member (identified by clientMemberId). The attributes passed in the request body are saved for the member.
       operationId: updateMemberDetails
@@ -241,7 +243,7 @@ paths:
   /members/emails:
     put:
       tags:
-      - ''
+      - Members
       summary: Update Member Emails
       description: Updates the email address(es) for a member (identified by clientMemberId). Attributes that are supplied in the request body are saved for the member.
       operationId: updateMemberEmails
@@ -278,7 +280,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     delete:
       tags:
-      - ''
+      - Members
       summary: Delete Member Email
       description: This API will allow you to delete a member email address.
       operationId: deleteMemberEmail
@@ -329,272 +331,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
-  /members/expense:
-    post:
-      tags:
-      - Expense
-      summary: Create Expense
-      description: Allow members to log expenses for tracking purposes.
-      operationId: createMemberExpense
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PostMemberExpenseDataDoc'
-        required: true
-      responses:
-        '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MemberExpenseResponse'
-        '400':
-          description: 'Bad request.
-
-            - GBL-278: Expense date cannot be a future date
-
-            '
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionBaseResponse'
-        '401':
-          description: Not authorized
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionBaseResponse'
-    patch:
-      tags:
-      - member-expense-controller
-      summary: Update Expense
-      description: Allow members to edit expenses for tracking purposes.
-      operationId: updateMemberExpense
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchMemberExpenseDataDoc'
-        required: true
-      responses:
-        '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MemberExpenseResponse'
-        '400':
-          description: 'Bad request.
-
-            - GBL-278: Expense date cannot be a future date
-
-            '
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionBaseResponse'
-        '401':
-          description: Not authorized
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionBaseResponse'
-  /members/expense/receipt:
-    delete:
-      tags:
-      - member-expense-controller
-      summary: Delete Expense Receipt
-      description: Delete Expense Receipt.
-      operationId: deleteMemberExpenseReceipt
-      parameters:
-      - name: clientOrgName
-        in: query
-        description: The name of the client organization
-        required: true
-        schema:
-          type: string
-        example: Health_Plan_ABC_Division
-      - name: clientMemberId
-        in: query
-        description: Unique client-side identifier for the member
-        required: true
-        schema:
-          type: string
-        example: 3f50436491
-      - name: expenseNumber
-        in: query
-        description: Expense Number
-        required: true
-        schema:
-          type: string
-        example: EXPEN00000001
-      - name: receiptId
-        in: query
-        description: Id
-        required: true
-        schema:
-          type: string
-          format: uuid
-        example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      responses:
-        '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MemberExpenseResponse'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionBaseResponse'
-        '401':
-          description: Not authorized
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionBaseResponse'
-  /members/expense/receipts:
-    post:
-      tags:
-      - member-expense-controller
-      summary: Upload Receipts to Expense
-      description: Allow members to upload receipts to expense
-      operationId: addExpenseReceipts
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                data:
-                  $ref: '#/components/schemas/MemberExpenseReceiptDoc'
-                files:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
-              required:
-              - data
-              - files
-      responses:
-        '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AddReceiptResponse'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionBaseResponse'
-        '401':
-          description: Not authorized
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionBaseResponse'
-  /members/expenses:
-    get:
-      tags:
-      - member-expense-controller
-      summary: Get Member Expenses
-      description: Retrieves a paginated list of expenses for a member. Supports filtering and sorting by expense date.
-      operationId: getMemberExpenses
-      parameters:
-      - name: clientOrgName
-        in: query
-        description: The name of the client organization
-        required: true
-        schema:
-          type: string
-        example: Health_Plan_ABC_Division
-      - name: clientMemberId
-        in: query
-        description: Unique client-side identifier for the member
-        required: true
-        schema:
-          type: string
-        example: 3f50436491
-      - name: memberAccountId
-        in: query
-        description: MemberAccount Id
-        required: false
-        schema:
-          type: string
-          format: uuid
-        example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      - name: sortValue
-        in: query
-        description: The property by which the response is sorted
-        required: false
-        schema:
-          type: string
-          default: expenseDate
-          enum:
-          - expenseDate
-          - amount
-      - name: sortOrder
-        in: query
-        description: The sort direction
-        required: false
-        schema:
-          type: string
-          default: Descending
-          enum:
-          - Ascending
-          - Descending
-      - name: pageNumber
-        in: query
-        required: false
-        schema:
-          type: integer
-          format: int32
-          default: 1
-      - name: pageSize
-        in: query
-        required: false
-        schema:
-          type: integer
-          format: int32
-          default: 25
-      responses:
-        '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetMemberExpenseResponse'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionBaseResponse'
-        '401':
-          description: Not authorized
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExceptionBaseResponse'
   /members/list:
     get:
       tags:
-      - ''
+      - Members
       summary: Get All Member Summary
       description: Retrieves the summary list of members for a given client organization
       operationId: getMemberSummariesByClientOrg
@@ -723,7 +463,7 @@ paths:
   /members/phones:
     put:
       tags:
-      - ''
+      - Members
       summary: Update Member Phones
       description: Updates the phone numbers for a member (identified by clientMemberId). Attributes that are supplied in the request body are saved for the member.
       operationId: updateMemberPhones
@@ -760,7 +500,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     delete:
       tags:
-      - ''
+      - Members
       summary: Delete Member Phone
       description: This API will allow you to delete a member phone.
       operationId: deleteMemberPhone
@@ -814,7 +554,7 @@ paths:
   /members/status:
     get:
       tags:
-      - ''
+      - Members
       summary: Get Member Statuses
       description: Retrieves all statuses that are associated to the member. A member has various statuses; for e.g. Application Status, Account Status, Card Status. This API returns all of these statuses for the incoming clientMemberId and clientOrgName.
       operationId: getStatus
@@ -856,7 +596,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     delete:
       tags:
-      - ''
+      - Members
       summary: Delete Member
       description: This API will allow you to delete a member. This API applies to only those members that are enrolled in the INCENTIVE product.
       operationId: deleteMember
@@ -910,7 +650,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     patch:
       tags:
-      - ''
+      - Members
       summary: Update Member Statuses
       description: Updates the status for a member, identified by clientMemberId, in order to activate or deactivate a member.
       operationId: updateMemberStatus
@@ -952,7 +692,7 @@ paths:
   /members/transfer:
     post:
       tags:
-      - ''
+      - Members
       summary: Transfer Member
       description: This API will allow you to move a member’s account from one client organization to another, provided the source and destination client organizations are below the same parent client organization.
       operationId: memberTransfer
@@ -999,66 +739,6 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
 components:
   schemas:
-    ExceptionBaseResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          description: 'null'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    ResponseException:
-      type: object
-      properties:
-        errorCode:
-          type: string
-          description: The GBL error code that is populated when the exceptionSource is SYSTEM
-        exceptionSource:
-          type: string
-          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
-        exceptionMessage:
-          type: string
-          description: Additional information about the exception
-    DocumentDto:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Type of document requested.
-          example: ID verification
-        documentId:
-          type: string
-          description: Unique identifier (UUID) for the uploaded business document.
-          example: e5fa0a77-27f5-4df3-9f14-a3d8d19ec264
-        description:
-          type: string
-          description: Any document that confirms identity.
-          example: Drivers license
-        status:
-          type: string
-          description: Status of document.
-          example: Awaiting_Documents
-    MemberAccountStatusDto:
-      type: object
-      properties:
-        id:
-          type: string
-          description: UUID of the member account
-          example: 597bf428-3ee0-4a69-a303-dbacfaca5b37
-        type:
-          type: string
-          description: Type of account
-          example: HSA
-        status:
-          type: string
-          description: The status of this account
-          example: Account_Active
-        name:
-          type: string
-          description: A name for this account
-          example: John's Bank of America XX-0435
     MemberProductStatusDto:
       type: object
       properties:
@@ -1093,7 +773,259 @@ components:
       required:
       - productName
       - status
-    MemberStatusDto:
+    PhoneDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Auto-generated type for the phone number
+          example: Phone1
+        typeDescription:
+          type: string
+          description: Client-defined description for the phone number
+          example: Cell
+        countryCode:
+          type: string
+          default: '1'
+          description: Phone country code
+          example: 1
+        phoneNumber:
+          type: string
+          description: 10-Digit phone number
+          example: 5089188736
+        phoneExtension:
+          type: integer
+          format: int32
+          description: Optional extension
+          example: 344
+        primaryIndicator:
+          type: boolean
+          description: Determines whether this is a primary phone
+          example: true
+      required:
+      - countryCode
+      - phoneNumber
+    MemberDetailsResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/MemberDetailsDto'
+    MemberConsentDTO:
+      type: object
+      properties:
+        acceptedIndicator:
+          type: boolean
+          description: Indicates the member accepted the consent
+          enum:
+          - 'true'
+          example: true
+        electronicSignature:
+          type: string
+          description: The member’s digital signature (full name)
+          example: John Smith
+        consentDate:
+          type: string
+          format: date-time
+          description: Date the consent was accepted
+          example: '2023-08-23'
+        consent:
+          $ref: '#/components/schemas/ConsentDTO'
+    DeleteMemberResponseDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BaseMember'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    UpdateMemberDetailsAccountDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: HSA
+          example: Type of account
+        incentiveRatio:
+          type: number
+          description: The number that is multiplied by the cash deposit value to determine the incentive value
+          example: 1.2
+      required:
+      - incentiveRatio
+      - type
+    DirectorDTO:
+      type: object
+      properties:
+        companyName:
+          type: string
+          description: Company Name
+          example: IBM
+        symbol:
+          type: string
+          description: Stock Symbol
+          example: ACER
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    MemberDetailsDto:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        healthPlanCoverageType:
+          type: string
+          description: Type of coverage (Family, Individual)
+          example: Family
+        namePrefix:
+          type: string
+          description: Prefix for the name
+          example: Doctor
+        nameSuffix:
+          type: string
+          description: Suffix for the name
+          example: Jr.
+        firstName:
+          type: string
+          description: First name
+          example: John
+        middleName:
+          type: string
+          description: Middle name
+          example: Paul
+        lastName:
+          type: string
+          description: Last name
+          example: Smith
+        race:
+          type: string
+          description: Member race
+          example: Asian
+        gender:
+          type: string
+          description: Member gender
+          example: Female
+        maritalStatus:
+          type: string
+          description: Marital status (Married, Never Married, Widowed, etc.)
+          example: Never Married
+        preferredGenderPronoun:
+          type: string
+          description: Member preferred gender pronoun
+          example: She/Her
+        religion:
+          type: string
+          description: Member religion
+          example: Christianity
+        ssnLastFour:
+          type: string
+          description: Last four digits of SSN
+          example: 4347
+        kycCompletedIndicator:
+          type: boolean
+          description: Indicates whether Know Your Customer (KYC) has been completed for the member
+          example: true
+        countryOfCitizenship:
+          type: string
+          description: Country of citizenship
+          example: US
+        dateOfBirth:
+          type: string
+          format: date-time
+          description: Date of birth
+          example: '1969-03-02'
+        status:
+          type: string
+          description: The overall status of the member
+          example: Active
+        creationDate:
+          type: string
+          format: date-time
+          description: Date when the member was created
+          example: Date when the member was created
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressDto'
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhoneDto'
+        emails:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailDto'
+        language:
+          type: string
+          description: Language of the member
+          example: English
+        politicallyExposedNames:
+          type: array
+          items:
+            $ref: '#/components/schemas/PoliticalExposedNameDTO'
+        memberProducts:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberDetailsProductDto'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagDto'
+        associatedDirectorships:
+          type: array
+          items:
+            $ref: '#/components/schemas/DirectorDTO'
+        memberConsents:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberConsentDTO'
+        memberPlanBenefitPackages:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberPlanBenefitPackageDto'
+        memberProfile:
+          $ref: '#/components/schemas/MemberProfileDto'
+      required:
+      - clientMemberId
+    ConsentDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the consent to be accepted
+          enum:
+          - INVESTMENT_TERMS_OF_USE
+          - INVESTMENT_CUSTOMER_AGREEMENT
+          - INVESTMENT_MARKET_DATA_AGREEMENT
+          - INVESTMENT_RULE_14B_AGREEMENT
+          - INVESTMENT_FINDERS_FEE
+          - INVESTMENT_PRIVACY_POLICY
+          - INVESTMENT_DATA_SHARING_AGREEMENT
+          - INVESTMENT_MARGIN_AGREEMENT
+          - PH_TERMS_AND_CONDITIONS
+          - PH_ELECTRONIC_CONSENT
+          - PH_PRIVACY_POLICY
+          - FIS_DIGITAL_WALLET_TERMS
+          - FIS_ESIGN_CONSENT
+          - FIS_TERMS_AND_CONDITIONS
+          - FIS_PRIVACY_POLICY
+          - BENACCT_PRIVACY_POLICY
+          - BENACCT_TERMS_OF_USE
+          example: INVESTMENT_PRIVACY_POLICY
+        description:
+          type: string
+        productName:
+          type: string
+    MemberStatusRequestDto:
       type: object
       properties:
         clientMemberId:
@@ -1102,20 +1034,20 @@ components:
           example: 3f50436491
         status:
           type: string
-          description: The overall status of the member
-          example: Account_Active
-        statusReason:
-          type: string
-          description: The reason for a particular status
-          example: HSA rejected due to lack of documentation
-        memberProducts:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberProductStatusDto'
+          description: 'Status of the member. Possible values are: Inactive, Active.'
+          example: Active
       required:
       - clientMemberId
-      - memberProducts
       - status
+    UpdateMemberPhonesRequest:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/UpdateMemberPhoneDto'
+      required:
+      - clientOrg
     MemberStatusResponse:
       type: object
       properties:
@@ -1123,15 +1055,140 @@ components:
           $ref: '#/components/schemas/MemberStatusDto'
       required:
       - member
-    BaseMember:
+    BaseMemberResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BaseMember'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    MemberStatusUpdateResponseDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BaseMember'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    MemberStatusRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/MemberStatusUpdateDto'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    MemberAccountResponse:
+      type: object
+      properties:
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberAccounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountDto'
+    MemberDetailsProductDto:
+      type: object
+      properties:
+        effectiveDate:
+          type: string
+          format: date
+          description: Date when the product becomes effective for the member
+          example: '2023-02-25'
+        creationDate:
+          type: string
+          format: date-time
+          description: Date when the record was created
+          example: Date when the record was created
+        status:
+          type: string
+          description: Status of member enrollment for the product
+          example: Account_Active
+        statusReason:
+          type: string
+          description: The reason for a particular status
+          example: HSA rejected due to lack of documentation
+        product:
+          $ref: '#/components/schemas/ProductNameDto'
+        memberAccounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberDetailsAccountDto'
+      required:
+      - creationDate
+      - effectiveDate
+      - status
+      - statusReason
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    UpdateMemberConsentDto:
+      type: object
+      properties:
+        acceptedIndicator:
+          type: boolean
+          description: Indicates the member accepted the consent
+          enum:
+          - 'true'
+          example: true
+        electronicSignature:
+          type: string
+          description: The member’s digital signature (full name)
+          example: John Smith
+        consentDate:
+          type: string
+          format: date-time
+          description: Date the consent was accepted
+          example: '2023-08-23'
+        consent:
+          $ref: '#/components/schemas/ConsentNameDTO'
+    UpdateMemberPhoneDto:
       type: object
       properties:
         clientMemberId:
           type: string
           description: Unique client-side identifier for the member
           example: 3f50436491
+        phones:
+          type: array
+          example:
+          - countryCode: '1'
+            phoneNumber: '5089188736'
+            type: Phone1
+            phoneExtension: 344
+            typeDescription: Mobile
+            primaryIndicator: true
+          items:
+            $ref: '#/components/schemas/PhoneDto'
       required:
       - clientMemberId
+      - phones
     AccountDto:
       type: object
       properties:
@@ -1208,77 +1265,13 @@ components:
           format: date
           description: Date when the next scheduled funding will occur for the account
           example: '2024-10-10'
-    MemberAccountResponse:
+    Idempotency:
       type: object
       properties:
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        memberAccounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/AccountDto'
-    ClientOrgDto:
-      type: object
-      properties:
-        name:
+        idempotencyKey:
           type: string
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-      required:
-      - name
-    PhoneDto:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Auto-generated type for the phone number
-          example: Phone1
-        typeDescription:
-          type: string
-          description: Client-defined description for the phone number
-          example: Cell
-        countryCode:
-          type: string
-          default: '1'
-          description: Phone country code
-          example: 1
-        phoneNumber:
-          type: string
-          description: 10-Digit phone number
-          example: 5089188736
-        phoneExtension:
-          type: integer
-          format: int32
-          description: Optional extension
-          example: 344
-        primaryIndicator:
-          type: boolean
-          description: Determines whether this is a primary phone
-          example: true
-      required:
-      - countryCode
-      - phoneNumber
-    EmailDto:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Auto-generated type for the email address
-          example: Email1
-        typeDescription:
-          type: string
-          description: Client-defined description for the email address
-          example: Personal
-        emailAddress:
-          type: string
-          description: Email address - any notifications will be sent to this email address
-          example: john@doe.com
-        primaryIndicator:
-          type: boolean
-          description: Determines whether this is a primary email address
-          example: true
-      required:
-      - emailAddress
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
     ProductNameDto:
       type: object
       properties:
@@ -1288,17 +1281,25 @@ components:
           example: HSA_01
       required:
       - name
-    DirectorDTO:
+    DocumentDto:
       type: object
       properties:
-        companyName:
+        type:
           type: string
-          description: Company Name
-          example: IBM
-        symbol:
+          description: Type of document requested.
+          example: ID verification
+        documentId:
           type: string
-          description: Stock Symbol
-          example: ACER
+          description: Unique identifier (UUID) for the uploaded business document.
+          example: e5fa0a77-27f5-4df3-9f14-a3d8d19ec264
+        description:
+          type: string
+          description: Any document that confirms identity.
+          example: Drivers license
+        status:
+          type: string
+          description: Status of document.
+          example: Awaiting_Documents
     MemberProfileDto:
       type: object
       properties:
@@ -1483,14 +1484,142 @@ components:
           type: boolean
           description: Indicates whether the member’s current employer is a broker/dealer
           example: true
-    PoliticalExposedNameDTO:
+    UpdateMemberAddressesRequestDoc:
       type: object
       properties:
-        fullName:
-          type: string
-          description: Full name of the politically exposed person
+        data:
+          $ref: '#/components/schemas/UpdateMemberAddressesRequest'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
       required:
-      - fullName
+      - data
+      - idempotency
+    UpdateMemberAddressesRequest:
+      type: object
+      properties:
+        member:
+          $ref: '#/components/schemas/UpdateMemberAddressDto'
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+      required:
+      - clientOrg
+    UpdateMemberAddressDto:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        addresses:
+          type: array
+          example:
+          - city: Boston
+            country: US
+            line1: 10 Miller Street
+            postalCode: 02119
+            stateProvince: MA
+            type: Address1
+            attentionCareOf: Care/of John Smith
+            county: Norfolk
+            line2: line2
+            line3: line3
+            line4: line4
+            name: John Smith
+            pobox: P.O. box 21345
+            postalCodeExtension: '0123'
+            typeDescription: Home
+            primaryIndicator: true
+          items:
+            $ref: '#/components/schemas/UpdateAddressDto'
+      required:
+      - addresses
+      - clientMemberId
+    UpdateMemberResponse:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+    UpdateAddressDto:
+      type: object
+      properties:
+        line1:
+          type: string
+          description: The first line of the address
+          example: 10
+        line2:
+          type: string
+          description: The (optional) second line of the address
+          example: address line2
+        city:
+          type: string
+          description: Address city
+          example: Boston
+        stateProvince:
+          type: string
+          description: 2-Character address state or province
+          example: MA
+        country:
+          type: string
+          description: Address country
+          example: US
+        postalCode:
+          type: string
+          description: Address zip code
+          example: 02119
+        postalCodeExtension:
+          type: string
+          description: Address zip code extension
+          example: '0123'
+        type:
+          type: string
+          description: Auto-generated type for the address
+          example: Address1
+        typeDescription:
+          type: string
+          description: Client-defined description for the address
+          example: Home
+        name:
+          type: string
+          description: Name of person
+          example: John Smith
+        attentionCareOf:
+          type: string
+          description: If the address is 'in-care-of' someone else
+          example: Care/of John Smith
+        line3:
+          type: string
+          description: The (optional) third line of the address
+          example: address line3
+        line4:
+          type: string
+          description: The (optional) fourth line of the address
+          example: address line4
+        pobox:
+          type: string
+          description: P.O. Box number
+          example: P.O. box 21345
+        county:
+          type: string
+          description: Address county
+          example: Norfolk
+        primaryIndicator:
+          type: boolean
+          description: Determines whether this is a primary address
+          example: true
+        returnMailIndicator:
+          type: boolean
+          description: Indicated whether the member’s address has had mail returned
+          example: false
+      required:
+      - city
+      - country
+      - line1
+      - postalCode
+      - stateProvince
     AddressDto:
       type: object
       properties:
@@ -1577,55 +1706,121 @@ components:
       - line1
       - postalCode
       - stateProvince
-    ConsentDTO:
+    UpdateMemberEmailDto:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        emails:
+          type: array
+          example:
+          - emailAddress: john@doe.com
+            type: Email1
+            typeDescription: Work
+            primaryIndicator: true
+          items:
+            $ref: '#/components/schemas/EmailDto'
+      required:
+      - clientMemberId
+      - emails
+    EmailDto:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Auto-generated type for the email address
+          example: Email1
+        typeDescription:
+          type: string
+          description: Client-defined description for the email address
+          example: Personal
+        emailAddress:
+          type: string
+          description: Email address - any notifications will be sent to this email address
+          example: john@doe.com
+        primaryIndicator:
+          type: boolean
+          description: Determines whether this is a primary email address
+          example: true
+      required:
+      - emailAddress
+    UpdateMemberDetailsRequestDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/UpdateMemberRequest'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+      required:
+      - data
+      - idempotency
+    UpdateMemberRequest:
+      type: object
+      properties:
+        member:
+          $ref: '#/components/schemas/UpdateMemberDetailsDto'
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+      required:
+      - clientOrg
+    MemberSummaryDto:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        firstName:
+          type: string
+          description: First name
+          example: John
+        lastName:
+          type: string
+          description: Last name
+          example: Smith
+        status:
+          type: string
+          description: The overall status of the member
+          example: Active
+        creationDate:
+          type: string
+          format: date-time
+          description: Date when the member was created
+          example: '2018-03-22'
+        updateDate:
+          type: string
+          format: date-time
+          description: Date when the record was last updated
+          example: '2018-03-22'
+      required:
+      - clientMemberId
+      - updateDate
+    UpdateMemberEmailsRequest:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/UpdateMemberEmailDto'
+      required:
+      - clientOrg
+    TagDto:
       type: object
       properties:
         name:
           type: string
-          description: Name of the consent to be accepted
-          enum:
-          - INVESTMENT_TERMS_OF_USE
-          - INVESTMENT_CUSTOMER_AGREEMENT
-          - INVESTMENT_MARKET_DATA_AGREEMENT
-          - INVESTMENT_RULE_14B_AGREEMENT
-          - INVESTMENT_FINDERS_FEE
-          - INVESTMENT_PRIVACY_POLICY
-          - INVESTMENT_DATA_SHARING_AGREEMENT
-          - INVESTMENT_MARGIN_AGREEMENT
-          - PH_TERMS_AND_CONDITIONS
-          - PH_ELECTRONIC_CONSENT
-          - PH_PRIVACY_POLICY
-          - FIS_DIGITAL_WALLET_TERMS
-          - FIS_ESIGN_CONSENT
-          - FIS_TERMS_AND_CONDITIONS
-          - FIS_PRIVACY_POLICY
-          - BENACCT_PRIVACY_POLICY
-          - BENACCT_TERMS_OF_USE
-          example: INVESTMENT_PRIVACY_POLICY
-        description:
+          description: Constant used to define the metadata within a key-value pair
+        value:
           type: string
-        productName:
+          description: Variable belonging to the metadata within a key-value pair
+        type:
           type: string
-    MemberConsentDTO:
-      type: object
-      properties:
-        acceptedIndicator:
-          type: boolean
-          description: Indicates the member accepted the consent
-          enum:
-          - 'true'
-          example: true
-        electronicSignature:
-          type: string
-          description: The member’s digital signature (full name)
-          example: John Smith
-        consentDate:
-          type: string
-          format: date-time
-          description: Date the consent was accepted
-          example: '2023-08-23'
-        consent:
-          $ref: '#/components/schemas/ConsentDTO'
+          description: Additional client-defined qualifier that may be used to further classify the key-value pair
+      required:
+      - name
+      - value
     MemberDetailsAccountDto:
       type: object
       properties:
@@ -1693,324 +1888,6 @@ components:
           type: boolean
           description: Indicates if the account is owned by member
           example: true
-    MemberDetailsDto:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-        healthPlanCoverageType:
-          type: string
-          description: Type of coverage (Family, Individual)
-          example: Family
-        namePrefix:
-          type: string
-          description: Prefix for the name
-          example: Doctor
-        nameSuffix:
-          type: string
-          description: Suffix for the name
-          example: Jr.
-        firstName:
-          type: string
-          description: First name
-          example: John
-        middleName:
-          type: string
-          description: Middle name
-          example: Paul
-        lastName:
-          type: string
-          description: Last name
-          example: Smith
-        race:
-          type: string
-          description: Member race
-          example: Asian
-        gender:
-          type: string
-          description: Member gender
-          example: Female
-        maritalStatus:
-          type: string
-          description: Marital status (Married, Never Married, Widowed, etc.)
-          example: Never Married
-        preferredGenderPronoun:
-          type: string
-          description: Member preferred gender pronoun
-          example: She/Her
-        religion:
-          type: string
-          description: Member religion
-          example: Christianity
-        ssnLastFour:
-          type: string
-          description: Last four digits of SSN
-          example: 4347
-        kycCompletedIndicator:
-          type: boolean
-          description: Indicates whether Know Your Customer (KYC) has been completed for the member
-          example: true
-        countryOfCitizenship:
-          type: string
-          description: Country of citizenship
-          example: US
-        dateOfBirth:
-          type: string
-          format: date-time
-          description: Date of birth
-          example: '1969-03-02'
-        status:
-          type: string
-          description: The overall status of the member
-          example: Active
-        creationDate:
-          type: string
-          format: date-time
-          description: Date when the member was created
-          example: Date when the member was created
-        addresses:
-          type: array
-          items:
-            $ref: '#/components/schemas/AddressDto'
-        phones:
-          type: array
-          items:
-            $ref: '#/components/schemas/PhoneDto'
-        emails:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmailDto'
-        language:
-          type: string
-          description: Language of the member
-          example: English
-        politicallyExposedNames:
-          type: array
-          items:
-            $ref: '#/components/schemas/PoliticalExposedNameDTO'
-        memberProducts:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberDetailsProductDto'
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/TagDto'
-        associatedDirectorships:
-          type: array
-          items:
-            $ref: '#/components/schemas/DirectorDTO'
-        memberConsents:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberConsentDTO'
-        memberPlanBenefitPackages:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberPlanBenefitPackageDto'
-        memberProfile:
-          $ref: '#/components/schemas/MemberProfileDto'
-      required:
-      - clientMemberId
-    MemberDetailsProductDto:
-      type: object
-      properties:
-        effectiveDate:
-          type: string
-          format: date
-          description: Date when the product becomes effective for the member
-          example: '2023-02-25'
-        creationDate:
-          type: string
-          format: date-time
-          description: Date when the record was created
-          example: Date when the record was created
-        status:
-          type: string
-          description: Status of member enrollment for the product
-          example: Account_Active
-        statusReason:
-          type: string
-          description: The reason for a particular status
-          example: HSA rejected due to lack of documentation
-        product:
-          $ref: '#/components/schemas/ProductNameDto'
-        memberAccounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberDetailsAccountDto'
-      required:
-      - creationDate
-      - effectiveDate
-      - status
-      - statusReason
-    MemberDetailsResponse:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/MemberDetailsDto'
-    MemberPlanBenefitPackageDto:
-      type: object
-      properties:
-        clientOrgPlanBenefitPackageId:
-          type: string
-          format: uuid
-          description: Unique internal identifier of the Plan Benefit Package
-        name:
-          type: string
-          description: A unique identifier assigned by CMS (Centers for Medicare & Medicaid Services) to each plan benefit package (PBP) within a contract that a plan sponsor has with CMS.  This number is used to link the plan sponsor's contract and plan identifiers
-        status:
-          type: string
-          description: Status of the Plan Benefit Package
-        statusReason:
-          type: string
-          description: Status reason of the Plan Benefit Package
-        effectiveDate:
-          type: string
-          format: date
-          description: Effective date of the Plan Benefit Package
-        expirationDate:
-          type: string
-          format: date
-          description: Expiration date of the Plan Benefit Package
-        ssbciIndicator:
-          type: boolean
-          description: Indicates whether the member is eligible for SSBCI (Special Supplemental Benefits for the Chronically Ill)
-        ssbciEffectiveDate:
-          type: string
-          format: date
-          description: Effective date of SSBCI benefit eligibility
-        otcEligible:
-          type: boolean
-          description: ' Indicates whether the member is eligible for otc benefits'
-        fitnessEligible:
-          type: boolean
-          description: Indicates whether the member is eligible for fitness benefits
-        rewardsEligible:
-          type: boolean
-          description: Indicates whether the member is eligible for rewards benefits
-        dentalEligible:
-          type: boolean
-          description: Indicates whether the member is eligible for dental benefits
-        dentalPackage:
-          type: string
-          description: Name of the dental benefit package
-        visionEligible:
-          type: boolean
-          description: Indicates whether the member is eligible for vision benefits
-        visionPackage:
-          type: string
-          description: Name of the vision benefit package
-        hearingEligible:
-          type: boolean
-          description: Indicates whether the member is eligible for hearing benefits
-        hearingPackage:
-          type: string
-          description: Name of the hearing benefit package
-        riskIndicator:
-          type: boolean
-          description: Indicates whether the member is eligible for the In-home/telehealth assessment and PCP follow up activities
-    TagDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Constant used to define the metadata within a key-value pair
-        value:
-          type: string
-          description: Variable belonging to the metadata within a key-value pair
-        type:
-          type: string
-          description: Additional client-defined qualifier that may be used to further classify the key-value pair
-      required:
-      - name
-      - value
-    GetMemberSummariesByClientResponse:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-        memberSummaries:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberSummaryDto'
-      required:
-      - clientOrg
-    MemberSummaryDto:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-        firstName:
-          type: string
-          description: First name
-          example: John
-        lastName:
-          type: string
-          description: Last name
-          example: Smith
-        status:
-          type: string
-          description: The overall status of the member
-          example: Active
-        creationDate:
-          type: string
-          format: date-time
-          description: Date when the member was created
-          example: '2018-03-22'
-        updateDate:
-          type: string
-          format: date-time
-          description: Date when the record was last updated
-          example: '2018-03-22'
-      required:
-      - clientMemberId
-      - updateDate
-    Idempotency:
-      type: object
-      properties:
-        idempotencyKey:
-          type: string
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-    UpdateMemberPhoneDto:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-        phones:
-          type: array
-          example:
-          - countryCode: '1'
-            phoneNumber: '5089188736'
-            type: Phone1
-            phoneExtension: 344
-            typeDescription: Mobile
-            primaryIndicator: true
-          items:
-            $ref: '#/components/schemas/PhoneDto'
-      required:
-      - clientMemberId
-      - phones
-    UpdateMemberPhonesRequest:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/UpdateMemberPhoneDto'
-      required:
-      - clientOrg
     UpdateMemberPhonesRequestDoc:
       type: object
       properties:
@@ -2021,284 +1898,6 @@ components:
       required:
       - data
       - idempotency
-    UpdateMemberResponse:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-      required:
-      - clientMemberId
-    UpdateMemberEmailDto:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-        emails:
-          type: array
-          example:
-          - emailAddress: john@doe.com
-            type: Email1
-            typeDescription: Work
-            primaryIndicator: true
-          items:
-            $ref: '#/components/schemas/EmailDto'
-      required:
-      - clientMemberId
-      - emails
-    UpdateMemberEmailsRequest:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/UpdateMemberEmailDto'
-      required:
-      - clientOrg
-    UpdateMemberEmailsRequestDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/UpdateMemberEmailsRequest'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-      required:
-      - data
-      - idempotency
-    UpdateAddressDto:
-      type: object
-      properties:
-        line1:
-          type: string
-          description: The first line of the address
-          example: 10
-        line2:
-          type: string
-          description: The (optional) second line of the address
-          example: address line2
-        city:
-          type: string
-          description: Address city
-          example: Boston
-        stateProvince:
-          type: string
-          description: 2-Character address state or province
-          example: MA
-        country:
-          type: string
-          description: Address country
-          example: US
-        postalCode:
-          type: string
-          description: Address zip code
-          example: 02119
-        postalCodeExtension:
-          type: string
-          description: Address zip code extension
-          example: '0123'
-        type:
-          type: string
-          description: Auto-generated type for the address
-          example: Address1
-        typeDescription:
-          type: string
-          description: Client-defined description for the address
-          example: Home
-        name:
-          type: string
-          description: Name of person
-          example: John Smith
-        attentionCareOf:
-          type: string
-          description: If the address is 'in-care-of' someone else
-          example: Care/of John Smith
-        line3:
-          type: string
-          description: The (optional) third line of the address
-          example: address line3
-        line4:
-          type: string
-          description: The (optional) fourth line of the address
-          example: address line4
-        pobox:
-          type: string
-          description: P.O. Box number
-          example: P.O. box 21345
-        county:
-          type: string
-          description: Address county
-          example: Norfolk
-        primaryIndicator:
-          type: boolean
-          description: Determines whether this is a primary address
-          example: true
-        returnMailIndicator:
-          type: boolean
-          description: Indicated whether the member’s address has had mail returned
-          example: false
-      required:
-      - city
-      - country
-      - line1
-      - postalCode
-      - stateProvince
-    UpdateMemberAddressDto:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-        addresses:
-          type: array
-          example:
-          - city: Boston
-            country: US
-            line1: 10 Miller Street
-            postalCode: 02119
-            stateProvince: MA
-            type: Address1
-            attentionCareOf: Care/of John Smith
-            county: Norfolk
-            line2: line2
-            line3: line3
-            line4: line4
-            name: John Smith
-            pobox: P.O. box 21345
-            postalCodeExtension: '0123'
-            typeDescription: Home
-            primaryIndicator: true
-          items:
-            $ref: '#/components/schemas/UpdateAddressDto'
-      required:
-      - addresses
-      - clientMemberId
-    UpdateMemberAddressesRequest:
-      type: object
-      properties:
-        member:
-          $ref: '#/components/schemas/UpdateMemberAddressDto'
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-      required:
-      - clientOrg
-    UpdateMemberAddressesRequestDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/UpdateMemberAddressesRequest'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-      required:
-      - data
-      - idempotency
-    MemberTransferDto:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-        sourceClientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        destinationClientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        products:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProductNameDto'
-      required:
-      - clientMemberId
-    MemberTransferRequestDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/PostMemberTransferRequest'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    PostMemberTransferRequest:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/MemberTransferDto'
-    BaseMemberResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/BaseMember'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    ConsentNameDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the consent to be accepted
-          enum:
-          - INVESTMENT_TERMS_OF_USE
-          - INVESTMENT_CUSTOMER_AGREEMENT
-          - INVESTMENT_MARKET_DATA_AGREEMENT
-          - INVESTMENT_RULE_14B_AGREEMENT
-          - INVESTMENT_FINDERS_FEE
-          - INVESTMENT_PRIVACY_POLICY
-          - INVESTMENT_DATA_SHARING_AGREEMENT
-          - INVESTMENT_MARGIN_AGREEMENT
-          - PH_TERMS_AND_CONDITIONS
-          - PH_ELECTRONIC_CONSENT
-          - PH_PRIVACY_POLICY
-          - FIS_DIGITAL_WALLET_TERMS
-          - FIS_ESIGN_CONSENT
-          - FIS_TERMS_AND_CONDITIONS
-          - FIS_PRIVACY_POLICY
-          - BENACCT_PRIVACY_POLICY
-          - BENACCT_TERMS_OF_USE
-          example: INVESTMENT_PRIVACY_POLICY
-    UpdateMemberConsentDto:
-      type: object
-      properties:
-        acceptedIndicator:
-          type: boolean
-          description: Indicates the member accepted the consent
-          enum:
-          - 'true'
-          example: true
-        electronicSignature:
-          type: string
-          description: The member’s digital signature (full name)
-          example: John Smith
-        consentDate:
-          type: string
-          format: date-time
-          description: Date the consent was accepted
-          example: '2023-08-23'
-        consent:
-          $ref: '#/components/schemas/ConsentNameDTO'
-    UpdateMemberDetailsAccountDto:
-      type: object
-      properties:
-        type:
-          type: string
-          description: HSA
-          example: Type of account
-        incentiveRatio:
-          type: number
-          description: The number that is multiplied by the cash deposit value to determine the incentive value
-          example: 1.2
-      required:
-      - incentiveRatio
-      - type
     UpdateMemberDetailsDto:
       type: object
       properties:
@@ -2696,48 +2295,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UpdateMemberDetailsAccountDto'
-    UpdateMemberDetailsRequestDoc:
+    MemberTransferRequestDoc:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/UpdateMemberRequest'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-      required:
-      - data
-      - idempotency
-    UpdateMemberRequest:
-      type: object
-      properties:
-        member:
-          $ref: '#/components/schemas/UpdateMemberDetailsDto'
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-      required:
-      - clientOrg
-    DeleteMemberResponseDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/BaseMember'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    MemberStatusUpdateResponseDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/BaseMember'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    MemberStatusRequest:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/MemberStatusUpdateDto'
+          $ref: '#/components/schemas/PostMemberTransferRequest'
         idempotency:
           $ref: '#/components/schemas/Idempotency'
           description: Unique identifier that represents the operation
@@ -2745,7 +2307,53 @@ components:
       required:
       - data
       - idempotency
-    MemberStatusRequestDto:
+    GetMemberSummariesByClientResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+        memberSummaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberSummaryDto'
+      required:
+      - clientOrg
+    BaseMember:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+    PostMemberTransferRequest:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/MemberTransferDto'
+    MemberTransferDto:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        sourceClientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        destinationClientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductNameDto'
+      required:
+      - clientMemberId
+    MemberStatusDto:
       type: object
       properties:
         clientMemberId:
@@ -2754,10 +2362,19 @@ components:
           example: 3f50436491
         status:
           type: string
-          description: 'Status of the member. Possible values are: Inactive, Active.'
-          example: Active
+          description: The overall status of the member
+          example: Account_Active
+        statusReason:
+          type: string
+          description: The reason for a particular status
+          example: HSA rejected due to lack of documentation
+        memberProducts:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberProductStatusDto'
       required:
       - clientMemberId
+      - memberProducts
       - status
     MemberStatusUpdateDto:
       type: object
@@ -2770,263 +2387,129 @@ components:
           $ref: '#/components/schemas/MemberStatusRequestDto'
       required:
       - clientOrg
-    MemberAccountIdDto:
+    MemberPlanBenefitPackageDto:
       type: object
       properties:
-        id:
+        clientOrgPlanBenefitPackageId:
           type: string
           format: uuid
-          description: Unique identifier of the bank account
-          example: 6ae73974-2bd1-0f0d-7316-bbfff8cdc91b
-      required:
-      - id
-    PostExpenseData:
+          description: Unique internal identifier of the Plan Benefit Package
+        name:
+          type: string
+          description: A unique identifier assigned by CMS (Centers for Medicare & Medicaid Services) to each plan benefit package (PBP) within a contract that a plan sponsor has with CMS.  This number is used to link the plan sponsor's contract and plan identifiers
+        status:
+          type: string
+          description: Status of the Plan Benefit Package
+        statusReason:
+          type: string
+          description: Status reason of the Plan Benefit Package
+        effectiveDate:
+          type: string
+          format: date
+          description: Effective date of the Plan Benefit Package
+        expirationDate:
+          type: string
+          format: date
+          description: Expiration date of the Plan Benefit Package
+        ssbciIndicator:
+          type: boolean
+          description: Indicates whether the member is eligible for SSBCI (Special Supplemental Benefits for the Chronically Ill)
+        ssbciEffectiveDate:
+          type: string
+          format: date
+          description: Effective date of SSBCI benefit eligibility
+        otcEligible:
+          type: boolean
+          description: ' Indicates whether the member is eligible for otc benefits'
+        fitnessEligible:
+          type: boolean
+          description: Indicates whether the member is eligible for fitness benefits
+        rewardsEligible:
+          type: boolean
+          description: Indicates whether the member is eligible for rewards benefits
+        dentalEligible:
+          type: boolean
+          description: Indicates whether the member is eligible for dental benefits
+        dentalPackage:
+          type: string
+          description: Name of the dental benefit package
+        visionEligible:
+          type: boolean
+          description: Indicates whether the member is eligible for vision benefits
+        visionPackage:
+          type: string
+          description: Name of the vision benefit package
+        hearingEligible:
+          type: boolean
+          description: Indicates whether the member is eligible for hearing benefits
+        hearingPackage:
+          type: string
+          description: Name of the hearing benefit package
+        riskIndicator:
+          type: boolean
+          description: Indicates whether the member is eligible for the In-home/telehealth assessment and PCP follow up activities
+    PoliticalExposedNameDTO:
       type: object
       properties:
-        merchantName:
+        fullName:
           type: string
-          description: Name of merchant accepting the original transaction
-          example: MTA VENDING MACHINES
-        expenseDate:
+          description: Full name of the politically exposed person
+      required:
+      - fullName
+    UpdateMemberEmailsRequestDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/UpdateMemberEmailsRequest'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+      required:
+      - data
+      - idempotency
+    ConsentNameDTO:
+      type: object
+      properties:
+        name:
           type: string
-          description: Date of Expense
-          example: '2024-01-01'
-        amount:
-          type: number
-          description: Expense Amout
-          example: 12.3
-        expenseCategory:
-          type: string
-          description: Expense Category
+          description: Name of the consent to be accepted
           enum:
-          - Medical
-          - Rx
-          - Dental
-          - Vision
-          - Other
-          example: Rx
-        description:
-          type: string
-          description: Expense Description
-          example: General checkup
-      required:
-      - amount
-      - expenseDate
-    PostMemberExpenseData:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        memberAccount:
-          $ref: '#/components/schemas/MemberAccountIdDto'
-        expense:
-          $ref: '#/components/schemas/PostExpenseData'
-      required:
-      - clientOrg
-      - expense
-      - member
-      - memberAccount
-    PostMemberExpenseDataDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/PostMemberExpenseData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    MemberExpenseResponse:
-      type: object
-      properties:
-        expenseNumber:
-          type: string
-          description: Expense Number
-          example: EXPEN00000001
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-      required:
-      - clientMemberId
-      - expenseNumber
-    PatchExpenseData:
-      type: object
-      properties:
-        merchantName:
-          type: string
-          description: Name of merchant accepting the original transaction
-          example: MTA VENDING MACHINES
-        expenseDate:
-          type: string
-          description: Date of Expense
-          example: '2024-01-01'
-        amount:
-          type: number
-          description: Expense Amout
-          example: 12.3
-        expenseCategory:
-          type: string
-          description: Expense Category
-          enum:
-          - Medical
-          - Rx
-          - Dental
-          - Vision
-          - Other
-          example: Rx
-        description:
-          type: string
-          description: Expense Description
-          example: General checkup
-        expenseNumber:
-          type: string
-          description: Expense Number
-          example: EXPEN00000001
-      required:
-      - expenseNumber
-    PatchMemberExpenseData:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        expense:
-          $ref: '#/components/schemas/PatchExpenseData'
-      required:
-      - clientOrg
-      - expense
-      - member
-    PatchMemberExpenseDataDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/PatchMemberExpenseData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    MemberExpenseReceiptData:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        expenseNumber:
-          type: string
-          description: Expense Number
-          example: EXPEN00000001
-      required:
-      - clientOrg
-      - expenseNumber
-      - member
-    MemberExpenseReceiptDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/MemberExpenseReceiptData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    AddReceiptResponse:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        expenseNumber:
-          type: string
-        receipts:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReceiptData'
-      required:
-      - clientOrg
-      - expenseNumber
-      - member
-      - receipts
-    ReceiptData:
+          - INVESTMENT_TERMS_OF_USE
+          - INVESTMENT_CUSTOMER_AGREEMENT
+          - INVESTMENT_MARKET_DATA_AGREEMENT
+          - INVESTMENT_RULE_14B_AGREEMENT
+          - INVESTMENT_FINDERS_FEE
+          - INVESTMENT_PRIVACY_POLICY
+          - INVESTMENT_DATA_SHARING_AGREEMENT
+          - INVESTMENT_MARGIN_AGREEMENT
+          - PH_TERMS_AND_CONDITIONS
+          - PH_ELECTRONIC_CONSENT
+          - PH_PRIVACY_POLICY
+          - FIS_DIGITAL_WALLET_TERMS
+          - FIS_ESIGN_CONSENT
+          - FIS_TERMS_AND_CONDITIONS
+          - FIS_PRIVACY_POLICY
+          - BENACCT_PRIVACY_POLICY
+          - BENACCT_TERMS_OF_USE
+          example: INVESTMENT_PRIVACY_POLICY
+    MemberAccountStatusDto:
       type: object
       properties:
         id:
           type: string
-          format: uuid
-          description: Id
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-        s3Path:
+          description: UUID of the member account
+          example: 597bf428-3ee0-4a69-a303-dbacfaca5b37
+        type:
           type: string
-          description: s3 path to the file
-          example: /client/clientOrgName/Member/Client_Member_id/Receipt/id
-      required:
-      - id
-      - s3Path
-    ExpenseItemResponse:
-      type: object
-      properties:
-        expenseNumber:
+          description: Type of account
+          example: HSA
+        status:
           type: string
-        expenseDate:
+          description: The status of this account
+          example: Account_Active
+        name:
           type: string
-          format: date-time
-        amount:
-          type: number
-        description:
-          type: string
-        merchantName:
-          type: string
-        expenseCategory:
-          type: string
-        receipts:
-          type: array
-          items:
-            $ref: '#/components/schemas/ReceiptData'
-        transactions:
-          type: array
-          items:
-            $ref: '#/components/schemas/TransactionData'
-    GetMemberExpenseResponse:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        expenses:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExpenseItemResponse'
-      required:
-      - clientOrg
-      - member
-    TransactionData:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Id
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-        referenceIdentifier:
-          type: string
-          description: Transaction Reference Identifier
-          example: T12345678
-      required:
-      - id
-      - referenceIdentifier
+          description: A name for this account
+          example: John's Bank of America XX-0435
   securitySchemes:
     bearerAuth:
       type: http

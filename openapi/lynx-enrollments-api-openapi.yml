@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: ENROLLMENT API
-  description: 'This API facilitates the enrollment of individual members onto the Lynx platform for the desired product (HSA and/or Filtered Spend). Creates a member on the Lynx platform. This includes creation of the ''member'' on Lynx, creation of a bank account and creation and distribution of cards (physical and/or virtual) '
+  title: Enrollments API
+  description: This API facilitates the enrollment of individual members onto the Lynx platform for the desired product (HSA and/or Filtered Spend). Creates a member on the Lynx platform. This includes creation of the 'member' on Lynx, creation of a bank account and creation and distribution of cards (physical and/or virtual)
   termsOfService: http://lynx-fh.com
   license:
     name: LynxFH
@@ -11,11 +11,13 @@ servers:
 - url: https://sandbox.lynx-fh.co
 security:
 - bearerAuth: []
+tags:
+- name: Enrollments
 paths:
   /enrollments/client:
     post:
       tags:
-      - ''
+      - Enrollments
       summary: Client Organization Enrollment
       description: The client organization enrollment API is used to enroll a client organization with the Lynx platform. The API ensures creation business bank accounts for the enrolled product (HSA, Filtered Spend etc.)
       operationId: businessEnroll
@@ -56,7 +58,7 @@ paths:
   /enrollments/list:
     get:
       tags:
-      - ''
+      - Enrollments
       summary: Get Member Enrollment Summary
       description: Retrieves the summary of all member enrollments for the incoming client organization.
       operationId: getMemberEnrollmentsByClientOrg
@@ -185,7 +187,7 @@ paths:
   /enrollments/member:
     post:
       tags:
-      - ''
+      - Enrollments
       summary: Member Enrollment
       description: The enrollment API is used to enroll a member with the Lynx platform. The API saves the member information within the Lynx platform and then proceeds to initiate various processes associated with the product(s) that the member is enrolling into. For example for a Health Savings Account, the API ensures creation of bank accounts and cards.
       operationId: member
@@ -262,7 +264,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     patch:
       tags:
-      - ''
+      - Enrollments
       summary: Patch Member Enrollment
       description: This enrollment API is used to enroll an existing member within the Lynx platform into an additional product (i.e. Investments). The API retrieves the current member's information within the Lynx platform and then proceeds to initiate various processes associated with the product that the member is enrolling into.
       operationId: patchMemberEnrollment
@@ -355,112 +357,98 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
 components:
   schemas:
-    ClientOrgDto:
+    MemberAccount:
+      type: object
+      properties:
+        type:
+          type: string
+          default: VSA
+          description: Type of account for this member product
+          example: VSA
+        incentiveRatio:
+          type: number
+          format: double
+          default: '1.2'
+          description: The number that is multiplied by the cash deposit value to determine the incentive value
+          example: 1.2
+        electionAmount:
+          type: number
+          description: Amount of tax-deductible funds chosen by the member to use on eligible health care or dependent care expenses throughout the plan year
+          example: 1500
+        numPayPeriod:
+          type: integer
+          format: int32
+          description: The annual election amount is divided evenly by the number of paychecks that an employee has for the year, and that amount is deducted from each paycheck by the employer
+          example: 26
+      required:
+      - type
+    DirectorDoc:
+      type: object
+      properties:
+        companyName:
+          type: string
+          description: The company name if the member is a director or owns more than 10% of a publicly traded company
+          example: IBM
+        symbol:
+          type: string
+          description: The ticker symbol if the member is a director or owns more than 10% of a publicly traded company
+          example: ACER
+    MemberConsentDoc:
+      type: object
+      properties:
+        consent:
+          $ref: '#/components/schemas/ConsentDoc'
+        acceptedIndicator:
+          type: boolean
+          description: Indicates the member accepted the consent
+          example: true
+        electronicSignature:
+          type: string
+          description: The member’s digital signature (full name)
+          example: John Smith
+        consentDate:
+          type: string
+          description: Date the consent was accepted
+          example: '2023-08-23'
+      required:
+      - acceptedIndicator
+      - consent
+    PoliticalExposedNameDTO:
+      type: object
+      properties:
+        fullName:
+          type: string
+          description: Full name of the politically exposed person
+      required:
+      - fullName
+    HSA01ConsentDoc:
       type: object
       properties:
         name:
           type: string
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-      required:
-      - name
-    ResponseException:
-      type: object
-      properties:
-        errorCode:
-          type: string
-          description: The GBL error code that is populated when the exceptionSource is SYSTEM
-        exceptionSource:
-          type: string
-          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
-        exceptionMessage:
-          type: string
-          description: Additional information about the exception
-    ExceptionBaseResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          description: 'null'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    GetMemberEnrollmentsByClientResponse:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        memberEnrollments:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberEnrollmentDto'
-    MemberDto:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-        firstName:
-          type: string
-          description: First name
-          example: John
-        lastName:
-          type: string
-          description: Last name
-          example: Smith
-      required:
-      - clientMemberId
-    MemberEnrollmentDto:
-      type: object
-      properties:
-        member:
-          $ref: '#/components/schemas/MemberDto'
-        memberProduct:
-          $ref: '#/components/schemas/MemberProductEnrollmentDto'
-    MemberProductEnrollmentDto:
-      type: object
-      properties:
+          description: Name of the consent to be accepted
+          enum:
+          - HSA_CUSTODIAL_AGREEMENT
+          - DEPOSIT_ACCOUNT_AGREEMENT
+          - TRUTH_IN_SAVINGS
+          - FUNDS_AVAILABILITY_AGREEMENT
+          - EXTERNAL_FUNDS_TRANSFER
+          - ELECTRONIC_RECORDS_SIGNATURE
+          example: HSA_CUSTODIAL_AGREEMENT
         productName:
           type: string
           description: The name of the product
           example: HSA_01
-        applicationId:
-          type: string
-          description: Member Application Identifier
-          example: 123
-        status:
-          type: string
-          description: Status of member enrollment for the product
-          example: Active
-        creationDate:
-          type: string
-          format: date-time
-          description: Date when the record was created
-          example: '2018-03-22'
-        updateDate:
-          type: string
-          format: date-time
-          description: Date when the record was last updated
-          example: '2018-03-22'
-        productDisplayName:
-          type: string
-          description: The display name of the product
-          example: HSA
-        effectiveDate:
-          type: string
-          format: date-time
-          description: Date when the product becomes effective for the member
-          example: '2018-03-22'
-        expirationDate:
-          type: string
-          format: date-time
-          description: Date when the product expires for the member
-          example: '2018-03-22'
       required:
+      - name
       - productName
-      - updateDate
+    Data:
+      type: object
+      properties:
+        member:
+          $ref: '#/components/schemas/Member'
+      required:
+      - member
     AddressRequest:
       type: object
       properties:
@@ -530,59 +518,278 @@ components:
       - line1
       - postalCode
       - stateProvince
-    Data:
+    MemberProduct:
       type: object
       properties:
-        member:
-          $ref: '#/components/schemas/Member'
-      required:
-      - member
-    EmailRequest:
-      type: object
-      properties:
-        typeDescription:
+        effectiveDate:
           type: string
-          description: Client-defined description for the email address
-          example: Personal
-        emailAddress:
-          type: string
-          description: Email address - any notifications will be sent to this email address
-          example: john@doe.com
-        primaryIndicator:
-          type: boolean
-          description: Determines whether this is a primary email address
-          example: true
+          default: '2022-03-25'
+          description: Date when the product becomes effective for the member
+          example: '2022-03-25'
+        product:
+          $ref: '#/components/schemas/ProductNameDto'
+        memberAccounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberAccount'
       required:
-      - emailAddress
-      - primaryIndicator
-    HSA01ConsentDoc:
+      - effectiveDate
+      - product
+    ClientOrgDto:
       type: object
       properties:
         name:
           type: string
-          description: Name of the consent to be accepted
-          enum:
-          - HSA_CUSTODIAL_AGREEMENT
-          - DEPOSIT_ACCOUNT_AGREEMENT
-          - TRUTH_IN_SAVINGS
-          - FUNDS_AVAILABILITY_AGREEMENT
-          - EXTERNAL_FUNDS_TRANSFER
-          - ELECTRONIC_RECORDS_SIGNATURE
-          example: HSA_CUSTODIAL_AGREEMENT
-        productName:
-          type: string
-          description: The name of the product
-          example: HSA_01
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
       required:
       - name
-      - productName
-    Idempotency:
+    ClientOrgProductDocDto:
       type: object
       properties:
-        idempotencyKey:
+        product:
+          $ref: '#/components/schemas/ProductDto'
+          description: Product details
+      required:
+      - product
+    ClientOrgContactDocDto:
+      type: object
+      description: Contact details
+      properties:
+        firstName:
           type: string
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+          description: Contact first name
+          example: John
+        lastName:
+          type: string
+          description: Contact last name
+          example: Smith
+        namePrefix:
+          type: string
+          description: Contact name prefix
+          example: Mr.
+        nameSuffix:
+          type: string
+          description: Contact name suffix
+          example: Jr.
+        relationshipType:
+          type: string
+          description: Relationship type to client organization
+          example: Owner
+        dateOfBirth:
+          type: string
+          description: Date of birth
+          example: '1969-03-02'
+        title:
+          type: string
+          description: The title of the client org contact
+          example: President
+        type:
+          type: string
+          description: The type of the client org contact
+          example: General
+        ssn:
+          type: string
+          description: Social Security Number
+          example: 123-45-6789
+        passport:
+          type: string
+          description: Passport number
+          example: 584673234
+        primaryIndicator:
+          type: boolean
+          description: Determines whether this is a primary contact
+          example: true
+        addresses:
+          type: array
+          description: List of addresses
+          example:
+          - city: Boston
+            country: US
+            line1: 10 Main St
+            line2: Apt 4B
+            line3: Building 2
+            line4: Floor 3
+            postalCode: '02110'
+            postalCodeExtension: '1234'
+            stateProvince: MA
+            typeDescription: Headquarters
+            primaryIndicator: true
+          items:
+            $ref: '#/components/schemas/ClientOrgAddressDto'
+        phones:
+          type: array
+          description: List of phone numbers
+          example:
+          - phoneNumber: '5089188736'
+            countryCode: '1'
+            phoneExtension: 344
+            typeDescription: Cell
+            primaryIndicator: true
+          items:
+            $ref: '#/components/schemas/ClientOrgPhoneDto'
+        emails:
+          type: array
+          description: List of email addresses
+          example:
+          - typeDescription: Work
+            emailAddress: contact@company.com
+            primaryIndicator: true
+          items:
+            $ref: '#/components/schemas/EmailRequest'
+      required:
+      - addresses
+      - dateOfBirth
+      - emails
+      - firstName
+      - lastName
+      - phones
+      - primaryIndicator
+      - relationshipType
+      - ssn
+      - title
+      - type
+    MemberCardPreferences:
+      type: object
+      properties:
+        planName:
+          type: string
+          description: The name of the plan
+          example: Health Plan ABC HSA Plan
+        cardPackageName:
+          type: string
+          description: The name of the card package
+          example: Health Plan ABC Blue Card
+        rushDelivery:
+          type: boolean
+          description: Indicates whether to ship the card via express mail; if omitted, default is false to ship first class mail
+          example: true
+      required:
+      - cardPackageName
+      - planName
+    ClientOrgRequest:
+      type: object
+      description: Request model for business enrollment
+      properties:
+        data:
+          $ref: '#/components/schemas/ClientOrgData'
+          description: Business enrollment data
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+      required:
+      - data
+      - idempotency
+    ClientOrgAddressDto:
+      type: object
+      properties:
+        city:
+          type: string
+          description: Address city
+          example: Boston
+        country:
+          type: string
+          description: Address country
+          example: US
+        line1:
+          type: string
+          description: The first line of the address
+          example: 10
+        line2:
+          type: string
+          description: The (optional) second line of the address
+          example: address line2
+        line3:
+          type: string
+          description: The (optional) third line of the address
+          example: address line3
+        line4:
+          type: string
+          description: The (optional) fourth line of the address
+          example: address line4
+        postalCode:
+          type: string
+          description: Address zip code
+          example: 02119
+        postalCodeExtension:
+          type: string
+          description: Address zip code extension
+          example: '0123'
+        stateProvince:
+          type: string
+          description: 2-Character address state or province
+          example: MA
+        typeDescription:
+          type: string
+          description: Client-defined description for the address
+          example: Home
+        primaryIndicator:
+          type: boolean
+          description: Determines whether this is a primary address
+          example: true
+      required:
+      - city
+      - country
+      - line1
+      - postalCode
+      - primaryIndicator
+      - stateProvince
+    GetMemberEnrollmentsByClientResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        memberEnrollments:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberEnrollmentDto'
+    MemberEnrollmentDto:
+      type: object
+      properties:
+        member:
+          $ref: '#/components/schemas/MemberDto'
+        memberProduct:
+          $ref: '#/components/schemas/MemberProductEnrollmentDto'
+    ClientOrgData:
+      type: object
+      description: Business enrollment data
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDocDto'
+          description: Client organization details
+        cardProgram:
+          $ref: '#/components/schemas/ClientOrgCardProgramDto'
+          description: By default, if the cardProgram object is not passed, we will automatically proceed with creating the FIS ACC Client and Program. If a new FIS ACC Client and Program should not be created, then the cardProgram object should be passed and createCardProgram should be false.
+      required:
+      - clientOrg
+    BaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    MemberHSA01ConsentDoc:
+      type: object
+      properties:
+        consent:
+          $ref: '#/components/schemas/HSA01ConsentDoc'
+        acceptedIndicator:
+          type: boolean
+          description: Indicates the member accepted the consent
+          example: true
+        electronicSignature:
+          type: string
+          description: The member’s digital signature (full name)
+          example: John Smith
+        consentDate:
+          type: string
+          description: Date the consent was accepted
+          example: '2023-08-23'
+      required:
+      - acceptedIndicator
+      - consent
     Member:
       type: object
       properties:
@@ -775,197 +982,6 @@ components:
       required:
       - clientMemberId
       - clientOrg
-    MemberAccessWalletPlan:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the access wallet plan. Must match an existing client_org_access_wallet_plan for the client org. Required when enrolling delegated-auth products on a Lynx rules engine client org.
-          example: DAP_HRA_PLAN_2024
-      required:
-      - name
-    MemberAccount:
-      type: object
-      properties:
-        type:
-          type: string
-          default: VSA
-          description: Type of account for this member product
-          example: VSA
-        incentiveRatio:
-          type: number
-          format: double
-          default: '1.2'
-          description: The number that is multiplied by the cash deposit value to determine the incentive value
-          example: 1.2
-        electionAmount:
-          type: number
-          description: Amount of tax-deductible funds chosen by the member to use on eligible health care or dependent care expenses throughout the plan year
-          example: 1500
-        numPayPeriod:
-          type: integer
-          format: int32
-          description: The annual election amount is divided evenly by the number of paychecks that an employee has for the year, and that amount is deducted from each paycheck by the employer
-          example: 26
-      required:
-      - type
-    MemberCardPreferences:
-      type: object
-      properties:
-        planName:
-          type: string
-          description: The name of the plan
-          example: Health Plan ABC HSA Plan
-        cardPackageName:
-          type: string
-          description: The name of the card package
-          example: Health Plan ABC Blue Card
-        rushDelivery:
-          type: boolean
-          description: Indicates whether to ship the card via express mail; if omitted, default is false to ship first class mail
-          example: true
-      required:
-      - cardPackageName
-      - planName
-    MemberHSA01ConsentDoc:
-      type: object
-      properties:
-        consent:
-          $ref: '#/components/schemas/HSA01ConsentDoc'
-        acceptedIndicator:
-          type: boolean
-          description: Indicates the member accepted the consent
-          example: true
-        electronicSignature:
-          type: string
-          description: The member’s digital signature (full name)
-          example: John Smith
-        consentDate:
-          type: string
-          description: Date the consent was accepted
-          example: '2023-08-23'
-      required:
-      - acceptedIndicator
-      - consent
-    MemberPlanBenefitPackage:
-      type: object
-      properties:
-        name:
-          type: string
-          description: A unique identifier assigned by CMS (Centers for Medicare & Medicaid Services) to each plan benefit package (PBP) within a contract that a plan sponsor has with CMS.  This number is used to link the plan sponsor's contract and plan identifiers
-          example: H1416043000
-        effectiveDate:
-          type: string
-          description: Effective date of the Plan Benefit Package
-          example: '2026-01-01'
-        expirationDate:
-          type: string
-          description: Expiration date of the Plan Benefit Package
-          example: '2026-12-31'
-        voidIndicator:
-          type: boolean
-          description: Indicates whether to void the Plan Benefit Package
-          example: false
-        ssbciIndicator:
-          type: boolean
-          description: Indicates whether the member is eligible for SSBCI (Special Supplemental Benefits for the Chronically Ill)
-          example: true
-        ssbciEffectiveDate:
-          type: string
-          description: Effective date of SSBCI benefit eligibility
-          example: '2026-01-01'
-      required:
-      - effectiveDate
-      - expirationDate
-      - name
-    MemberProduct:
-      type: object
-      properties:
-        effectiveDate:
-          type: string
-          default: '2022-03-25'
-          description: Date when the product becomes effective for the member
-          example: '2022-03-25'
-        product:
-          $ref: '#/components/schemas/ProductNameDto'
-        memberAccounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberAccount'
-      required:
-      - effectiveDate
-      - product
-    MemberRequest:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Data'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-      required:
-      - data
-      - idempotency
-    PhoneRequest:
-      type: object
-      properties:
-        typeDescription:
-          type: string
-          description: Client-defined description for the phone number
-          example: Cell
-        countryCode:
-          type: string
-          default: '1'
-          description: Phone country code
-          example: 1
-        phoneNumber:
-          type: string
-          description: 10-Digit phone number
-          example: 5089188736
-        phoneExtension:
-          type: integer
-          format: int32
-          description: Optional extension
-          example: 344
-        primaryIndicator:
-          type: boolean
-          description: Determines whether this is a primary phone
-          example: true
-      required:
-      - countryCode
-      - phoneNumber
-    ProductNameDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the product
-          example: HSA_01
-      required:
-      - name
-    TagDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Constant used to define the metadata within a key-value pair
-        value:
-          type: string
-          description: Variable belonging to the metadata within a key-value pair
-        type:
-          type: string
-          description: Additional client-defined qualifier that may be used to further classify the key-value pair
-      required:
-      - name
-      - value
-    BaseMember:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-      required:
-      - clientMemberId
     BaseMemberResponse:
       type: object
       properties:
@@ -975,70 +991,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResponseException'
-    ClientDto:
+    ProductDto:
       type: object
-      description: Client details
+      description: Product details
       properties:
         name:
           type: string
-          description: Client name
-          example: Health Plan ABC
+          description: The name of the product
+          example: HSA_01
       required:
       - name
-    ClientOrgAddressDto:
-      type: object
-      properties:
-        city:
-          type: string
-          description: Address city
-          example: Boston
-        country:
-          type: string
-          description: Address country
-          example: US
-        line1:
-          type: string
-          description: The first line of the address
-          example: 10
-        line2:
-          type: string
-          description: The (optional) second line of the address
-          example: address line2
-        line3:
-          type: string
-          description: The (optional) third line of the address
-          example: address line3
-        line4:
-          type: string
-          description: The (optional) fourth line of the address
-          example: address line4
-        postalCode:
-          type: string
-          description: Address zip code
-          example: 02119
-        postalCodeExtension:
-          type: string
-          description: Address zip code extension
-          example: '0123'
-        stateProvince:
-          type: string
-          description: 2-Character address state or province
-          example: MA
-        typeDescription:
-          type: string
-          description: Client-defined description for the address
-          example: Home
-        primaryIndicator:
-          type: boolean
-          description: Determines whether this is a primary address
-          example: true
-      required:
-      - city
-      - country
-      - line1
-      - postalCode
-      - primaryIndicator
-      - stateProvince
     ClientOrgCardProgramDto:
       type: object
       description: Card program settings for the client organization
@@ -1046,115 +1008,40 @@ components:
         createCardProgram:
           type: boolean
           description: If a new FIS ACC Client and Program should not be created, set to false. Defaults to true if not provided.
-    ClientOrgContactDocDto:
+    PatchMemberEnrollmentDoc:
       type: object
-      description: Contact details
       properties:
-        firstName:
-          type: string
-          description: Contact first name
-          example: John
-        lastName:
-          type: string
-          description: Contact last name
-          example: Smith
-        namePrefix:
-          type: string
-          description: Contact name prefix
-          example: Mr.
-        nameSuffix:
-          type: string
-          description: Contact name suffix
-          example: Jr.
-        relationshipType:
-          type: string
-          description: Relationship type to client organization
-          example: Owner
-        dateOfBirth:
-          type: string
-          description: Date of birth
-          example: '1969-03-02'
-        title:
-          type: string
-          description: The title of the client org contact
-          example: President
-        type:
-          type: string
-          description: The type of the client org contact
-          example: General
-        ssn:
-          type: string
-          description: Social Security Number
-          example: 123-45-6789
-        passport:
-          type: string
-          description: Passport number
-          example: 584673234
-        primaryIndicator:
-          type: boolean
-          description: Determines whether this is a primary contact
-          example: true
-        addresses:
-          type: array
-          description: List of addresses
-          example:
-          - city: Boston
-            country: US
-            line1: 10 Main St
-            line2: Apt 4B
-            line3: Building 2
-            line4: Floor 3
-            postalCode: '02110'
-            postalCodeExtension: '1234'
-            stateProvince: MA
-            typeDescription: Headquarters
-            primaryIndicator: true
-          items:
-            $ref: '#/components/schemas/ClientOrgAddressDto'
-        phones:
-          type: array
-          description: List of phone numbers
-          example:
-          - phoneNumber: '5089188736'
-            countryCode: '1'
-            phoneExtension: 344
-            typeDescription: Cell
-            primaryIndicator: true
-          items:
-            $ref: '#/components/schemas/ClientOrgPhoneDto'
-        emails:
-          type: array
-          description: List of email addresses
-          example:
-          - typeDescription: Work
-            emailAddress: contact@company.com
-            primaryIndicator: true
-          items:
-            $ref: '#/components/schemas/EmailRequest'
-      required:
-      - addresses
-      - dateOfBirth
-      - emails
-      - firstName
-      - lastName
-      - phones
-      - primaryIndicator
-      - relationshipType
-      - ssn
-      - title
-      - type
-    ClientOrgData:
+        member:
+          $ref: '#/components/schemas/PatchMemberDoc'
+    ResponseException:
       type: object
-      description: Business enrollment data
       properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDocDto'
-          description: Client organization details
-        cardProgram:
-          $ref: '#/components/schemas/ClientOrgCardProgramDto'
-          description: By default, if the cardProgram object is not passed, we will automatically proceed with creating the FIS ACC Client and Program. If a new FIS ACC Client and Program should not be created, then the cardProgram object should be passed and createCardProgram should be false.
-      required:
-      - clientOrg
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
     ClientOrgDocDto:
       type: object
       description: Client organization details
@@ -1364,57 +1251,8 @@ components:
       - stateIncorporated
       - type
       - websiteUrl
-    ClientOrgPhoneDto:
+    ProductNameDto:
       type: object
-      properties:
-        phoneNumber:
-          type: string
-          description: 10-Digit phone number
-          example: 5089188736
-        countryCode:
-          type: string
-          description: Phone country code
-          example: 1
-        phoneExtension:
-          type: integer
-          format: int32
-          description: Optional extension
-          example: 344
-        typeDescription:
-          type: string
-          description: Client-defined description for the phone number
-          example: Cell
-        primaryIndicator:
-          type: boolean
-          description: Determines whether this is a primary phone
-          example: true
-      required:
-      - countryCode
-      - phoneNumber
-      - primaryIndicator
-    ClientOrgProductDocDto:
-      type: object
-      properties:
-        product:
-          $ref: '#/components/schemas/ProductDto'
-          description: Product details
-      required:
-      - product
-    ClientOrgRequest:
-      type: object
-      description: Request model for business enrollment
-      properties:
-        data:
-          $ref: '#/components/schemas/ClientOrgData'
-          description: Business enrollment data
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-      required:
-      - data
-      - idempotency
-    ProductDto:
-      type: object
-      description: Product details
       properties:
         name:
           type: string
@@ -1422,95 +1260,6 @@ components:
           example: HSA_01
       required:
       - name
-    BaseResponse:
-      type: object
-      properties:
-        data:
-          type: object
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    ConsentDoc:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the consent to be accepted
-          enum:
-          - INVESTMENT_TERMS_OF_USE
-          - INVESTMENT_CUSTOMER_AGREEMENT
-          - INVESTMENT_MARKET_DATA_AGREEMENT
-          - INVESTMENT_RULE_14B_AGREEMENT
-          - INVESTMENT_PRIVACY_POLICY
-          - INVESTMENT_DATA_SHARING_AGREEMENT
-          - INVESTMENT_MARGIN_AGREEMENT
-          - DRIVEWEALTH_W9_AGREEMENT
-          - INVESTMENT_ACCOUNT_TERMS_AND_CONDITIONS
-          - RIA_TERMS_AND_AGREEMENTS
-          example: INVESTMENT_TERMS_OF_USE
-      required:
-      - name
-    DirectorDoc:
-      type: object
-      properties:
-        companyName:
-          type: string
-          description: The company name if the member is a director or owns more than 10% of a publicly traded company
-          example: IBM
-        symbol:
-          type: string
-          description: The ticker symbol if the member is a director or owns more than 10% of a publicly traded company
-          example: ACER
-    MemberConsentDoc:
-      type: object
-      properties:
-        consent:
-          $ref: '#/components/schemas/ConsentDoc'
-        acceptedIndicator:
-          type: boolean
-          description: Indicates the member accepted the consent
-          example: true
-        electronicSignature:
-          type: string
-          description: The member’s digital signature (full name)
-          example: John Smith
-        consentDate:
-          type: string
-          description: Date the consent was accepted
-          example: '2023-08-23'
-      required:
-      - acceptedIndicator
-      - consent
-    MemberProductDoc:
-      type: object
-      properties:
-        product:
-          $ref: '#/components/schemas/ProductDoc'
-        relatedProductName:
-          type: string
-          description: Indicates the linked product name
-          example: HSA_01
-        managementType:
-          type: string
-          enum:
-          - Self-Directed Lineup
-          - Self-Directed Robo
-          - Self-Directed Brokerage
-        riskPortfolio:
-          type: string
-        effectiveDate:
-          type: string
-          format: date-time
-          description: Date when the product becomes effective for the member
-          example: '2023-02-25'
-        memberAccounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberAccount'
-      required:
-      - effectiveDate
-      - product
     MemberProfileDto:
       type: object
       properties:
@@ -1695,6 +1444,264 @@ components:
           type: boolean
           description: Indicates whether the member’s current employer is a broker/dealer
           example: true
+    PhoneRequest:
+      type: object
+      properties:
+        typeDescription:
+          type: string
+          description: Client-defined description for the phone number
+          example: Cell
+        countryCode:
+          type: string
+          default: '1'
+          description: Phone country code
+          example: 1
+        phoneNumber:
+          type: string
+          description: 10-Digit phone number
+          example: 5089188736
+        phoneExtension:
+          type: integer
+          format: int32
+          description: Optional extension
+          example: 344
+        primaryIndicator:
+          type: boolean
+          description: Determines whether this is a primary phone
+          example: true
+      required:
+      - countryCode
+      - phoneNumber
+    EnrollmentResponse:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+    PatchMemberEnrollmentResponseDoc:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/EnrollmentResponse'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    EmailRequest:
+      type: object
+      properties:
+        typeDescription:
+          type: string
+          description: Client-defined description for the email address
+          example: Personal
+        emailAddress:
+          type: string
+          description: Email address - any notifications will be sent to this email address
+          example: john@doe.com
+        primaryIndicator:
+          type: boolean
+          description: Determines whether this is a primary email address
+          example: true
+      required:
+      - emailAddress
+      - primaryIndicator
+    MemberRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Data'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+      required:
+      - data
+      - idempotency
+    ProductDoc:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the product
+          example: HSA_01
+      required:
+      - name
+    TagDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Constant used to define the metadata within a key-value pair
+        value:
+          type: string
+          description: Variable belonging to the metadata within a key-value pair
+        type:
+          type: string
+          description: Additional client-defined qualifier that may be used to further classify the key-value pair
+      required:
+      - name
+      - value
+    MemberProductDoc:
+      type: object
+      properties:
+        product:
+          $ref: '#/components/schemas/ProductDoc'
+        relatedProductName:
+          type: string
+          description: Indicates the linked product name
+          example: HSA_01
+        managementType:
+          type: string
+          enum:
+          - Self-Directed Lineup
+          - Self-Directed Robo
+          - Self-Directed Brokerage
+        riskPortfolio:
+          type: string
+        effectiveDate:
+          type: string
+          format: date-time
+          description: Date when the product becomes effective for the member
+          example: '2023-02-25'
+        memberAccounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberAccount'
+      required:
+      - effectiveDate
+      - product
+    MemberAccessWalletPlan:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the access wallet plan. Must match an existing client_org_access_wallet_plan for the client org. Required when enrolling delegated-auth products on a Lynx rules engine client org.
+          example: DAP_HRA_PLAN_2024
+      required:
+      - name
+    MemberProductEnrollmentDto:
+      type: object
+      properties:
+        productName:
+          type: string
+          description: The name of the product
+          example: HSA_01
+        applicationId:
+          type: string
+          description: Member Application Identifier
+          example: 123
+        status:
+          type: string
+          description: Status of member enrollment for the product
+          example: Active
+        creationDate:
+          type: string
+          format: date-time
+          description: Date when the record was created
+          example: '2018-03-22'
+        updateDate:
+          type: string
+          format: date-time
+          description: Date when the record was last updated
+          example: '2018-03-22'
+        productDisplayName:
+          type: string
+          description: The display name of the product
+          example: HSA
+        effectiveDate:
+          type: string
+          format: date-time
+          description: Date when the product becomes effective for the member
+          example: '2018-03-22'
+        expirationDate:
+          type: string
+          format: date-time
+          description: Date when the product expires for the member
+          example: '2018-03-22'
+      required:
+      - productName
+      - updateDate
+    BaseMember:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+    ClientDto:
+      type: object
+      description: Client details
+      properties:
+        name:
+          type: string
+          description: Client name
+          example: Health Plan ABC
+      required:
+      - name
+    MemberDto:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        firstName:
+          type: string
+          description: First name
+          example: John
+        lastName:
+          type: string
+          description: Last name
+          example: Smith
+      required:
+      - clientMemberId
+    ConsentDoc:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the consent to be accepted
+          enum:
+          - INVESTMENT_TERMS_OF_USE
+          - INVESTMENT_CUSTOMER_AGREEMENT
+          - INVESTMENT_MARKET_DATA_AGREEMENT
+          - INVESTMENT_RULE_14B_AGREEMENT
+          - INVESTMENT_PRIVACY_POLICY
+          - INVESTMENT_DATA_SHARING_AGREEMENT
+          - INVESTMENT_MARGIN_AGREEMENT
+          - DRIVEWEALTH_W9_AGREEMENT
+          - INVESTMENT_ACCOUNT_TERMS_AND_CONDITIONS
+          - RIA_TERMS_AND_AGREEMENTS
+          example: INVESTMENT_TERMS_OF_USE
+      required:
+      - name
+    ClientOrgPhoneDto:
+      type: object
+      properties:
+        phoneNumber:
+          type: string
+          description: 10-Digit phone number
+          example: 5089188736
+        countryCode:
+          type: string
+          description: Phone country code
+          example: 1
+        phoneExtension:
+          type: integer
+          format: int32
+          description: Optional extension
+          example: 344
+        typeDescription:
+          type: string
+          description: Client-defined description for the phone number
+          example: Cell
+        primaryIndicator:
+          type: boolean
+          description: Determines whether this is a primary phone
+          example: true
+      required:
+      - countryCode
+      - phoneNumber
+      - primaryIndicator
     PatchMemberDoc:
       type: object
       properties:
@@ -1762,11 +1769,6 @@ components:
       required:
       - clientMemberId
       - clientOrg
-    PatchMemberEnrollmentDoc:
-      type: object
-      properties:
-        member:
-          $ref: '#/components/schemas/PatchMemberDoc'
     PatchMemberEnrollmentRequestDoc:
       type: object
       properties:
@@ -1779,37 +1781,37 @@ components:
       required:
       - data
       - idempotency
-    PoliticalExposedNameDTO:
-      type: object
-      properties:
-        fullName:
-          type: string
-          description: Full name of the politically exposed person
-      required:
-      - fullName
-    ProductDoc:
+    MemberPlanBenefitPackage:
       type: object
       properties:
         name:
           type: string
-          description: The name of the product
-          example: HSA_01
-      required:
-      - name
-    EnrollmentResponse:
-      type: object
-      properties:
-        clientMemberId:
+          description: A unique identifier assigned by CMS (Centers for Medicare & Medicaid Services) to each plan benefit package (PBP) within a contract that a plan sponsor has with CMS.  This number is used to link the plan sponsor's contract and plan identifiers
+          example: H1416043000
+        effectiveDate:
           type: string
-    PatchMemberEnrollmentResponseDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/EnrollmentResponse'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
+          description: Effective date of the Plan Benefit Package
+          example: '2026-01-01'
+        expirationDate:
+          type: string
+          description: Expiration date of the Plan Benefit Package
+          example: '2026-12-31'
+        voidIndicator:
+          type: boolean
+          description: Indicates whether to void the Plan Benefit Package
+          example: false
+        ssbciIndicator:
+          type: boolean
+          description: Indicates whether the member is eligible for SSBCI (Special Supplemental Benefits for the Chronically Ill)
+          example: true
+        ssbciEffectiveDate:
+          type: string
+          description: Effective date of SSBCI benefit eligibility
+          example: '2026-01-01'
+      required:
+      - effectiveDate
+      - expirationDate
+      - name
   securitySchemes:
     bearerAuth:
       type: http

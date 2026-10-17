@@ -144,8 +144,10 @@ common:
 
 apis:
 - name: Lynx API
-  description: Lynx FinHealth API for embedded health accounts, enrollment, contributions, payments and distributions, transactions, and card
-    issuance/management. Reference is gated behind developer login; a hosted sandbox is available.
+  description: >-
+    Lynx FinHealth API for embedded health accounts, enrollment, contributions, payments and distributions,
+    transactions, and card issuance/management. Reference is gated behind developer login; a hosted sandbox
+    is available.
   humanURL: https://docs.lynx-fh.com/
   baseURL: https://sandbox.lynx-fh.co
   properties:
@@ -156,222 +158,6 @@ apis:
   - type: GettingStarted
     url: https://docs.lynx-fh.com/
   aid: lynx:lynx-api
-- aid: lynx:lynx-account-api
-  name: Lynx Account API
-  description: The Account API from Lynx — 9 operation(s) for account.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  tags:
-  - Account
-  properties:
-  - type: OpenAPI
-    url: openapi/lynx-account-api-openapi.yml
-  - type: JSONSchema
-    url: json-schema/lynx-get-member-account-balance-response-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-member-account-status-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-post-member-account-transfer-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-patch-member-account-request-doc-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-get-member-account-transfer-response-schema.json
-- aid: lynx:lynx-card-management-api
-  name: Lynx Card Management API
-  description: The Card Management API from Lynx — 14 operation(s) for card management.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  tags:
-  - Card Management
-  properties:
-  - type: OpenAPI
-    url: openapi/lynx-card-management-api-openapi.yml
-  - type: JSONSchema
-    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-reissue-card-request-doc-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-replace-card-request-doc-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-card-status-change-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-get-member-cards-response-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-member-card-request-schema.json
-- aid: lynx:lynx-claims-service-api
-  name: Lynx Claims Service API
-  description: The Claims Service API from Lynx — 3 operation(s) for claims service.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  tags:
-  - Claims Service
-  properties:
-  - type: OpenAPI
-    url: openapi/lynx-claims-service-api-openapi.yml
-  - type: JSONSchema
-    url: json-schema/lynx-post-member-claim-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-put-member-claim-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-persist-claims-response-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-get-claims-response-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-get-claim-detail-response-schema.json
-- aid: lynx:lynx-client-org-management-api
-  name: Lynx Client Org Management API
-  description: The Client Org Management API from Lynx — 6 operation(s) for client org management.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  tags:
-  - Client Org Management
-  properties:
-  - type: OpenAPI
-    url: openapi/lynx-client-org-management-api-openapi.yml
-  - type: JSONSchema
-    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-client-org-application-token-response-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
-- aid: lynx:lynx-commerce-order-api
-  name: Lynx Commerce Order API
-  description: The Commerce Order API from Lynx — 15 operation(s) for commerce order.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  tags:
-  - Commerce Order
-  properties:
-  - type: OpenAPI
-    url: openapi/lynx-commerce-order-api-openapi.yml
-  - type: JSONSchema
-    url: json-schema/lynx-calculate-sales-tax-response-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-validate-coupon-request-schema.json
-- aid: lynx:lynx-commodity-api
-  name: Lynx Commodity API
-  description: The Commodity API from Lynx — 8 operation(s) for commodity.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  tags:
-  - Commodity
-  properties:
-  - type: OpenAPI
-    url: openapi/lynx-commodity-api-openapi.yml
-  - type: JSONSchema
-    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
-- aid: lynx:lynx-copay-management-service-api
-  name: Lynx Copay Management Service API
-  description: The Copay Management Service API from Lynx — 2 operation(s) for copay management service.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  tags:
-  - Copay Management Service
-  properties:
-  - type: OpenAPI
-    url: openapi/lynx-copay-management-service-api-openapi.yml
-  - type: JSONSchema
-    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-doc-copay-group-get-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-copay-group-get-detail-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-copay-create-response-schema.json
-- aid: lynx:lynx-enrollment-api
-  name: Lynx Enrollment API
-  description: The Enrollment API from Lynx — 3 operation(s) for enrollment.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  tags:
-  - Enrollment
-  properties:
-  - type: OpenAPI
-    url: openapi/lynx-enrollment-api-openapi.yml
-  - type: JSONSchema
-    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-client-org-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-base-member-response-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-member-request-schema.json
-- aid: lynx:lynx-external-account-api
-  name: Lynx External Account API
-  description: The External Account API from Lynx — 6 operation(s) for external account.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  tags:
-  - External Account
-  properties:
-  - type: OpenAPI
-    url: openapi/lynx-external-account-api-openapi.yml
-  - type: JSONSchema
-    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-doc-update-bank-account-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-doc-member-bank-account-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-doc-link-account-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-get-member-external-accounts-response-schema.json
-- aid: lynx:lynx-external-notification-api
-  name: Lynx External Notification API
-  description: The External Notification API from Lynx — 7 operation(s) for external notification.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  tags:
-  - External Notification
-  properties:
-  - type: OpenAPI
-    url: openapi/lynx-external-notification-api-openapi.yml
-  - type: JSONSchema
-    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-ad-hoc-notification-request-schema.json
-  - type: JSONSchema
-    url: json-schema/lynx-patch-member-notification-status-request-schema.json
 - aid: lynx:lynx-investments-api
   name: Lynx Investments API
   description: The Investments API from Lynx — 20 operation(s) for investments.
@@ -386,46 +172,6 @@ apis:
     url: json-schema/lynx-get-account-performance-response-schema.json
   - type: JSONSchema
     url: json-schema/lynx-get-account-positions-response-schema.json
-- aid: lynx:lynx-member-management-api
-  name: Lynx Member Management API
-  description: The Member Management API from Lynx — 12 operation(s) for member management.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  tags:
-  - Member Management
-  properties:
-  - type: OpenAPI
-    url: openapi/lynx-member-management-api-openapi.yml
-- aid: lynx:lynx-payment-api
-  name: Lynx Payment API
-  description: The Payment API from Lynx — 11 operation(s) for payment.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  tags:
-  - Payment
-  properties:
-  - type: OpenAPI
-    url: openapi/lynx-payment-api-openapi.yml
-- aid: lynx:lynx-related-person-api
-  name: Lynx Related Person API
-  description: The Related Person API from Lynx — 7 operation(s) for related person.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  tags:
-  - Related Person
-  properties:
-  - type: OpenAPI
-    url: openapi/lynx-related-person-api-openapi.yml
-- aid: lynx:lynx-substantiation-service-api
-  name: Lynx Substantiation Service API
-  description: The Substantiation Service API from Lynx — 5 operation(s) for substantiation service.
-  humanURL: https://docs.lynx-fh.com/
-  baseURL: https://sandbox.lynx-fh.co
-  tags:
-  - Substantiation Service
-  properties:
-  - type: OpenAPI
-    url: openapi/lynx-substantiation-service-api-openapi.yml
 - aid: lynx:lynx-tags-api
   name: Lynx Tags API
   description: The Tags API from Lynx — 2 operation(s) for tags.
@@ -436,27 +182,2276 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/lynx-tags-api-openapi.yml
-- aid: lynx:lynx-transaction-api
-  name: Lynx Transaction API
-  description: The Transaction API from Lynx — 13 operation(s) for transaction.
+- aid: lynx:lynx-accounts-api
+  name: Lynx Accounts API
+  description: The Accounts API from Lynx — 9 operation(s) for accounts.
   humanURL: https://docs.lynx-fh.com/
   baseURL: https://sandbox.lynx-fh.co
   tags:
-  - Transaction
+  - Accounts
   properties:
   - type: OpenAPI
-    url: openapi/lynx-transaction-api-openapi.yml
-- aid: lynx:lynx-upload-api
-  name: Lynx Upload API
-  description: The Upload API from Lynx — 2 operation(s) for upload.
+    url: openapi/lynx-accounts-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-cards-api
+  name: Lynx Cards API
+  description: The Cards API from Lynx — 14 operation(s) for cards.
   humanURL: https://docs.lynx-fh.com/
   baseURL: https://sandbox.lynx-fh.co
   tags:
-  - Upload
+  - Cards
   properties:
   - type: OpenAPI
-    url: openapi/lynx-upload-api-openapi.yml
-
+    url: openapi/lynx-cards-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-claims-api
+  name: Lynx Claims API
+  description: The Claims API from Lynx — 3 operation(s) for claims.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Claims
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-claims-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-client-org-application-token-controller-api
+  name: Lynx Client Org Application Token Controller API
+  description: >-
+    The client-org-application-token-controller API from Lynx — 1 operation(s) for client-org-application-token-controller.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - client-org-application-token-controller
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-client-org-application-token-controller-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-clients-api
+  name: Lynx Clients API
+  description: The Clients API from Lynx — 5 operation(s) for clients.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Clients
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-clients-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-commerce-api
+  name: Lynx Commerce API
+  description: The Commerce API from Lynx — 23 operation(s) for commerce.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Commerce
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-commerce-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-copay-api
+  name: Lynx Copay API
+  description: The Copay API from Lynx — 2 operation(s) for copay.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Copay
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-copay-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-enrollments-api
+  name: Lynx Enrollments API
+  description: The Enrollments API from Lynx — 3 operation(s) for enrollments.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Enrollments
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-enrollments-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-expense-api
+  name: Lynx Expense API
+  description: The Expense API from Lynx — 1 operation(s) for expense.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Expense
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-expense-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-externalaccounts-api
+  name: Lynx Externalaccounts API
+  description: The Externalaccounts API from Lynx — 6 operation(s) for externalaccounts.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Externalaccounts
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-externalaccounts-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-externalnotifications-api
+  name: Lynx Externalnotifications API
+  description: The Externalnotifications API from Lynx — 7 operation(s) for externalnotifications.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Externalnotifications
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-externalnotifications-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-member-expense-controller-api
+  name: Lynx Member Expense Controller API
+  description: >-
+    The member-expense-controller API from Lynx — 4 operation(s) for member-expense-controller.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - member-expense-controller
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-member-expense-controller-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-members-api
+  name: Lynx Members API
+  description: The Members API from Lynx — 8 operation(s) for members.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Members
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-members-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-payments-api
+  name: Lynx Payments API
+  description: The Payments API from Lynx — 11 operation(s) for payments.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-payments-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-relatedpersons-api
+  name: Lynx Relatedpersons API
+  description: The Relatedpersons API from Lynx — 7 operation(s) for relatedpersons.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Relatedpersons
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-relatedpersons-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-substantiation-api
+  name: Lynx Substantiation API
+  description: The Substantiation API from Lynx — 5 operation(s) for substantiation.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Substantiation
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-substantiation-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-transactions-api
+  name: Lynx Transactions API
+  description: The Transactions API from Lynx — 13 operation(s) for transactions.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Transactions
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-transactions-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
+- aid: lynx:lynx-uploads-api
+  name: Lynx Uploads API
+  description: The Uploads API from Lynx — 2 operation(s) for uploads.
+  humanURL: https://docs.lynx-fh.com/
+  baseURL: https://sandbox.lynx-fh.co
+  tags:
+  - Uploads
+  properties:
+  - type: OpenAPI
+    url: openapi/lynx-uploads-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-account-status-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-account-transfer-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-account-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-bank-account-balance-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-account-transfer-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-post-dependent-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-reissue-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-replace-card-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-card-status-change-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-cards-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-card-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-member-claim-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-persist-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claims-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-claim-detail-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-subscribed-events-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-substantiation-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-application-token-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-substantiation-model-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-calculate-sales-tax-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-member-ecommerce-order-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-replace-ecommerce-order-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-put-commerce-sales-tax-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-ecommerce-refund-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-validate-coupon-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-view-commerce-classification-dto-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-exclusion-list-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-commodity-list-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-commerce-catalog-facets-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-commodity-detail-doc-model-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-client-org-exclusion-list-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-create-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-client-org-copay-group-edit-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-copay-group-get-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-group-get-detail-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-copay-create-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-request-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-enrollments-by-client-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-enrollment-response-doc-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-base-member-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-member-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-create-client-org-external-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-verified-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-update-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-member-bank-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-doc-link-account-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-get-member-external-accounts-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-data-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-client-org-notification-configuration-response-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-post-client-org-notification-configuration-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-ad-hoc-notification-request-schema.json
+  - type: JSONSchema
+    url: json-schema/lynx-patch-member-notification-status-request-schema.json
 x-enrichment:
   date: '2026-07-20'
   status: enriched

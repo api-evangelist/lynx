@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: UPLOAD API
+  title: Uploads API
   description: These API's are used to manage documents and files uploads
   termsOfService: '"https://lynx-fh.com/terms/"'
   version: '"1.0"'
@@ -8,11 +8,13 @@ servers:
 - url: https://sandbox.lynx-fh.co
 security:
 - bearerAuth: []
+tags:
+- name: Uploads
 paths:
   /uploads/business/document:
     post:
       tags:
-      - ''
+      - Uploads
       summary: Upload Client Org Enrollment Documents
       description: Uploads a document file for client org enrollment. Supported file types are pdf, jpeg or png.
       operationId: businessUploadDocument
@@ -47,7 +49,7 @@ paths:
   /uploads/member/document:
     post:
       tags:
-      - ''
+      - Uploads
       summary: Upload Enrollment Documents
       description: Uploads a document file for member enrollment. Supported file types are pdf, jpeg or png.
       operationId: handleFileUpload
@@ -118,37 +120,19 @@ paths:
       - bearerAuth: []
 components:
   schemas:
-    ExceptionBaseResponse:
+    UploadDocumentRequestMultipart:
       type: object
       properties:
         data:
-          type: object
-          description: 'null'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    ResponseException:
-      type: object
-      properties:
-        errorCode:
+          $ref: '#/components/schemas/UploadBusinessDocumentRequest'
+          description: This field only accepts a raw string, not a JSON object. Because of that limitation, we can’t embed a structured example directly in the input box. Please view documentation for an example result.
+        file:
           type: string
-          description: The GBL error code that is populated when the exceptionSource is SYSTEM
-        exceptionSource:
-          type: string
-          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
-        exceptionMessage:
-          type: string
-          description: Additional information about the exception
-    ClientOrgDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
+          format: binary
+          description: Uploaded file
       required:
-      - name
+      - data
+      - file
     UploadBusinessDocumentRequest:
       type: object
       properties:
@@ -178,19 +162,15 @@ components:
       - documentId
       - documentType
       - productName
-    UploadDocumentRequestMultipart:
+    BaseResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/UploadBusinessDocumentRequest'
-          description: This field only accepts a raw string, not a JSON object. Because of that limitation, we can’t embed a structured example directly in the input box. Please view documentation for an example result.
-        file:
-          type: string
-          format: binary
-          description: Uploaded file
-      required:
-      - data
-      - file
+          type: object
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
     UploadBusinessDocumentResponse:
       type: object
       properties:
@@ -200,11 +180,33 @@ components:
           type: string
         clientOrgName:
           type: string
-    BaseResponse:
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    ExceptionBaseResponse:
       type: object
       properties:
         data:
           type: object
+          description: 'null'
         exceptions:
           type: array
           items:

@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: ACCOUNT API
+  title: Accounts API
   description: These set of APIs interact with the BaaS vendor (unit) to create bank accounts, facilitate payment and card transactions.
   termsOfService: http://lynx-fh.com
   license:
@@ -11,11 +11,13 @@ servers:
 - url: https://sandbox.lynx-fh.co
 security:
 - bearerAuth: []
+tags:
+- name: Accounts
 paths:
   /accounts/client/account-number:
     get:
       tags:
-      - ''
+      - Accounts
       summary: Get FBO Account Number
       description: This API will return the full account number for the specified business account.
       operationId: getClientOrgAccountNumber
@@ -58,7 +60,7 @@ paths:
   /accounts/client/balance:
     get:
       tags:
-      - ''
+      - Accounts
       summary: Get FBO Account Balance
       description: Retrieves the settled and available balances for a client organizations' account(s). The client organization is passed in as a request parameter.
       operationId: getAllFBOAccountBalances
@@ -101,7 +103,7 @@ paths:
   /accounts/client/list:
     get:
       tags:
-      - ''
+      - Accounts
       summary: Get All FBO Accounts
       description: This API will return a list of all business accounts associated to the client organization
       operationId: getClientOrgAccounts
@@ -144,7 +146,7 @@ paths:
   /accounts/member/account:
     patch:
       tags:
-      - ''
+      - Accounts
       summary: Update Member Account
       description: Updates Member Account
       operationId: updateMemberAccount
@@ -180,7 +182,7 @@ paths:
   /accounts/member/account-number:
     get:
       tags:
-      - ''
+      - Accounts
       summary: Get Member Account Number
       description: This API will return the full account number for the specified member account.
       operationId: getMemberAccountNumber
@@ -244,9 +246,8 @@ paths:
   /accounts/member/account-transfer-request:
     post:
       tags:
-      - ''
+      - Accounts
       summary: Member Account Transfer
-      description: Member Account Transfer
       operationId: postAccountTransfer
       requestBody:
         content:
@@ -278,9 +279,8 @@ paths:
   /accounts/member/account-transfer-requests:
     get:
       tags:
-      - ''
+      - Accounts
       summary: Get Member Account Transfers
-      description: Get Member Account Transfers
       operationId: getAccountTransfers
       parameters:
       - name: clientMemberId
@@ -347,7 +347,7 @@ paths:
   /accounts/member/balance:
     get:
       tags:
-      - ''
+      - Accounts
       summary: Get Member Account Balance
       description: Retrieves the settled and available balance for a member (identified by the clientMemberId).
       operationId: getBalance
@@ -411,7 +411,7 @@ paths:
   /accounts/member/status:
     patch:
       tags:
-      - ''
+      - Accounts
       summary: Update Member Account Status
       description: Updates the member account status in order to close, freeze, or activate the account.
       operationId: updateAccountStatus
@@ -464,117 +464,58 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
 components:
   schemas:
-    ClientOrgDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-      required:
-      - name
-    ExceptionBaseResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          description: 'null'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    ResponseException:
-      type: object
-      properties:
-        errorCode:
-          type: string
-          description: The GBL error code that is populated when the exceptionSource is SYSTEM
-        exceptionSource:
-          type: string
-          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
-        exceptionMessage:
-          type: string
-          description: Additional information about the exception
-    ClientOrgAccountNumberDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: UUID of the client organization's FBO account
-          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
-        accountNumber:
-          type: string
-          description: The bank account number
-          example: 0002109789118
-    GetClientOrgAccountNumberResponse:
+    GetMemberAccountNumberResponse:
       type: object
       properties:
         clientOrg:
           $ref: '#/components/schemas/ClientOrgDto'
-        clientOrgAccount:
-          $ref: '#/components/schemas/ClientOrgAccountNumberDto'
-    AccountBalanceDto:
+        memberAccount:
+          $ref: '#/components/schemas/MemberFullAccountNumberDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+    PostMemberAccountTransferResponse:
       type: object
       properties:
         id:
           type: string
           format: uuid
-          description: UUID of the client organization's FBO account
-          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
-        name:
-          type: string
-          description: A name for this account
-          example: John's Bank of America XX-0435
-        availableAmount:
-          type: number
-          description: Available balance to spend for the account
-          example: 379
-        balanceAmount:
-          type: number
-          description: Settled transaction balance for the account
-          example: 379
-        lastFourAccountNumber:
-          type: string
-          description: The last four digits of the bank account number
-          example: 9118
-        routingNumber:
-          type: string
-          description: The account routing number (9 Digits, numeric)
-          example: 211070178
-        type:
+          description: Account Transfer Request Id
+          example: 5fb82b31-6a31-4866-bc93-a11a9e1df8d6
+      required:
+      - id
+    PatchMemberAccountStatusDto:
+      type: object
+      properties:
+        accountType:
           type: string
           description: Type of account
           example: HSA
-        accountQualifierType:
+        id:
           type: string
-          description: The purpose for this account
-          example: John Smith's tax-free health spend
-        verifiedDate:
-          type: string
-          format: date-time
-          description: Date when the account was verified
-          example: '2018-03-22'
-        verifiedIndicator:
-          type: boolean
-          description: Flag that represents the state of verification of an account
-          example: true
-        updateDate:
-          type: string
-          format: date-time
-          description: Last known date when the balance was last updated
-          example: '2018-03-22'
-    GetClientOrgBankAccountBalanceResponse:
+          format: uuid
+          description: UUID of the member account
+          example: 597bf428-3ee0-4a69-a303-dbacfaca5b37
+    MemberAccountTransferRequestData:
       type: object
       properties:
+        account:
+          $ref: '#/components/schemas/AccountDto'
         clientOrg:
           $ref: '#/components/schemas/ClientOrgDto'
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-        clientOrgBankAccounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/AccountBalanceDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        product:
+          $ref: '#/components/schemas/ProductDto'
+        memberBankAccount:
+          $ref: '#/components/schemas/MemberBankAccount'
+        accountTransfer:
+          $ref: '#/components/schemas/AccountTransferData'
+      required:
+      - account
+      - accountTransfer
+      - clientOrg
+      - member
+      - product
     ClientOrgAccountDetailsDto:
       type: object
       properties:
@@ -625,68 +566,45 @@ components:
           format: date-time
           description: Date when the record was last updated
           example: '2018-03-22'
-    GetClientOrgAccountsResponse:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        clientOrgAccounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClientOrgAccountDetailsDto'
-    BaseMember:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-      required:
-      - clientMemberId
-    GetMemberAccountNumberResponse:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        memberAccount:
-          $ref: '#/components/schemas/MemberFullAccountNumberDto'
-        member:
-          $ref: '#/components/schemas/BaseMember'
-    MemberFullAccountNumberDto:
-      type: object
-      properties:
-        accountNumber:
-          type: string
-          description: The bank account number
-          example: 0002109789118
-        name:
-          type: string
-          description: A name for this account
-          example: John's Bank of America XX-0435
-        effectiveDate:
-          type: string
-          format: date-time
-          description: Date when the account becomes effective for the member
-          example: '2024-10-10'
-        expirationDate:
-          type: string
-          format: date-time
-          description: Date when the account expires for the member
-          example: '2024-10-10'
-    GetMemberAccountBalanceResponse:
+    GetClientOrgBankAccountBalanceResponse:
       type: object
       properties:
         clientOrg:
           $ref: '#/components/schemas/ClientOrgDto'
           description: The name of the client organization
           example: Health_Plan_ABC_Division
-        member:
-          $ref: '#/components/schemas/BaseMember'
-          description: Object describing the member
-        memberAccounts:
+        clientOrgBankAccounts:
           type: array
           items:
-            $ref: '#/components/schemas/MemberAccountBalanceDto'
+            $ref: '#/components/schemas/AccountBalanceDto'
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    GetClientOrgAccountNumberResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        clientOrgAccount:
+          $ref: '#/components/schemas/ClientOrgAccountNumberDto'
+    ClientOrgAccountNumberDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: UUID of the client organization's FBO account
+          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+        accountNumber:
+          type: string
+          description: The bank account number
+          example: 0002109789118
     MemberAccountBalanceDto:
       type: object
       properties:
@@ -765,13 +683,22 @@ components:
           format: date-time
           description: Date when the next scheduled funding will occur for the account
           example: '2024-10-10'
-    Idempotency:
+    PatchMemberAccountRequest:
       type: object
       properties:
-        idempotencyKey:
-          type: string
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberProduct:
+          $ref: '#/components/schemas/BaseMemberProduct'
+        memberAccount:
+          $ref: '#/components/schemas/MemberAccountData'
+      required:
+      - clientOrg
+      - member
+      - memberAccount
+      - memberProduct
     BaseMemberProduct:
       type: object
       properties:
@@ -793,32 +720,6 @@ components:
       required:
       - data
       - idempotency
-    PatchAccountStatusMemberDto:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-        memberBankAccountId:
-          type: string
-          format: uuid
-          description: Unique identifier of the bank account
-          example: 6ae73974-2bd1-0f0d-7316-bbfff8cdc91b
-      required:
-      - clientMemberId
-    PatchMemberAccountStatusDto:
-      type: object
-      properties:
-        accountType:
-          type: string
-          description: Type of account
-          example: HSA
-        id:
-          type: string
-          format: uuid
-          description: UUID of the member account
-          example: 597bf428-3ee0-4a69-a303-dbacfaca5b37
     PatchUpdateMemberAccountStatusRequest:
       type: object
       properties:
@@ -857,36 +758,83 @@ components:
       - memberAccount
       - memberProduct
       - status
-    MemberAccountStatusDto:
+    GetMemberAccountBalanceResponse:
       type: object
       properties:
-        id:
-          type: string
-          description: UUID of the member account
-          example: 597bf428-3ee0-4a69-a303-dbacfaca5b37
-        type:
-          type: string
-          description: Type of account
-          example: HSA
-        status:
-          type: string
-          description: The status of this account
-          example: Account_Active
-        name:
-          type: string
-          description: A name for this account
-          example: John's Bank of America XX-0435
-    UpdateMemberAccountStatusResponse:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+        member:
+          $ref: '#/components/schemas/BaseMember'
+          description: Object describing the member
+        memberAccounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberAccountBalanceDto'
+    GetMemberAccountTransferResponse:
       type: object
       properties:
         clientOrg:
           $ref: '#/components/schemas/ClientOrgDto'
         member:
           $ref: '#/components/schemas/BaseMember'
-        memberAccounts:
+        accountTransfers:
           type: array
           items:
-            $ref: '#/components/schemas/MemberAccountStatusDto'
+            $ref: '#/components/schemas/AccountTransferRequestInfo'
+    ProductDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the product
+          example: HSA_01
+      required:
+      - name
+    MemberFullAccountNumberDto:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          description: The bank account number
+          example: 0002109789118
+        name:
+          type: string
+          description: A name for this account
+          example: John's Bank of America XX-0435
+        effectiveDate:
+          type: string
+          format: date-time
+          description: Date when the account becomes effective for the member
+          example: '2024-10-10'
+        expirationDate:
+          type: string
+          format: date-time
+          description: Date when the account expires for the member
+          example: '2024-10-10'
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
     AccountDto:
       type: object
       properties:
@@ -896,6 +844,44 @@ components:
           example: HSA
       required:
       - accountType
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+    GetClientOrgAccountsResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        clientOrgAccounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientOrgAccountDetailsDto'
+    MemberBankAccount:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: External bank account
+          example: Platypus bank
+      required:
+      - id
+    PostMemberAccountTransferRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/MemberAccountTransferRequestData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
     AccountTransferData:
       type: object
       properties:
@@ -979,42 +965,11 @@ components:
       - priorCustodianName
       - transferScope
       - transferType
-    MemberAccountTransferRequestData:
-      type: object
-      properties:
-        account:
-          $ref: '#/components/schemas/AccountDto'
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        product:
-          $ref: '#/components/schemas/ProductDto'
-        memberBankAccount:
-          $ref: '#/components/schemas/MemberBankAccount'
-        accountTransfer:
-          $ref: '#/components/schemas/AccountTransferData'
-      required:
-      - account
-      - accountTransfer
-      - clientOrg
-      - member
-      - product
-    MemberBankAccount:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: External bank account
-          example: Platypus bank
-      required:
-      - id
-    PostMemberAccountTransferRequest:
+    PatchMemberAccountRequestDoc:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/MemberAccountTransferRequestData'
+          $ref: '#/components/schemas/PatchMemberAccountRequest'
         idempotency:
           $ref: '#/components/schemas/Idempotency'
           description: Unique identifier that represents the operation
@@ -1022,16 +977,35 @@ components:
       required:
       - data
       - idempotency
-    ProductDto:
+    PatchAccountStatusMemberDto:
       type: object
       properties:
-        name:
+        clientMemberId:
           type: string
-          description: The name of the product
-          example: HSA_01
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        memberBankAccountId:
+          type: string
+          format: uuid
+          description: Unique identifier of the bank account
+          example: 6ae73974-2bd1-0f0d-7316-bbfff8cdc91b
       required:
-      - name
-    PostMemberAccountTransferResponse:
+      - clientMemberId
+    MemberAccountData:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Account Id
+          example: 5fb82b31-6a31-4866-bc93-a11a9e1df8d6
+        electionAmount:
+          type: number
+          description: Election Amount
+          example: 150
+      required:
+      - id
+    PatchMemberAccountResponse:
       type: object
       properties:
         id:
@@ -1041,6 +1015,15 @@ components:
           example: 5fb82b31-6a31-4866-bc93-a11a9e1df8d6
       required:
       - id
+    BaseMember:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
     AccountTransferRequestInfo:
       type: object
       properties:
@@ -1067,69 +1050,86 @@ components:
         memberAccountId:
           type: string
           format: uuid
-    GetMemberAccountTransferResponse:
+    AccountBalanceDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: UUID of the client organization's FBO account
+          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+        name:
+          type: string
+          description: A name for this account
+          example: John's Bank of America XX-0435
+        availableAmount:
+          type: number
+          description: Available balance to spend for the account
+          example: 379
+        balanceAmount:
+          type: number
+          description: Settled transaction balance for the account
+          example: 379
+        lastFourAccountNumber:
+          type: string
+          description: The last four digits of the bank account number
+          example: 9118
+        routingNumber:
+          type: string
+          description: The account routing number (9 Digits, numeric)
+          example: 211070178
+        type:
+          type: string
+          description: Type of account
+          example: HSA
+        accountQualifierType:
+          type: string
+          description: The purpose for this account
+          example: John Smith's tax-free health spend
+        verifiedDate:
+          type: string
+          format: date-time
+          description: Date when the account was verified
+          example: '2018-03-22'
+        verifiedIndicator:
+          type: boolean
+          description: Flag that represents the state of verification of an account
+          example: true
+        updateDate:
+          type: string
+          format: date-time
+          description: Last known date when the balance was last updated
+          example: '2018-03-22'
+    UpdateMemberAccountStatusResponse:
       type: object
       properties:
         clientOrg:
           $ref: '#/components/schemas/ClientOrgDto'
         member:
           $ref: '#/components/schemas/BaseMember'
-        accountTransfers:
+        memberAccounts:
           type: array
           items:
-            $ref: '#/components/schemas/AccountTransferRequestInfo'
-    MemberAccountData:
+            $ref: '#/components/schemas/MemberAccountStatusDto'
+    MemberAccountStatusDto:
       type: object
       properties:
         id:
           type: string
-          format: uuid
-          description: Account Id
-          example: 5fb82b31-6a31-4866-bc93-a11a9e1df8d6
-        electionAmount:
-          type: number
-          description: Election Amount
-          example: 150
-      required:
-      - id
-    PatchMemberAccountRequest:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        memberProduct:
-          $ref: '#/components/schemas/BaseMemberProduct'
-        memberAccount:
-          $ref: '#/components/schemas/MemberAccountData'
-      required:
-      - clientOrg
-      - member
-      - memberAccount
-      - memberProduct
-    PatchMemberAccountRequestDoc:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/PatchMemberAccountRequest'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    PatchMemberAccountResponse:
-      type: object
-      properties:
-        id:
+          description: UUID of the member account
+          example: 597bf428-3ee0-4a69-a303-dbacfaca5b37
+        type:
           type: string
-          format: uuid
-          description: Account Transfer Request Id
-          example: 5fb82b31-6a31-4866-bc93-a11a9e1df8d6
-      required:
-      - id
+          description: Type of account
+          example: HSA
+        status:
+          type: string
+          description: The status of this account
+          example: Account_Active
+        name:
+          type: string
+          description: A name for this account
+          example: John's Bank of America XX-0435
   securitySchemes:
     bearerAuth:
       type: http

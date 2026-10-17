@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: CLAIMS SERVICE API
-  description: <Insert page description with key 'api.service.desc' within application.properties>
+  title: SERVICE Claims API
+  description: ''
   termsOfService: http://lynx-fh.com
   license:
     name: LynxFH
@@ -11,17 +11,17 @@ servers:
 - url: https://sandbox.lynx-fh.co
 security:
 - bearerAuth: []
+tags:
+- name: Claims
 paths:
   /claims/member/claim:
     put:
       tags:
-      - ''
+      - Claims
       summary: Update a Claim
       description: 'API that allows a client to update certain elements of an already existing member claim.
 
-        Only claims in the Submitted, PendingReview or NeedsReview statuses are able to be updated.
-
-        '
+        Only claims in the Submitted, PendingReview or NeedsReview statuses are able to be updated.'
       operationId: updateClaim
       requestBody:
         content:
@@ -78,7 +78,7 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
     post:
       tags:
-      - ''
+      - Claims
       summary: Create a Claim
       description: Allows a member to submit a Claim refund request for an out-of-pocket expense.
       operationId: createClaim
@@ -149,11 +149,9 @@ paths:
   /claims/member/claim/detail:
     get:
       tags:
-      - ''
+      - Claims
       summary: Member Claims Detail
-      description: 'Retrieves details of a member claim for a given member
-
-        '
+      description: Retrieves details of a member claim for a given member
       operationId: memberClaimDetail
       parameters:
       - name: clientOrgName
@@ -201,11 +199,9 @@ paths:
   /claims/member/claim/list:
     get:
       tags:
-      - ''
+      - Claims
       summary: Member Claims List
-      description: 'Retrieves a list of all member claims for a given member
-
-        '
+      description: Retrieves a list of all member claims for a given member
       operationId: memberClaims
       parameters:
       - name: clientOrgName
@@ -271,138 +267,16 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
 components:
   schemas:
-    BaseMember:
+    MemberBankAccountDto:
       type: object
       properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-      required:
-      - clientMemberId
-    ClientOrgDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-      required:
-      - name
-    Idempotency:
-      type: object
-      properties:
-        idempotencyKey:
-          type: string
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-    MemberClaimUpdateDto:
-      type: object
-      properties:
-        itemDescription:
-          type: string
-          description: Description of the item or service. e.g. Tums, Teeth Cleaning
-          example: Tylenol
-        amount:
-          type: number
-          description: The cost of the individual item.
-          example: 10
         id:
           type: string
           format: uuid
-          description: ID of the existing item detail. Omit for new items.
-          example: 2efe0ba7-9e84-44d1-9c5a-d9cb2d64bbee
+          description: UUID of the Member's external bank account
+          example: 2aa614ba-5590-4c16-bdd0-3f03964ee274
       required:
-      - amount
-      - itemDescription
-    MemberClaimsData:
-      type: object
-      properties:
-        claimNumber:
-          type: string
-          description: The claim number
-          example: C-1234
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        claimAmount:
-          type: number
-          description: Total amount of the claim
-          example: 50
-        expenseDate:
-          type: string
-          description: Date of Expense
-          example: '2024-07-05'
-        merchantName:
-          type: string
-          description: Name of the merchant related to the claim
-          example: CVS Pharmacy, Boston MA
-        category:
-          type: string
-          description: The category for the Claim
-          enum:
-          - OverTheCounter
-          - Wellness
-          - HealthyFood
-          - RentPayment
-          - UtilityPayment
-          - MortgagePayment
-          - Other
-          - FitnessFacility
-          - FitnessClass
-          example: OverTheCounter
-        description:
-          type: string
-          description: The short description for the claim
-          example: Claim to reimburse the purchase of over the counter medicine
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberClaimUpdateDto'
-      required:
-      - category
-      - claimAmount
-      - claimNumber
-      - clientOrg
-      - description
-      - expenseDate
-      - member
-      - merchantName
-    PutMemberClaimRequest:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/MemberClaimsData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    ExceptionBaseResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          description: 'null'
-        exceptions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ResponseException'
-    ResponseException:
-      type: object
-      properties:
-        errorCode:
-          type: string
-          description: The GBL error code that is populated when the exceptionSource is SYSTEM
-        exceptionSource:
-          type: string
-          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
-        exceptionMessage:
-          type: string
-          description: Additional information about the exception
+      - id
     PersistClaimsResponse:
       type: object
       properties:
@@ -417,6 +291,115 @@ components:
       required:
       - claimNumber
       - clientMemberId
+    GetClaimsResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        memberClaims:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberClaimDetailInfo'
+    AiAdjudicationResultDTO:
+      type: object
+      properties:
+        aiValidAmount:
+          type: number
+          description: Amount that the AI partner validated for the submitted claimdence.
+          example: 10
+        aiDenyReason:
+          type: string
+          description: Reason for the denial. Null if not denied.
+          example: Silver AI did not recognize any eligible expenses on the receipt/invoice for this claim.
+        aiRecommendation:
+          type: string
+          description: The AI'd recommendation for the claim.
+          example: NeedsReview
+        confidence:
+          type: number
+        suggestion:
+          type: string
+        flags:
+          type: array
+          items:
+            type: string
+        merchant:
+          type: string
+        expenseDate:
+          type: string
+          format: date-time
+        claimAmount:
+          type: number
+        receiptTotal:
+          type: number
+        receiptMerchant:
+          type: string
+        receiptDate:
+          type: string
+          format: date-time
+    MemberClaimDetailInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The unique identifier of the claim
+          example: 40cd232c-4b42-469c-81d1-d04bf3e95b98
+        claimNumber:
+          type: string
+          description: The claim number
+          example: C-1234
+        memberAccount:
+          $ref: '#/components/schemas/MemberAccountIdDto'
+        reimbursementType:
+          type: string
+          description: ' Method of reimbursement (ACH or CHECK).'
+          example: ACH
+        status:
+          type: string
+          description: The status of the claim
+          example: NeedsReview
+        claimAmount:
+          type: number
+          description: Total amount of the claim
+          example: 50
+        approvedAmount:
+          type: number
+          description: The Approved Claim Amount
+          example: 50
+        expenseDate:
+          type: string
+          description: Date of Expense
+          example: '2024-07-05'
+        addDatetime:
+          type: string
+          description: Date and time of add
+          example: '2024-07-05'
+        aiRecommendation:
+          type: string
+          description: The AI'd recommendation for the claim.
+          example: NeedsReview
+        member:
+          $ref: '#/components/schemas/MemberDto'
+      required:
+      - addDatetime
+      - approvedAmount
+      - claimAmount
+      - claimNumber
+      - expenseDate
+      - id
+      - memberAccount
+      - reimbursementType
+      - status
+    ClientOrgDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
     BaseAddress:
       type: object
       properties:
@@ -454,6 +437,38 @@ components:
       - line1
       - postalCode
       - stateProvince
+    PostMemberClaimRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CreateClaimRequestData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
+    MemberAccountDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the bank account
+          example: 6ae73974-2bd1-0f0d-7316-bbfff8cdc91b
+        type:
+          type: string
+          description: Type of account
+          example: HSA
+        availableAmount:
+          type: number
+          description: Available balance to spend for the account
+          example: 50
+      required:
+      - availableAmount
+      - id
+      - type
     CreateClaimRequestData:
       type: object
       properties:
@@ -514,6 +529,94 @@ components:
       - member
       - memberAccount
       - reimbursementType
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    GetClaimDetailResponse:
+      type: object
+      properties:
+        memberClaim:
+          $ref: '#/components/schemas/MemberClaimDetailDto'
+    MemberClaimsData:
+      type: object
+      properties:
+        claimNumber:
+          type: string
+          description: The claim number
+          example: C-1234
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        claimAmount:
+          type: number
+          description: Total amount of the claim
+          example: 50
+        expenseDate:
+          type: string
+          description: Date of Expense
+          example: '2024-07-05'
+        merchantName:
+          type: string
+          description: Name of the merchant related to the claim
+          example: CVS Pharmacy, Boston MA
+        category:
+          type: string
+          description: The category for the Claim
+          enum:
+          - OverTheCounter
+          - Wellness
+          - HealthyFood
+          - RentPayment
+          - UtilityPayment
+          - MortgagePayment
+          - Other
+          - FitnessFacility
+          - FitnessClass
+          example: OverTheCounter
+        description:
+          type: string
+          description: The short description for the claim
+          example: Claim to reimburse the purchase of over the counter medicine
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberClaimUpdateDto'
+      required:
+      - category
+      - claimAmount
+      - claimNumber
+      - clientOrg
+      - description
+      - expenseDate
+      - member
+      - merchantName
+    Idempotency:
+      type: object
+      properties:
+        idempotencyKey:
+          type: string
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
     MemberAccountIdDto:
       type: object
       properties:
@@ -524,137 +627,6 @@ components:
           example: 6ae73974-2bd1-0f0d-7316-bbfff8cdc91b
       required:
       - id
-    MemberBankAccountDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: UUID of the Member's external bank account
-          example: 2aa614ba-5590-4c16-bdd0-3f03964ee274
-      required:
-      - id
-    MemberClaimItemDto:
-      type: object
-      properties:
-        itemDescription:
-          type: string
-          description: Description of the item or service. e.g. Tums, Teeth Cleaning
-          example: Tylenol
-        amount:
-          type: number
-          description: The cost of the individual item.
-          example: 10
-      required:
-      - amount
-      - itemDescription
-    PostMemberClaimRequest:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/CreateClaimRequestData'
-        idempotency:
-          $ref: '#/components/schemas/Idempotency'
-          description: Unique identifier that represents the operation
-          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
-      required:
-      - data
-      - idempotency
-    MemberDto:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-        firstName:
-          type: string
-          description: First name
-          example: John
-        lastName:
-          type: string
-          description: Last name
-          example: Smith
-      required:
-      - clientMemberId
-    AiAdjudicationResultDTO:
-      type: object
-      properties:
-        aiValidAmount:
-          type: number
-          description: Amount that the AI partner validated for the submitted claimdence.
-          example: 10
-        aiDenyReason:
-          type: string
-          description: Reason for the denial. Null if not denied.
-          example: Silver AI did not recognize any eligible expenses on the receipt/invoice for this claim.
-        aiRecommendation:
-          type: string
-          description: The AI'd recommendation for the claim.
-          example: NeedsReview
-        confidence:
-          type: number
-        suggestion:
-          type: string
-        flags:
-          type: array
-          items:
-            type: string
-        merchant:
-          type: string
-        expenseDate:
-          type: string
-          format: date-time
-        claimAmount:
-          type: number
-        receiptTotal:
-          type: number
-        receiptMerchant:
-          type: string
-        receiptDate:
-          type: string
-          format: date-time
-    ClaimDetailItem:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier of the claim detail record
-          example: 914f6a4b-2da0-4223-86c3-0ec2ffb86865
-        itemDescription:
-          type: string
-          description: Text description of the item or service
-          example: Tums
-        amount:
-          type: number
-          description: Amount for the individual item
-          example: 40
-    GetClaimDetailResponse:
-      type: object
-      properties:
-        memberClaim:
-          $ref: '#/components/schemas/MemberClaimDetailDto'
-    MemberAccountDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier of the bank account
-          example: 6ae73974-2bd1-0f0d-7316-bbfff8cdc91b
-        type:
-          type: string
-          description: Type of account
-          example: HSA
-        availableAmount:
-          type: number
-          description: Available balance to spend for the account
-          example: 50
-      required:
-      - availableAmount
-      - id
-      - type
     MemberClaimDetailDto:
       type: object
       properties:
@@ -742,6 +714,18 @@ components:
       - reimbursementType
       - status
       - statusReason
+    PutMemberClaimRequest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/MemberClaimsData'
+        idempotency:
+          $ref: '#/components/schemas/Idempotency'
+          description: Unique identifier that represents the operation
+          example: cf82639c-e3b6-4d51-9871-0e452a2b1566
+      required:
+      - data
+      - idempotency
     ReceiptDto:
       type: object
       properties:
@@ -756,69 +740,81 @@ components:
       required:
       - receiptId
       - receiptUrl
-    GetClaimsResponse:
+    MemberClaimItemDto:
       type: object
       properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        memberClaims:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberClaimDetailInfo'
-    MemberClaimDetailInfo:
+        itemDescription:
+          type: string
+          description: Description of the item or service. e.g. Tums, Teeth Cleaning
+          example: Tylenol
+        amount:
+          type: number
+          description: The cost of the individual item.
+          example: 10
+      required:
+      - amount
+      - itemDescription
+    MemberClaimUpdateDto:
+      type: object
+      properties:
+        itemDescription:
+          type: string
+          description: Description of the item or service. e.g. Tums, Teeth Cleaning
+          example: Tylenol
+        amount:
+          type: number
+          description: The cost of the individual item.
+          example: 10
+        id:
+          type: string
+          format: uuid
+          description: ID of the existing item detail. Omit for new items.
+          example: 2efe0ba7-9e84-44d1-9c5a-d9cb2d64bbee
+      required:
+      - amount
+      - itemDescription
+    BaseMember:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
+    ClaimDetailItem:
       type: object
       properties:
         id:
           type: string
           format: uuid
-          description: The unique identifier of the claim
-          example: 40cd232c-4b42-469c-81d1-d04bf3e95b98
-        claimNumber:
+          description: Unique identifier of the claim detail record
+          example: 914f6a4b-2da0-4223-86c3-0ec2ffb86865
+        itemDescription:
           type: string
-          description: The claim number
-          example: C-1234
-        memberAccount:
-          $ref: '#/components/schemas/MemberAccountIdDto'
-        reimbursementType:
-          type: string
-          description: ' Method of reimbursement (ACH or CHECK).'
-          example: ACH
-        status:
-          type: string
-          description: The status of the claim
-          example: NeedsReview
-        claimAmount:
+          description: Text description of the item or service
+          example: Tums
+        amount:
           type: number
-          description: Total amount of the claim
-          example: 50
-        approvedAmount:
-          type: number
-          description: The Approved Claim Amount
-          example: 50
-        expenseDate:
+          description: Amount for the individual item
+          example: 40
+    MemberDto:
+      type: object
+      properties:
+        clientMemberId:
           type: string
-          description: Date of Expense
-          example: '2024-07-05'
-        addDatetime:
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        firstName:
           type: string
-          description: Date and time of add
-          example: '2024-07-05'
-        aiRecommendation:
+          description: First name
+          example: John
+        lastName:
           type: string
-          description: The AI'd recommendation for the claim.
-          example: NeedsReview
-        member:
-          $ref: '#/components/schemas/MemberDto'
+          description: Last name
+          example: Smith
       required:
-      - addDatetime
-      - approvedAmount
-      - claimAmount
-      - claimNumber
-      - expenseDate
-      - id
-      - memberAccount
-      - reimbursementType
-      - status
+      - clientMemberId
   securitySchemes:
     bearerAuth:
       type: http

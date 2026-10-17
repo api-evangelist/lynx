@@ -1,7 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: TRANSACTION API
-  description: 'The clientorgcontribute API is used to contribute from a Client Org account to a member account on the Lynx-FH platform. The API initiates the transfer of the contribution amount from the Client Org account to the specific member account. '
+  title: Transactions API
+  description: The clientorgcontribute API is used to contribute from a Client Org account to a member account on the Lynx-FH platform. The API initiates the transfer of the contribution amount from the Client Org account to the specific member account.
   termsOfService: http://lynx-fh.com
   license:
     name: LynxFH
@@ -11,11 +11,13 @@ servers:
 - url: https://sandbox.lynx-fh.co
 security:
 - bearerAuth: []
+tags:
+- name: Transactions
 paths:
   /transactions/client/ach-pending:
     get:
       tags:
-      - ''
+      - Transactions
       summary: GET Pending ACH Activity
       description: This API will return a list of pending ACH transactions for a specific client org account.
       operationId: getPendingACHActivity
@@ -96,7 +98,7 @@ paths:
   /transactions/client/authorizations/list:
     get:
       tags:
-      - ''
+      - Transactions
       summary: Get All Member Authorization Summary by Client
       description: Retrieves a list of authorizations in the last seven days for all members in a client.
       operationId: getAllMemberAuthorizationsByClient
@@ -177,7 +179,7 @@ paths:
   /transactions/client/businessaccount/list:
     get:
       tags:
-      - ''
+      - Transactions
       summary: Get All Business Account Transactions
       description: This API will return a list of transactions for all business accounts associated to the client organization or a single business account.
       operationId: getClientOrgTransactions
@@ -348,7 +350,7 @@ paths:
   /transactions/client/list:
     get:
       tags:
-      - ''
+      - Transactions
       summary: Get All Member Transactions By Client
       description: Retrieves all member transactions for all members associated with a client.
       operationId: getAllMemberTransactionsByClient
@@ -582,7 +584,7 @@ paths:
   /transactions/member/authorizations/detail:
     get:
       tags:
-      - ''
+      - Transactions
       summary: Get Member Authorization Detail
       description: Retrieves detailed information for a member authorization
       operationId: getMemberAuthorizationsDetail
@@ -633,7 +635,7 @@ paths:
   /transactions/member/authorizations/list:
     get:
       tags:
-      - ''
+      - Transactions
       summary: Get Member Authorization Summary
       description: 'Retrieves a list of all authorizations for the member identified by the clientMemberId parameter. The retrieved authorization statuses include: ''Settled'', ''Pending'', ''Approve'', ''Declined'' and ''Canceled.'
       operationId: getMemberAuthorizationSummary
@@ -758,7 +760,7 @@ paths:
   /transactions/member/contribution-limit:
     get:
       tags:
-      - ''
+      - Transactions
       summary: Get Contribution Limit
       description: Retrieves contribution limit of a specific member for the incoming clientMemberId, clientOrgName, productName and taxYear.The contribution limit depends upon a number of factors, including the health coverage type (Individual vs. Family), the tax year, age of the individual (over or under 55). Given a member, this API computes and returns the limit.
       operationId: getMemberContributionLimit
@@ -816,7 +818,7 @@ paths:
   /transactions/member/contribution-requests/detail:
     get:
       tags:
-      - ''
+      - Transactions
       summary: Get Member Contribution Request Detail
       description: Retrieves detailed information for a member contribution request
       operationId: getMemberContributionDetail
@@ -867,7 +869,7 @@ paths:
   /transactions/member/contribution-requests/list:
     get:
       tags:
-      - ''
+      - Transactions
       summary: Get Member Contribution Request Summary
       description: Retrieves a list of all contribution requests where funds were requested to be pulled from a member’s external bank account
       operationId: getMemberContributionRequestSummary
@@ -1005,7 +1007,7 @@ paths:
   /transactions/member/list:
     get:
       tags:
-      - ''
+      - Transactions
       summary: Get Member Transactions
       description: Retrieves all transactions that are associated to the member.
       operationId: getMemberTransactions
@@ -1198,7 +1200,7 @@ paths:
   /transactions/member/transactions/detail:
     get:
       tags:
-      - ''
+      - Transactions
       summary: Get Member Transaction Detail
       description: Retrieves detailed information for a member transaction.
       operationId: getMemberTransactionDetail
@@ -1249,7 +1251,7 @@ paths:
   /transactions/member/transactions/list:
     get:
       tags:
-      - ''
+      - Transactions
       summary: Get Member Transaction Summary
       description: Retrieves all transactions that are associated to the member.
       operationId: getMemberTransactionsSummary
@@ -1459,7 +1461,7 @@ paths:
   /transactions/member/v2/item-level-detail:
     get:
       tags:
-      - ''
+      - Transactions
       summary: Get Member Transaction Item Level Detail
       description: Retrieves item level detail for a specific member transaction or member authorization
       operationId: getCardActivities
@@ -1519,37 +1521,195 @@ paths:
                 $ref: '#/components/schemas/ExceptionBaseResponse'
 components:
   schemas:
-    ExceptionBaseResponse:
+    CardActivityDoc:
       type: object
       properties:
-        data:
-          type: object
-          description: 'null'
-        exceptions:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        memberTransaction:
+          $ref: '#/components/schemas/CardActivityDto'
+      required:
+      - clientOrg
+      - member
+    MemberTransactionFullDetailDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Internal unique identifier for the monetary transaction
+        transactionDate:
+          type: string
+          format: date-time
+          description: Date of service that triggered this transaction
+        authorizationDate:
+          type: string
+          format: date-time
+          description: Date and time the transaction occurred
+        settlementDate:
+          type: string
+          format: date-time
+          description: Date and time the transaction posted
+        direction:
+          type: string
+          description: Debit vs. Credit
+        amount:
+          type: number
+          description: Dollar amount of the settled transaction
+        localAmount:
+          type: number
+          description: The actual dollar amount of the transaction. The local amount may differ from amount when there are ineligible items purchased or a split purse transaction.
+        authorizationAmount:
+          type: number
+          description: Dollar amount of the authorization
+        status:
+          type: string
+          description: Status of this transaction
+        statusReason:
+          type: string
+          description: The reason for a particular status
+        partnerPurseNumber:
+          type: integer
+          format: int32
+          description: An internal number assigned to each of the purses that an account can have
+        merchant:
+          $ref: '#/components/schemas/MerchantDetailDTO'
+        memberCard:
+          $ref: '#/components/schemas/MemberCardDetailDTO'
+        memberAccount:
+          $ref: '#/components/schemas/MemberAccountTransactionsDto'
+        referenceIdentifier:
+          type: string
+          description: Transaction reference identifier
+        bankConfirmationId:
+          type: string
+          description: Confirmation id from bank
+        category:
+          type: string
+          description: 'Describes the transaction category. Possible values are: CONTRIBUTION, DISBURSEMENT, REDEMPTION, TRANSFER, DEPOSIT, WITHDRAWAL, CORPORATE_ACTION, CARD, ADJUSTMENT, RETURN, FEE, and MEMBER_FEE_REVENUE'
+        type:
+          type: string
+          description: Additional transaction type. Some possible values are listed below; to view the full list refer to the documentation. ClaimReimbursement, ClientOrgContribution, Credit, Debit, Dispute, EcommerceBuy, EcommerceRefund, Forfeiture, Incentive, InvestmentBuy, InvestmentSell, Manual, MemberAccountClosed, MemberContribution, MemberPurchase
+        shortMemo:
+          type: string
+          description: 10 character memo associated to the transaction
+        longMemo:
+          type: string
+          description: 100 character memo associated to the transaction
+        serviceDate:
+          type: string
+          format: date-time
+          description: Date of service that triggered this transaction
+        counterpartyAccount:
+          $ref: '#/components/schemas/CounterpartyAccountDto'
+        dispute:
+          $ref: '#/components/schemas/MemberTransactionDisputeDTO'
+        transactionLedger:
+          $ref: '#/components/schemas/TransactionLedgerIdDto'
+        incentiveValue:
+          type: number
+          description: Virtual currency balance of the incentive account based on the incentive ratio
+        clientTransactionIdentifier:
+          type: string
+          description: Unique client-defined identifier for the transaction
+        correctionIndicator:
+          type: boolean
+          description: Indicates whether the transaction is a correction
+        tags:
           type: array
           items:
-            $ref: '#/components/schemas/ResponseException'
-    ResponseException:
+            $ref: '#/components/schemas/TagDto'
+        bankPaymentId:
+          type: string
+          description: Unique card processor identifier for the transaction that is human readable
+        transactionTypeDescription:
+          type: string
+          description: Transaction type description
+        sourceDescription:
+          type: string
+          description: Description of the source of the transaction
+        authorizationCode:
+          type: string
+          description: The system-generated authorization code that is given at the time of purchase
+        authorizationReversalIndicator:
+          type: boolean
+          description: Indicates whether the authorization has been reversed
+        cardPresentIndicator:
+          type: boolean
+          description: Indicates whether the card was present for the transaction
+        acquirerReferenceNumber:
+          type: string
+          description: A reference number assigned by the Acquirer maintaining the original source information for a transaction. This number is used to assist in locating/retrieving source information or documents
+        spendCategory:
+          type: string
+          description: IIAS or Filtered Spend Category with the amount
+        filterType:
+          type: string
+          description: Type of filter on a transaction with a Spend Category
+        partnerTransactionId:
+          type: string
+          format: uuid
+          description: Card processor uuid for the transaction
+        requestCode:
+          type: integer
+          format: int32
+          description: Unique card processor identifier for the type of monetary transaction
+        requestName:
+          type: string
+          description: Card processor description for the type of monetary transaction
+        taxYear:
+          type: string
+          description: Tax year to which a contribution or limit applies
+        reasonCode:
+          type: string
+          description: Reason code generated by the authorization system when the transaction fails
+        reasonCodeDescription:
+          type: string
+          description: Reason for a failed transaction
+        responseCode:
+          type: string
+          description: Description of the response to the authorization request
+        responseCodeDescription:
+          type: string
+          description: Description of the response to the authorization request
+        partnerLogId:
+          type: string
+          description: Transaction Log ID
+        partnerMatchTypeCode:
+          type: string
+          description: Code for the authorization and settlement match outcome
+        partnerMatchTypeName:
+          type: string
+          description: Authorization and settlement match outcome description
+        creationDate:
+          type: string
+          format: date-time
+          description: Date when the record was created
+        updateDate:
+          type: string
+          format: date-time
+          description: Date when the record was last updated
+    MemberAccountDTO:
       type: object
       properties:
-        errorCode:
+        accountName:
           type: string
-          description: The GBL error code that is populated when the exceptionSource is SYSTEM
-        exceptionSource:
+          description: A name for this account
+          example: John's Bank of America XX-0435
+        accountType:
           type: string
-          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
-        exceptionMessage:
+          description: Type of account
+          example: HSA
+        productName:
           type: string
-          description: Additional information about the exception
-    BaseMember:
-      type: object
-      properties:
-        clientMemberId:
+          description: The name of the product
+          example: HSA_01
+        lastFourAccountNumber:
           type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-      required:
-      - clientMemberId
+          description: The last four digits of the bank account number
+          example: 9118
     ClientOrgDto:
       type: object
       properties:
@@ -1559,36 +1719,6 @@ components:
           example: Health_Plan_ABC_Division
       required:
       - name
-    GetContributionLimitResponse:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        productName:
-          type: string
-        category:
-          type: string
-        contributionLimit:
-          type: string
-        contributionTotal:
-          type: string
-    CounterpartyAccountDto:
-      type: object
-      properties:
-        accountName:
-          type: string
-          description: A name for this account
-          example: John's Bank of America XX-0435
-        routingNumber:
-          type: string
-          description: The account routing number (9 Digits, numeric)
-          example: 211070178
-        lastFourAccountNumber:
-          type: string
-          description: The last four digits of the bank account number
-          example: 9118
     MemberAccountTransactionsDto:
       type: object
       properties:
@@ -1608,43 +1738,457 @@ components:
           type: string
           description: The last four digits of the bank account number
           example: 9118
-    MemberTransactionDisputeDTO:
-      type: object
-      properties:
-        indicator:
-          type: boolean
-          description: Indicates whether the transaction has been disputed
-        state:
-          type: string
-          description: State of the dispute in the Claim Queue flow
-        status:
-          type: string
-          description: Additional detail for the dispute state in the Claim process
-        reason:
-          type: string
-          description: Reason of the dispute
-    TagDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Constant used to define the metadata within a key-value pair
-        value:
-          type: string
-          description: Variable belonging to the metadata within a key-value pair
-        type:
-          type: string
-          description: Additional client-defined qualifier that may be used to further classify the key-value pair
-      required:
-      - name
-      - value
-    TransactionLedgerIdDto:
+    ClientOrgAccountIdDto:
       type: object
       properties:
         id:
           type: string
           format: uuid
-          description: Unique identifier for the ledger transaction
+          description: UUID of the client organization's FBO account
+          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+      required:
+      - id
+    MemberAuthorizationDetailResponse:
+      type: object
+      properties:
+        member:
+          $ref: '#/components/schemas/MemberDTO'
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDTO'
+        memberAuthorization:
+          $ref: '#/components/schemas/MemberAuthorizationDetailDTO'
+      required:
+      - clientOrg
+      - member
+      - memberAuthorization
+    MerchantDetailDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of merchant accepting the original transaction
+          example: MTA VENDING MACHINES
+        mcc:
+          type: integer
+          format: int32
+          description: Code representing the merchant's line of business
+          example: 5411
+        id:
+          type: string
+          description: Merchant ID number
+        originalMerchantId:
+          type: string
+          description: Merchant ID Number as received in the authorization message
+    ClientOrgTransactionDto:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Dollar transaction amount. Either amount or incentiveValue is required.
+          example: 782.34
+        category:
+          type: string
+          description: 'Describes the transaction category. Possible values are: CONTRIBUTION, DISBURSEMENT, REDEMPTION, TRANSFER, DEPOSIT, WITHDRAWAL, CORPORATE_ACTION, CARD, ADJUSTMENT, RETURN, FEE, and MEMBER_FEE_REVENUE'
+          example: CONTRIBUTION
+        direction:
+          type: string
+          description: Debit vs. Credit
+          example: Debit
+        shortMemo:
+          type: string
+          description: 10 character memo
+          example: March19
+        longMemo:
+          type: string
+          description: Long descriptions Max 100 characters
+          example: John Smith's monthly contribution
+        referenceIdentifier:
+          type: string
+          description: Transaction reference identifier
+          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
+        serviceDate:
+          type: string
+          format: date-time
+          description: Date of service that triggered this transaction
+          example: '2022-03-21'
+        status:
+          type: string
+          description: Status of this transaction
+          example: Settled
+        statusReason:
+          type: string
+          description: The reason for a particular status
+          example: HSA rejected due to lack of documentation
+        type:
+          type: string
+          description: Additional transaction type. Some possible values are listed below; to view the full list refer to the documentation. MemberContribution, ClientOrgContribution, Incentive, Payroll, Cashback, Refund, Reimbursement, MemberPurchase, TransferPointsToDollars, MemberTransfer, Closed, ReceivedAchTransaction, ReceivedWireTransaction.
+          example: MemberPurchase
+        creationDate:
+          type: string
+          format: date-time
+          description: Date when the record was created
+          example: '2018-03-22'
+        updateDate:
+          type: string
+          format: date-time
+          description: Date when the record was last updated
+          example: '2018-03-22'
+        member:
+          $ref: '#/components/schemas/MemberDto'
+        counterpartyAccount:
+          $ref: '#/components/schemas/CounterpartyAccountDto'
+        clientOrgAccount:
+          $ref: '#/components/schemas/ClientOrgAccountDto'
+        transactionLedger:
+          $ref: '#/components/schemas/TransactionLedgerIdDto'
+    MemberContributionDetailResponseDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Internal unique identifier for the monetary transaction
+        contributionDate:
+          type: string
+          format: date
+          description: Date on which this contribution applies
+        direction:
+          type: string
+          description: Debit vs. Credit
+          example: Debit
+        amount:
+          type: number
+          description: Dollar amount of the contribution request.
+        status:
+          type: string
+          description: Status of this transaction
+          example: Settled
+        statusReason:
+          type: string
+          description: The reason for a particular status
+          example: HSA rejected due to lack of documentation
+        memberAccount:
+          $ref: '#/components/schemas/MemberAccountDTO'
+        referenceIdentifier:
+          type: string
+          description: Transaction reference identifier
+          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
+        category:
+          type: string
+          description: 'Describes the transaction category. Possible values are: CONTRIBUTION, DISBURSEMENT, REDEMPTION, TRANSFER, DEPOSIT, WITHDRAWAL, CORPORATE_ACTION, CARD, ADJUSTMENT, RETURN, FEE, and MEMBER_FEE_REVENUE'
+          example: CONTRIBUTION
+        type:
+          type: string
+          description: Additional transaction type. Some possible values are listed below; to view the full list refer to the documentation. MemberContribution, ClientOrgContribution, Incentive, Payroll, Cashback, Refund, Reimbursement, MemberPurchase, TransferPointsToDollars, MemberTransfer, Closed, ReceivedAchTransaction, ReceivedWireTransaction.
+          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
+        shortMemo:
+          type: string
+          description: 10 character memo associated to the transaction
+          example: March19
+        longMemo:
+          type: string
+          description: 100 character memo associated to the transaction
+        counterpartyAccount:
+          $ref: '#/components/schemas/MemberBankAccountDTO'
+        correctionIndicator:
+          type: boolean
+          description: Indicates whether the transaction is a correction
+          example: true
+        taxYear:
+          type: string
+          description: Tax year to which a contribution or limit applies
+          example: '2024'
+        creationDate:
+          type: string
+          format: date-time
+          description: Date when the record was created
+          example: '2024-10-10'
+    MemberContributionRequestDetailResponse:
+      type: object
+      properties:
+        member:
+          $ref: '#/components/schemas/MemberDTO'
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDTO'
+        memberContributionRequest:
+          $ref: '#/components/schemas/MemberContributionDetailResponseDTO'
+      required:
+      - clientOrg
+      - member
+      - memberContributionRequest
+    GetAllMemberTransactionsByClientResponseDoc:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        memberTransactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberTransactionByClientDto'
+    GetClientOrgTransactionsResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        clientOrgTransactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientOrgTransactionDto'
+    MemberTransactionByClientDto:
+      type: object
+      properties:
+        referenceIdentifier:
+          type: string
+          description: Transaction reference identifier
+          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
+        bankConfirmationId:
+          type: string
+          description: Confirmation id from bank
+          example: 32193678
+        category:
+          type: string
+          description: 'Describes the transaction category. Possible values are: CONTRIBUTION, DISBURSEMENT, REDEMPTION, TRANSFER, DEPOSIT, WITHDRAWAL, CORPORATE_ACTION, CARD, ADJUSTMENT, RETURN, FEE, and MEMBER_FEE_REVENUE'
+          example: CONTRIBUTION
+        type:
+          type: string
+          description: Additional transaction type. Some possible values are listed below; to view the full list refer to the documentation. MemberContribution, ClientOrgContribution, Incentive, Payroll, Cashback, Refund, Reimbursement, MemberPurchase, TransferPointsToDollars, MemberTransfer, Closed, ReceivedAchTransaction, ReceivedWireTransaction.
+          example: MemberPurchase
+        direction:
+          type: string
+          description: Debit vs. Credit
+          example: Debit
+        status:
+          type: string
+          description: Status of this transaction
+          example: Settled
+        statusReason:
+          type: string
+          description: The reason for a particular status
+          example: HSA rejected due to lack of documentation
+        shortMemo:
+          type: string
+          description: 10 character memo
+          example: March19
+        longMemo:
+          type: string
+          description: Long descriptions Max 100 characters
+          example: John Smith's monthly contribution
+        amount:
+          type: number
+          description: Dollar transaction amount. Either amount or incentiveValue is required.
+          example: 782.34
+        serviceDate:
+          type: string
+          format: date-time
+          description: Date of service that triggered this transaction
+          example: '2022-03-21'
+        member:
+          $ref: '#/components/schemas/MemberDto'
+        counterpartyAccount:
+          $ref: '#/components/schemas/CounterpartyAccountDto'
+        memberAccount:
+          $ref: '#/components/schemas/MemberAccountTransactionsDto'
+        id:
+          type: string
+          format: uuid
+          description: Internal unique identifier for the monetary transaction
+          example: cf82639c-e3b6-4d51-9871-1e452a2a0001
+        creationDate:
+          type: string
+          format: date-time
+          description: Date when the record was created
+          example: '2018-03-22'
+        updateDate:
+          type: string
+          format: date-time
+          description: Date when the record was last updated
+          example: '2018-03-22'
+        transactionLedger:
+          $ref: '#/components/schemas/TransactionLedgerIdDto'
+        incentiveValue:
+          type: number
+          description: Virtual currency balance of the incentive account based on the incentive ratio
+          example: 379
+        clientTransactionIdentifier:
+          type: string
+          description: Unique client-defined identifier for the transaction
+          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
+        correctionIndicator:
+          type: boolean
+          description: Indicates whether the transaction is a correction
+          example: true
+        partnerTransactionId:
+          type: string
+          format: uuid
+          description: Card processor uuid for the transaction
+          example: B8242D17-2FF6-4926-A579-4617EB7D77F9
+        requestCode:
+          type: integer
+          format: int32
+          description: Unique card processor identifier for the type of monetary transaction
+          example: 94200
+        requestName:
+          type: string
+          description: Card processor description for the type of monetary transaction
+          example: PURCHASE
+        taxYear:
+          type: string
+          description: Tax year to which a contribution or limit applies
+          example: '2024'
+        transactionDate:
+          type: string
+          format: date
+          description: Date of service that triggered this transaction
+          example: '2018-03-22'
+        bankPaymentId:
+          type: string
+          description: Unique card processor identifier for the transaction that is human readable
+          example: CC0014DA1E02
+        spendCategory:
+          type: string
+          description: IIAS or Filtered Spend Category with the amount
+          example: 5A-67.00
+        filterType:
+          type: string
+          description: Type of filter on a transaction with a Spend Category
+          example: Item Level
+        settlementDate:
+          type: string
+          format: date-time
+          description: Date and time the transaction posted
+          example: '2018-03-22'
+        authorizationDate:
+          type: string
+          format: date-time
+          description: Date and time the transaction occurred
+          example: '2018-03-22'
+        sourceDescription:
+          type: string
+          description: Description of the source of the transaction
+          example: MasterCard debit transactions
+        transactionTypeDescription:
+          type: string
+          description: Transaction type description
+          example: Purchase Approved NotSettled
+        authorizationCode:
+          type: string
+          description: The system-generated authorization code that is given at the time of purchase
+          example: 784026
+        authorizationReversalIndicator:
+          type: boolean
+          description: Indicates whether the authorization has been reversed
+          example: false
+        cardPresentIndicator:
+          type: boolean
+          description: Indicates whether the card was present for the transaction
+          example: false
+        acquirerReferenceNumber:
+          type: string
+          description: A reference number assigned by the Acquirer maintaining the original source information for a transaction. This number is used to assist in locating/retrieving source information or documents
+          example: 5.554650334528689e+22
+        idType:
+          type: string
+          description: Unique identifier
+          example: cf82639c-e3b6-4d51-9871-1e452a2a0001
+        reasonCode:
+          type: string
+          description: Reason code generated by the authorization system when the transaction fails
+          example: 79
+        reasonCodeDescription:
+          type: string
+          description: 'Reason for a failed transaction '
+          example: lorem
+        responseCode:
+          type: string
+          description: Code for the response to the authorization request
+          example: 0
+        responseCodeDescription:
+          type: string
+          description: Description of the response to the authorization request
+          example: OK
+        merchant:
+          $ref: '#/components/schemas/MerchantDTO'
+        dispute:
+          $ref: '#/components/schemas/MemberTransactionDisputeDTO'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/TagDto'
+      required:
+      - creationDate
+      - updateDate
+    ResponseException:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: The GBL error code that is populated when the exceptionSource is SYSTEM
+        exceptionSource:
+          type: string
+          description: Characterizes the type of exception (JSON, SYSTEM, PARAMETER)
+        exceptionMessage:
+          type: string
+          description: Additional information about the exception
+    ExceptionBaseResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          description: 'null'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseException'
+    ClientMemberDTO:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        firstName:
+          type: string
+          description: First name
+        lastName:
+          type: string
+          description: Last name
+      required:
+      - clientMemberId
+    ProductNameDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the product
+          example: HSA_01
+      required:
+      - name
+    MemberCardDTO:
+      type: object
+      properties:
+        cardProxy:
+          type: string
+          description: Proxy id of the card
+          example: 5263218885395
+        cardLastFour:
+          type: string
+          description: Last four digits of the card number
+          example: 4434
+    GetContributionLimitResponse:
+      type: object
+      properties:
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDto'
+        member:
+          $ref: '#/components/schemas/BaseMember'
+        productName:
+          type: string
+        category:
+          type: string
+        contributionLimit:
+          type: string
+        contributionTotal:
+          type: string
     GetMemberTransactionsResponseDoc:
       type: object
       properties:
@@ -1835,466 +2379,80 @@ components:
           example: OK
       required:
       - updateDate
-    MerchantDTO:
+    MemberAuthorizationSummaryResponse:
       type: object
       properties:
-        id:
-          type: string
-        name:
-          type: string
-        city:
-          type: string
-        stateProvince:
-          type: string
-        mcc:
-          type: integer
-          format: int32
-    GetAllMemberTransactionsByClientResponseDoc:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        memberTransactions:
-          type: array
-          items:
-            $ref: '#/components/schemas/MemberTransactionByClientDto'
-    MemberDto:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-        firstName:
-          type: string
-          description: First name
-          example: John
-        lastName:
-          type: string
-          description: Last name
-          example: Smith
-      required:
-      - clientMemberId
-    MemberTransactionByClientDto:
-      type: object
-      properties:
-        referenceIdentifier:
-          type: string
-          description: Transaction reference identifier
-          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
-        bankConfirmationId:
-          type: string
-          description: Confirmation id from bank
-          example: 32193678
-        category:
-          type: string
-          description: 'Describes the transaction category. Possible values are: CONTRIBUTION, DISBURSEMENT, REDEMPTION, TRANSFER, DEPOSIT, WITHDRAWAL, CORPORATE_ACTION, CARD, ADJUSTMENT, RETURN, FEE, and MEMBER_FEE_REVENUE'
-          example: CONTRIBUTION
-        type:
-          type: string
-          description: Additional transaction type. Some possible values are listed below; to view the full list refer to the documentation. MemberContribution, ClientOrgContribution, Incentive, Payroll, Cashback, Refund, Reimbursement, MemberPurchase, TransferPointsToDollars, MemberTransfer, Closed, ReceivedAchTransaction, ReceivedWireTransaction.
-          example: MemberPurchase
-        direction:
-          type: string
-          description: Debit vs. Credit
-          example: Debit
-        status:
-          type: string
-          description: Status of this transaction
-          example: Settled
-        statusReason:
-          type: string
-          description: The reason for a particular status
-          example: HSA rejected due to lack of documentation
-        shortMemo:
-          type: string
-          description: 10 character memo
-          example: March19
-        longMemo:
-          type: string
-          description: Long descriptions Max 100 characters
-          example: John Smith's monthly contribution
-        amount:
-          type: number
-          description: Dollar transaction amount. Either amount or incentiveValue is required.
-          example: 782.34
-        serviceDate:
-          type: string
-          format: date-time
-          description: Date of service that triggered this transaction
-          example: '2022-03-21'
         member:
-          $ref: '#/components/schemas/MemberDto'
-        counterpartyAccount:
-          $ref: '#/components/schemas/CounterpartyAccountDto'
-        memberAccount:
-          $ref: '#/components/schemas/MemberAccountTransactionsDto'
-        id:
-          type: string
-          format: uuid
-          description: Internal unique identifier for the monetary transaction
-          example: cf82639c-e3b6-4d51-9871-1e452a2a0001
-        creationDate:
-          type: string
-          format: date-time
-          description: Date when the record was created
-          example: '2018-03-22'
-        updateDate:
-          type: string
-          format: date-time
-          description: Date when the record was last updated
-          example: '2018-03-22'
-        transactionLedger:
-          $ref: '#/components/schemas/TransactionLedgerIdDto'
-        incentiveValue:
-          type: number
-          description: Virtual currency balance of the incentive account based on the incentive ratio
-          example: 379
-        clientTransactionIdentifier:
-          type: string
-          description: Unique client-defined identifier for the transaction
-          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
-        correctionIndicator:
-          type: boolean
-          description: Indicates whether the transaction is a correction
-          example: true
-        partnerTransactionId:
-          type: string
-          format: uuid
-          description: Card processor uuid for the transaction
-          example: B8242D17-2FF6-4926-A579-4617EB7D77F9
-        requestCode:
-          type: integer
-          format: int32
-          description: Unique card processor identifier for the type of monetary transaction
-          example: 94200
-        requestName:
-          type: string
-          description: Card processor description for the type of monetary transaction
-          example: PURCHASE
-        taxYear:
-          type: string
-          description: Tax year to which a contribution or limit applies
-          example: '2024'
-        transactionDate:
-          type: string
-          format: date
-          description: Date of service that triggered this transaction
-          example: '2018-03-22'
-        bankPaymentId:
-          type: string
-          description: Unique card processor identifier for the transaction that is human readable
-          example: CC0014DA1E02
-        spendCategory:
-          type: string
-          description: IIAS or Filtered Spend Category with the amount
-          example: 5A-67.00
-        filterType:
-          type: string
-          description: Type of filter on a transaction with a Spend Category
-          example: Item Level
-        settlementDate:
-          type: string
-          format: date-time
-          description: Date and time the transaction posted
-          example: '2018-03-22'
-        authorizationDate:
-          type: string
-          format: date-time
-          description: Date and time the transaction occurred
-          example: '2018-03-22'
-        sourceDescription:
-          type: string
-          description: Description of the source of the transaction
-          example: MasterCard debit transactions
-        transactionTypeDescription:
-          type: string
-          description: Transaction type description
-          example: Purchase Approved NotSettled
-        authorizationCode:
-          type: string
-          description: The system-generated authorization code that is given at the time of purchase
-          example: 784026
-        authorizationReversalIndicator:
-          type: boolean
-          description: Indicates whether the authorization has been reversed
-          example: false
-        cardPresentIndicator:
-          type: boolean
-          description: Indicates whether the card was present for the transaction
-          example: false
-        acquirerReferenceNumber:
-          type: string
-          description: A reference number assigned by the Acquirer maintaining the original source information for a transaction. This number is used to assist in locating/retrieving source information or documents
-          example: 5.554650334528689e+22
-        idType:
-          type: string
-          description: Unique identifier
-          example: cf82639c-e3b6-4d51-9871-1e452a2a0001
-        reasonCode:
-          type: string
-          description: Reason code generated by the authorization system when the transaction fails
-          example: 79
-        reasonCodeDescription:
-          type: string
-          description: 'Reason for a failed transaction '
-          example: lorem
-        responseCode:
-          type: string
-          description: Code for the response to the authorization request
-          example: 0
-        responseCodeDescription:
-          type: string
-          description: Description of the response to the authorization request
-          example: OK
-        merchant:
-          $ref: '#/components/schemas/MerchantDTO'
-        dispute:
-          $ref: '#/components/schemas/MemberTransactionDisputeDTO'
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/TagDto'
-      required:
-      - creationDate
-      - updateDate
-    ClientOrgAccountDto:
-      type: object
-      properties:
-        id:
-          type: string
-          description: UUID of the client organization's FBO account
-          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
-        accountType:
-          type: string
-          description: Type of account
-          example: HSA
-        productName:
-          type: string
-          description: The name of the product
-          example: HSA_01
-        lastFourAccountNumber:
-          type: string
-          description: '9118'
-          example: The last four digits of the bank account number
-        accountQualifierType:
-          type: string
-          description: The purpose for this account
-          example: John Smith's tax-free health spend
-      required:
-      - lastFourAccountNumber
-    ClientOrgTransactionDto:
-      type: object
-      properties:
-        amount:
-          type: number
-          description: Dollar transaction amount. Either amount or incentiveValue is required.
-          example: 782.34
-        category:
-          type: string
-          description: 'Describes the transaction category. Possible values are: CONTRIBUTION, DISBURSEMENT, REDEMPTION, TRANSFER, DEPOSIT, WITHDRAWAL, CORPORATE_ACTION, CARD, ADJUSTMENT, RETURN, FEE, and MEMBER_FEE_REVENUE'
-          example: CONTRIBUTION
-        direction:
-          type: string
-          description: Debit vs. Credit
-          example: Debit
-        shortMemo:
-          type: string
-          description: 10 character memo
-          example: March19
-        longMemo:
-          type: string
-          description: Long descriptions Max 100 characters
-          example: John Smith's monthly contribution
-        referenceIdentifier:
-          type: string
-          description: Transaction reference identifier
-          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
-        serviceDate:
-          type: string
-          format: date-time
-          description: Date of service that triggered this transaction
-          example: '2022-03-21'
-        status:
-          type: string
-          description: Status of this transaction
-          example: Settled
-        statusReason:
-          type: string
-          description: The reason for a particular status
-          example: HSA rejected due to lack of documentation
-        type:
-          type: string
-          description: Additional transaction type. Some possible values are listed below; to view the full list refer to the documentation. MemberContribution, ClientOrgContribution, Incentive, Payroll, Cashback, Refund, Reimbursement, MemberPurchase, TransferPointsToDollars, MemberTransfer, Closed, ReceivedAchTransaction, ReceivedWireTransaction.
-          example: MemberPurchase
-        creationDate:
-          type: string
-          format: date-time
-          description: Date when the record was created
-          example: '2018-03-22'
-        updateDate:
-          type: string
-          format: date-time
-          description: Date when the record was last updated
-          example: '2018-03-22'
-        member:
-          $ref: '#/components/schemas/MemberDto'
-        counterpartyAccount:
-          $ref: '#/components/schemas/CounterpartyAccountDto'
-        clientOrgAccount:
-          $ref: '#/components/schemas/ClientOrgAccountDto'
-        transactionLedger:
-          $ref: '#/components/schemas/TransactionLedgerIdDto'
-    GetClientOrgTransactionsResponse:
-      type: object
-      properties:
+          $ref: '#/components/schemas/MemberDTO'
         clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        clientOrgTransactions:
+          $ref: '#/components/schemas/ClientOrgDTO'
+        memberAuthorizations:
           type: array
           items:
-            $ref: '#/components/schemas/ClientOrgTransactionDto'
-    ACHActivityDoc:
-      type: object
-      properties:
-        clientOrgBankAccount:
-          $ref: '#/components/schemas/ExternalBankAccountId'
-        type:
-          type: string
-          description: Type of transaction
-          example: ACH Pull
-        referenceIdentifier:
-          type: string
-          description: Transaction reference identifier
-          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
-        status:
-          type: string
-          description: Status of this transaction
-          example: Settled
-        shortMemo:
-          type: string
-          description: 10 character memo
-          example: March19
-        longMemo:
-          type: string
-          description: Long descriptions Max 100 characters
-          example: John Smith's monthly contribution
-        settlementStatus:
-          type: string
-          description: Settlement status of the ACH Push Request
-          example: Settled
-        amount:
-          type: number
-          description: The amount of the transaction
-          example: 100
-        contributionDate:
-          type: string
-          format: date-time
-          description: Date of service that triggered this transaction
-          example: '2022-03-21'
-        disbursementDate:
-          type: string
-          format: date-time
-          description: Date of service that triggered this transaction
-          example: '2022-03-21'
+            $ref: '#/components/schemas/MemberAuthorizationResponseDTO'
       required:
-      - amount
-      - longMemo
-      - referenceIdentifier
-      - settlementStatus
-      - shortMemo
-      - status
-      - type
-    ACHActivityResponseDoc:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        clientOrgAccount:
-          $ref: '#/components/schemas/ClientOrgAccountIdDto'
-        product:
-          $ref: '#/components/schemas/ProductNameDTO'
-        clientOrgTransactions:
-          type: array
-          items:
-            $ref: '#/components/schemas/ACHActivityDoc'
-    ClientOrgAccountIdDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: UUID of the client organization's FBO account
-          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
-      required:
-      - id
-    ExternalBankAccountId:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Unique identifier of the bank account
-          example: 6ae73974-2bd1-0f0d-7316-bbfff8cdc91b
-      required:
-      - id
-    ProductNameDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the product
-          example: HSA_01
-      required:
-      - name
-    ClientOrgDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The name of the client organization
-          example: Health_Plan_ABC_Division
-      required:
-      - name
-    MemberAccountDTO:
+      - clientOrg
+      - member
+    MemberBankAccountDTO:
       type: object
       properties:
         accountName:
           type: string
-          description: A name for this account
-          example: John's Bank of America XX-0435
-        accountType:
+          description: Name of the account
+        routingNumber:
           type: string
-          description: Type of account
-          example: HSA
-        productName:
-          type: string
-          description: The name of the product
-          example: HSA_01
+          description: The account routing number (9 Digits, numeric)
+          example: 211070178
         lastFourAccountNumber:
           type: string
           description: The last four digits of the bank account number
           example: 9118
-    MemberCardDTO:
+    MemberContributionResponseDTO:
       type: object
       properties:
-        cardProxy:
+        id:
           type: string
-          description: Proxy id of the card
-          example: 5263218885395
-        cardLastFour:
+          format: uuid
+          description: Internal unique identifier for the monetary transaction
+        contributionDate:
           type: string
-          description: Last four digits of the card number
-          example: 4434
-    MemberDTO:
-      type: object
-      properties:
-        clientMemberId:
+          format: date
+          description: Date of the contribution request
+        direction:
           type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-      required:
-      - clientMemberId
+          description: Debit vs. Credit
+          example: Debit
+        amount:
+          type: number
+          description: Dollar transaction amount.
+        status:
+          type: string
+          description: Status of this transaction
+          example: Settled
+        referenceIdentifier:
+          type: string
+          description: Transaction reference identifier
+          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
+        taxYear:
+          type: string
+          description: Tax year to which a contribution or limit applies
+          example: '2024'
+        contributionType:
+          type: string
+          description: Contribution Request Type
+          example: MemberContribution
+        memberAccount:
+          $ref: '#/components/schemas/MemberAccountDTO'
+        creationDate:
+          type: string
+          format: date-time
+          description: Date when the record was created
+          example: '2024-10-10'
+        updateDate:
+          type: string
+          format: date-time
+          description: Date when the record was last updated
+          example: '2024-10-10'
     MemberTransactionRespDTO:
       type: object
       properties:
@@ -2358,30 +2516,66 @@ components:
           format: date-time
           description: Date when the record was last updated
           example: '2024-10-10'
-    MemberTransactionSummaryResponse:
+    ExternalBankAccountId:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier of the bank account
+          example: 6ae73974-2bd1-0f0d-7316-bbfff8cdc91b
+      required:
+      - id
+    ClientMemberAuthorizationDTO:
+      type: object
+      properties:
+        direction:
+          type: string
+          description: Debit vs. Credit
+          example: Debit
+        amount:
+          type: number
+          description: Dollar transaction amount. Either amount or incentiveValue is required.
+          example: 782.34
+        status:
+          type: string
+          description: Status of this transaction
+          example: Settled
         member:
-          $ref: '#/components/schemas/MemberDTO'
+          $ref: '#/components/schemas/ClientMemberDTO'
+        id:
+          type: string
+          format: uuid
+        authorizationDate:
+          type: string
+          format: date-time
+          description: Date and time the transaction occurred
+        idType:
+          type: string
+          description: Identifies the type of monetary transaction, which can be Transaction, Authorization, or Contribution Request
+        reasonCode:
+          type: string
+          description: Reason code generated by the authorization system when the transaction fails
+          example: 79
+        reasonCodeDescription:
+          type: string
+          description: 'Reason for a failed transaction '
+          example: lorem
+        merchant:
+          $ref: '#/components/schemas/TransactionMerchantDTO'
+    ACHActivityResponseDoc:
+      type: object
+      properties:
         clientOrg:
-          $ref: '#/components/schemas/ClientOrgDTO'
-        memberTransactions:
+          $ref: '#/components/schemas/ClientOrgDto'
+        clientOrgAccount:
+          $ref: '#/components/schemas/ClientOrgAccountIdDto'
+        product:
+          $ref: '#/components/schemas/ProductNameDTO'
+        clientOrgTransactions:
           type: array
           items:
-            $ref: '#/components/schemas/MemberTransactionRespDTO'
-    TransactionMerchantDTO:
-      type: object
-      description: Merchant info for transaction authorization summary
-      properties:
-        name:
-          type: string
-          description: Name of merchant accepting the original transaction
-          example: MTA VENDING MACHINES
-        mcc:
-          type: integer
-          format: int32
-          description: Code representing the merchant's line of business
-          example: 5411
+            $ref: '#/components/schemas/ACHActivityDoc'
     MemberCardDetailDTO:
       type: object
       properties:
@@ -2396,6 +2590,188 @@ components:
         cardId:
           type: string
           description: Card processor assigned unique identifier for the car
+    CardActivityDetail:
+      type: object
+      properties:
+        productFamily:
+          type: string
+          description: 'Indicates the family id that the product code will fall into; Possible values include: UPC = Universal Product Code, PLU = Price Look-up, GTIN = Global Trade Item Number, EAN = European Article Number, SKU = Stock Keeping Unit'
+        productCode:
+          type: string
+          description: 'The numerical code, up to 17 digits, that uniquely identifies the product.
+
+            This can be the Universal Product Code (UPC), the Product Lookup (PLU) value, or a value from a
+
+            different product identification standard, like the Global Trade Item Number (GTIN) or
+
+            the International/European Article Number (EAN)
+
+            '
+        productDescription:
+          type: string
+          description: The description of the product associated with the product code
+        categoryDescription:
+          type: string
+          description: 'The general category to which the product belongs.  Sample Food categories
+
+            include: BEVERAGES, SEAFOOD, etc.
+
+            Sample OTC categories include: HEALTH ENHANCEMENT, HEALTH TREATMENTS/AIDS, etc
+
+            '
+        subcategoryDescription:
+          type: string
+          description: 'The sub-category to which the product belongs. Sample Food category/sub-category pairs
+
+            include: SEAFOOD / FISH - PREPARED/PROCESSED.
+
+            Sample OTC category/sub-category pairs include: HEALTH ENHANCEMENTS / VITAMINS/MINERALS/NUTRITION
+
+            '
+        benefitType:
+          type: string
+          description: Filtered Spend category of product purchased.Typically 5A is for Over the Counter (non-food) items and 5D is for Grocery items.  5I indicates APL uncategorized items
+        packageQuantity:
+          type: string
+          description: Quantity of what is included in the package
+        packageMeasure:
+          type: string
+          description: Size of a package unit (e.g., OZ, Cans, Tissues, Gallon, Pound)
+        itemPrice:
+          type: number
+          description: Size of a package unit (e.g., OZ, Cans, Tissues, Gallon, Pound)
+        quantity:
+          type: string
+          description: The quantity of the product purchased
+        discountAmount:
+          type: number
+          description: A discount applied to this product that reduces the final amount sought from the cardholder
+        couponAmount:
+          type: number
+          description: A discount applied to this product that reduces the final amount sought from the cardholder
+        couponQuantity:
+          type: number
+          description: The total number of coupons used to purchase this product
+        taxRate:
+          type: number
+          description: The tax rate applied to the purchase of this product
+        finalPrice:
+          type: number
+          description: The tax rate applied to the purchase of this product
+        isOnApl:
+          type: boolean
+          description: Indicates whether the product is on the APL (true) or is not on the APL (false)
+        fundingStatus:
+          type: string
+          description: Indicates whether the product is on the APL (true) or is not on the APL (false)
+        isProductCredit:
+          type: boolean
+          description: Indicates whether the product is on the APL (true) or is not on the APL (false)
+        departmentNumber:
+          type: string
+          description: Indicates whether the product is on the APL (true) or is not on the APL (false)
+        finelineNumber:
+          type: string
+          description: Number of the fineline; fineline is an internal Walmart hierarchy for stores
+        finelineDescription:
+          type: string
+          description: Name of the fineline; fineline is an internal Walmart hierarchy for stores
+        visitNumber:
+          type: string
+          description: Number of the transaction; used to help identify specific transactions
+        transactionNumber:
+          type: string
+          description: Number of the transaction; used to help identify specific transactions
+        storeNumber:
+          type: string
+          description: Number of the transaction; used to help identify specific transactions
+        totalDirectedSpendAmount:
+          type: number
+          description: Total directed spend amount of the basket
+        filterType:
+          type: string
+          description: 'Type of filter on a transaction with Spend Category; possible values are: Category, Item Level, Exception, Prenote'
+        transactionSource:
+          type: string
+          description: 'Source of the data; possible values are: Walmart, ISO, PreNote'
+        spendCategory:
+          type: string
+          description: ' Filtered Spend/IIAS Categories and amount'
+    ACHActivityDoc:
+      type: object
+      properties:
+        clientOrgBankAccount:
+          $ref: '#/components/schemas/ExternalBankAccountId'
+        type:
+          type: string
+          description: Type of transaction
+          example: ACH Pull
+        referenceIdentifier:
+          type: string
+          description: Transaction reference identifier
+          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
+        status:
+          type: string
+          description: Status of this transaction
+          example: Settled
+        shortMemo:
+          type: string
+          description: 10 character memo
+          example: March19
+        longMemo:
+          type: string
+          description: Long descriptions Max 100 characters
+          example: John Smith's monthly contribution
+        settlementStatus:
+          type: string
+          description: Settlement status of the ACH Push Request
+          example: Settled
+        amount:
+          type: number
+          description: The amount of the transaction
+          example: 100
+        contributionDate:
+          type: string
+          format: date-time
+          description: Date of service that triggered this transaction
+          example: '2022-03-21'
+        disbursementDate:
+          type: string
+          format: date-time
+          description: Date of service that triggered this transaction
+          example: '2022-03-21'
+      required:
+      - amount
+      - longMemo
+      - referenceIdentifier
+      - settlementStatus
+      - shortMemo
+      - status
+      - type
+    TagDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Constant used to define the metadata within a key-value pair
+        value:
+          type: string
+          description: Variable belonging to the metadata within a key-value pair
+        type:
+          type: string
+          description: Additional client-defined qualifier that may be used to further classify the key-value pair
+      required:
+      - name
+      - value
+    MemberDTO:
+      type: object
+      properties:
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+      required:
+      - clientMemberId
     MemberTransactionDetailResponse:
       type: object
       properties:
@@ -2405,182 +2781,32 @@ components:
           $ref: '#/components/schemas/ClientOrgDTO'
         memberTransaction:
           $ref: '#/components/schemas/MemberTransactionFullDetailDTO'
-    MemberTransactionFullDetailDTO:
+    MemberTransactionSummaryResponse:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
-          description: Internal unique identifier for the monetary transaction
-        transactionDate:
-          type: string
-          format: date-time
-          description: Date of service that triggered this transaction
-        authorizationDate:
-          type: string
-          format: date-time
-          description: Date and time the transaction occurred
-        settlementDate:
-          type: string
-          format: date-time
-          description: Date and time the transaction posted
-        direction:
-          type: string
-          description: Debit vs. Credit
-        amount:
-          type: number
-          description: Dollar amount of the settled transaction
-        localAmount:
-          type: number
-          description: The actual dollar amount of the transaction. The local amount may differ from amount when there are ineligible items purchased or a split purse transaction.
-        authorizationAmount:
-          type: number
-          description: Dollar amount of the authorization
-        status:
-          type: string
-          description: Status of this transaction
-        statusReason:
-          type: string
-          description: The reason for a particular status
-        partnerPurseNumber:
-          type: integer
-          format: int32
-          description: An internal number assigned to each of the purses that an account can have
-        merchant:
-          $ref: '#/components/schemas/MerchantDetailDTO'
-        memberCard:
-          $ref: '#/components/schemas/MemberCardDetailDTO'
-        memberAccount:
-          $ref: '#/components/schemas/MemberAccountTransactionsDto'
-        referenceIdentifier:
-          type: string
-          description: Transaction reference identifier
-        bankConfirmationId:
-          type: string
-          description: Confirmation id from bank
-        category:
-          type: string
-          description: 'Describes the transaction category. Possible values are: CONTRIBUTION, DISBURSEMENT, REDEMPTION, TRANSFER, DEPOSIT, WITHDRAWAL, CORPORATE_ACTION, CARD, ADJUSTMENT, RETURN, FEE, and MEMBER_FEE_REVENUE'
-        type:
-          type: string
-          description: Additional transaction type. Some possible values are listed below; to view the full list refer to the documentation. ClaimReimbursement, ClientOrgContribution, Credit, Debit, Dispute, EcommerceBuy, EcommerceRefund, Forfeiture, Incentive, InvestmentBuy, InvestmentSell, Manual, MemberAccountClosed, MemberContribution, MemberPurchase
-        shortMemo:
-          type: string
-          description: 10 character memo associated to the transaction
-        longMemo:
-          type: string
-          description: 100 character memo associated to the transaction
-        serviceDate:
-          type: string
-          format: date-time
-          description: Date of service that triggered this transaction
-        counterpartyAccount:
-          $ref: '#/components/schemas/CounterpartyAccountDto'
-        dispute:
-          $ref: '#/components/schemas/MemberTransactionDisputeDTO'
-        transactionLedger:
-          $ref: '#/components/schemas/TransactionLedgerIdDto'
-        incentiveValue:
-          type: number
-          description: Virtual currency balance of the incentive account based on the incentive ratio
-        clientTransactionIdentifier:
-          type: string
-          description: Unique client-defined identifier for the transaction
-        correctionIndicator:
-          type: boolean
-          description: Indicates whether the transaction is a correction
-        tags:
+        member:
+          $ref: '#/components/schemas/MemberDTO'
+        clientOrg:
+          $ref: '#/components/schemas/ClientOrgDTO'
+        memberTransactions:
           type: array
           items:
-            $ref: '#/components/schemas/TagDto'
-        bankPaymentId:
-          type: string
-          description: Unique card processor identifier for the transaction that is human readable
-        transactionTypeDescription:
-          type: string
-          description: Transaction type description
-        sourceDescription:
-          type: string
-          description: Description of the source of the transaction
-        authorizationCode:
-          type: string
-          description: The system-generated authorization code that is given at the time of purchase
-        authorizationReversalIndicator:
-          type: boolean
-          description: Indicates whether the authorization has been reversed
-        cardPresentIndicator:
-          type: boolean
-          description: Indicates whether the card was present for the transaction
-        acquirerReferenceNumber:
-          type: string
-          description: A reference number assigned by the Acquirer maintaining the original source information for a transaction. This number is used to assist in locating/retrieving source information or documents
-        spendCategory:
-          type: string
-          description: IIAS or Filtered Spend Category with the amount
-        filterType:
-          type: string
-          description: Type of filter on a transaction with a Spend Category
-        partnerTransactionId:
-          type: string
-          format: uuid
-          description: Card processor uuid for the transaction
-        requestCode:
-          type: integer
-          format: int32
-          description: Unique card processor identifier for the type of monetary transaction
-        requestName:
-          type: string
-          description: Card processor description for the type of monetary transaction
-        taxYear:
-          type: string
-          description: Tax year to which a contribution or limit applies
-        reasonCode:
-          type: string
-          description: Reason code generated by the authorization system when the transaction fails
-        reasonCodeDescription:
-          type: string
-          description: Reason for a failed transaction
-        responseCode:
-          type: string
-          description: Description of the response to the authorization request
-        responseCodeDescription:
-          type: string
-          description: Description of the response to the authorization request
-        partnerLogId:
-          type: string
-          description: Transaction Log ID
-        partnerMatchTypeCode:
-          type: string
-          description: Code for the authorization and settlement match outcome
-        partnerMatchTypeName:
-          type: string
-          description: Authorization and settlement match outcome description
-        creationDate:
-          type: string
-          format: date-time
-          description: Date when the record was created
-        updateDate:
-          type: string
-          format: date-time
-          description: Date when the record was last updated
-    MerchantDetailDTO:
+            $ref: '#/components/schemas/MemberTransactionRespDTO'
+    CounterpartyAccountDto:
       type: object
       properties:
-        name:
+        accountName:
           type: string
-          description: Name of merchant accepting the original transaction
-          example: MTA VENDING MACHINES
-        mcc:
-          type: integer
-          format: int32
-          description: Code representing the merchant's line of business
-          example: 5411
-        id:
+          description: A name for this account
+          example: John's Bank of America XX-0435
+        routingNumber:
           type: string
-          description: Merchant ID number
-        originalMerchantId:
+          description: The account routing number (9 Digits, numeric)
+          example: 211070178
+        lastFourAccountNumber:
           type: string
-          description: Merchant ID Number as received in the authorization message
+          description: The last four digits of the bank account number
+          example: 9118
     MemberContributionRequestSummaryResponse:
       type: object
       properties:
@@ -2595,200 +2821,39 @@ components:
       required:
       - clientOrg
       - member
-    MemberContributionResponseDTO:
+    GetAllMemberAuthorizationsByClientResponse:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
-          description: Internal unique identifier for the monetary transaction
-        contributionDate:
-          type: string
-          format: date
-          description: Date of the contribution request
-        direction:
-          type: string
-          description: Debit vs. Credit
-          example: Debit
-        amount:
-          type: number
-          description: Dollar transaction amount.
-        status:
-          type: string
-          description: Status of this transaction
-          example: Settled
-        referenceIdentifier:
-          type: string
-          description: Transaction reference identifier
-          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
-        taxYear:
-          type: string
-          description: Tax year to which a contribution or limit applies
-          example: '2024'
-        contributionType:
-          type: string
-          description: Contribution Request Type
-          example: MemberContribution
-        memberAccount:
-          $ref: '#/components/schemas/MemberAccountDTO'
-        creationDate:
-          type: string
-          format: date-time
-          description: Date when the record was created
-          example: '2024-10-10'
-        updateDate:
-          type: string
-          format: date-time
-          description: Date when the record was last updated
-          example: '2024-10-10'
-    MemberBankAccountDTO:
-      type: object
-      properties:
-        accountName:
-          type: string
-          description: Name of the account
-        routingNumber:
-          type: string
-          description: The account routing number (9 Digits, numeric)
-          example: 211070178
-        lastFourAccountNumber:
-          type: string
-          description: The last four digits of the bank account number
-          example: 9118
-    MemberContributionDetailResponseDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Internal unique identifier for the monetary transaction
-        contributionDate:
-          type: string
-          format: date
-          description: Date on which this contribution applies
-        direction:
-          type: string
-          description: Debit vs. Credit
-          example: Debit
-        amount:
-          type: number
-          description: Dollar amount of the contribution request.
-        status:
-          type: string
-          description: Status of this transaction
-          example: Settled
-        statusReason:
-          type: string
-          description: The reason for a particular status
-          example: HSA rejected due to lack of documentation
-        memberAccount:
-          $ref: '#/components/schemas/MemberAccountDTO'
-        referenceIdentifier:
-          type: string
-          description: Transaction reference identifier
-          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
-        category:
-          type: string
-          description: 'Describes the transaction category. Possible values are: CONTRIBUTION, DISBURSEMENT, REDEMPTION, TRANSFER, DEPOSIT, WITHDRAWAL, CORPORATE_ACTION, CARD, ADJUSTMENT, RETURN, FEE, and MEMBER_FEE_REVENUE'
-          example: CONTRIBUTION
-        type:
-          type: string
-          description: Additional transaction type. Some possible values are listed below; to view the full list refer to the documentation. MemberContribution, ClientOrgContribution, Incentive, Payroll, Cashback, Refund, Reimbursement, MemberPurchase, TransferPointsToDollars, MemberTransfer, Closed, ReceivedAchTransaction, ReceivedWireTransaction.
-          example: 4dbdd4694-4875-47d2-b663-04d9aee9ee30
-        shortMemo:
-          type: string
-          description: 10 character memo associated to the transaction
-          example: March19
-        longMemo:
-          type: string
-          description: 100 character memo associated to the transaction
-        counterpartyAccount:
-          $ref: '#/components/schemas/MemberBankAccountDTO'
-        correctionIndicator:
-          type: boolean
-          description: Indicates whether the transaction is a correction
-          example: true
-        taxYear:
-          type: string
-          description: Tax year to which a contribution or limit applies
-          example: '2024'
-        creationDate:
-          type: string
-          format: date-time
-          description: Date when the record was created
-          example: '2024-10-10'
-    MemberContributionRequestDetailResponse:
-      type: object
-      properties:
-        member:
-          $ref: '#/components/schemas/MemberDTO'
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDTO'
-        memberContributionRequest:
-          $ref: '#/components/schemas/MemberContributionDetailResponseDTO'
-      required:
-      - clientOrg
-      - member
-      - memberContributionRequest
-    MemberAuthorizationResponseDTO:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        authorizationDate:
-          type: string
-          format: date-time
-        direction:
-          type: string
-          description: Debit vs. Credit
-          example: Debit
-        amount:
-          type: number
-          description: Dollar transaction amount. Either amount or incentiveValue is required.
-          example: 782.34
-        status:
-          type: string
-          description: Status of this transaction
-          example: Settled
-        partnerReasonCode:
-          type: string
-          description: Reason code generated by the authorization system when the transaction fails
-          example: 79
-        partnerReasonCodeDescription:
-          type: string
-          description: 'Reason for a failed transaction '
-          example: lorem
-        merchant:
-          $ref: '#/components/schemas/TransactionMerchantDTO'
-        memberCard:
-          $ref: '#/components/schemas/MemberCardDTO'
-        memberAccount:
-          $ref: '#/components/schemas/MemberAccountDTO'
-        creationDate:
-          type: string
-          format: date-time
-          description: Date when the record was created
-          example: '2024-10-10'
-        updateDate:
-          type: string
-          format: date-time
-          description: Date when the record was last updated
-          example: '2024-10-10'
-    MemberAuthorizationSummaryResponse:
-      type: object
-      properties:
-        member:
-          $ref: '#/components/schemas/MemberDTO'
         clientOrg:
           $ref: '#/components/schemas/ClientOrgDTO'
         memberAuthorizations:
           type: array
           items:
-            $ref: '#/components/schemas/MemberAuthorizationResponseDTO'
+            $ref: '#/components/schemas/ClientMemberAuthorizationDTO'
       required:
       - clientOrg
-      - member
+    TransactionLedgerIdDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the ledger transaction
+    MemberTransactionDisputeDTO:
+      type: object
+      properties:
+        indicator:
+          type: boolean
+          description: Indicates whether the transaction has been disputed
+        state:
+          type: string
+          description: State of the dispute in the Claim Queue flow
+        status:
+          type: string
+          description: Additional detail for the dispute state in the Claim process
+        reason:
+          type: string
+          description: Reason of the dispute
     MemberAuthorizationDetailDTO:
       type: object
       properties:
@@ -2911,138 +2976,138 @@ components:
           format: date-time
           description: Date when the record was last updated
           example: '2024-10-10'
-    MemberAuthorizationDetailResponse:
+    BaseMember:
       type: object
       properties:
-        member:
-          $ref: '#/components/schemas/MemberDTO'
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDTO'
-        memberAuthorization:
-          $ref: '#/components/schemas/MemberAuthorizationDetailDTO'
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
       required:
-      - clientOrg
-      - member
-      - memberAuthorization
-    CardActivityDetail:
+      - clientMemberId
+    MerchantDTO:
       type: object
       properties:
-        productFamily:
+        id:
           type: string
-          description: 'Indicates the family id that the product code will fall into; Possible values include: UPC = Universal Product Code, PLU = Price Look-up, GTIN = Global Trade Item Number, EAN = European Article Number, SKU = Stock Keeping Unit'
-        productCode:
+        name:
           type: string
-          description: 'The numerical code, up to 17 digits, that uniquely identifies the product.
-
-            This can be the Universal Product Code (UPC), the Product Lookup (PLU) value, or a value from a
-
-            different product identification standard, like the Global Trade Item Number (GTIN) or
-
-            the International/European Article Number (EAN)
-
-            '
-        productDescription:
+        city:
           type: string
-          description: The description of the product associated with the product code
-        categoryDescription:
+        stateProvince:
           type: string
-          description: 'The general category to which the product belongs.  Sample Food categories
-
-            include: BEVERAGES, SEAFOOD, etc.
-
-            Sample OTC categories include: HEALTH ENHANCEMENT, HEALTH TREATMENTS/AIDS, etc
-
-            '
-        subcategoryDescription:
-          type: string
-          description: 'The sub-category to which the product belongs. Sample Food category/sub-category pairs
-
-            include: SEAFOOD / FISH - PREPARED/PROCESSED.
-
-            Sample OTC category/sub-category pairs include: HEALTH ENHANCEMENTS / VITAMINS/MINERALS/NUTRITION
-
-            '
-        benefitType:
-          type: string
-          description: Filtered Spend category of product purchased.Typically 5A is for Over the Counter (non-food) items and 5D is for Grocery items.  5I indicates APL uncategorized items
-        packageQuantity:
-          type: string
-          description: Quantity of what is included in the package
-        packageMeasure:
-          type: string
-          description: Size of a package unit (e.g., OZ, Cans, Tissues, Gallon, Pound)
-        itemPrice:
-          type: number
-          description: Size of a package unit (e.g., OZ, Cans, Tissues, Gallon, Pound)
-        quantity:
-          type: string
-          description: The quantity of the product purchased
-        discountAmount:
-          type: number
-          description: A discount applied to this product that reduces the final amount sought from the cardholder
-        couponAmount:
-          type: number
-          description: A discount applied to this product that reduces the final amount sought from the cardholder
-        couponQuantity:
-          type: number
-          description: The total number of coupons used to purchase this product
-        taxRate:
-          type: number
-          description: The tax rate applied to the purchase of this product
-        finalPrice:
-          type: number
-          description: The tax rate applied to the purchase of this product
-        isOnApl:
-          type: boolean
-          description: Indicates whether the product is on the APL (true) or is not on the APL (false)
-        fundingStatus:
-          type: string
-          description: Indicates whether the product is on the APL (true) or is not on the APL (false)
-        isProductCredit:
-          type: boolean
-          description: Indicates whether the product is on the APL (true) or is not on the APL (false)
-        departmentNumber:
-          type: string
-          description: Indicates whether the product is on the APL (true) or is not on the APL (false)
-        finelineNumber:
-          type: string
-          description: Number of the fineline; fineline is an internal Walmart hierarchy for stores
-        finelineDescription:
-          type: string
-          description: Name of the fineline; fineline is an internal Walmart hierarchy for stores
-        visitNumber:
-          type: string
-          description: Number of the transaction; used to help identify specific transactions
-        transactionNumber:
-          type: string
-          description: Number of the transaction; used to help identify specific transactions
-        storeNumber:
-          type: string
-          description: Number of the transaction; used to help identify specific transactions
-        totalDirectedSpendAmount:
-          type: number
-          description: Total directed spend amount of the basket
-        filterType:
-          type: string
-          description: 'Type of filter on a transaction with Spend Category; possible values are: Category, Item Level, Exception, Prenote'
-        transactionSource:
-          type: string
-          description: 'Source of the data; possible values are: Walmart, ISO, PreNote'
-        spendCategory:
-          type: string
-          description: ' Filtered Spend/IIAS Categories and amount'
-    CardActivityDoc:
+        mcc:
+          type: integer
+          format: int32
+    MemberDto:
       type: object
       properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDto'
-        member:
-          $ref: '#/components/schemas/BaseMember'
-        memberTransaction:
-          $ref: '#/components/schemas/CardActivityDto'
+        clientMemberId:
+          type: string
+          description: Unique client-side identifier for the member
+          example: 3f50436491
+        firstName:
+          type: string
+          description: First name
+          example: John
+        lastName:
+          type: string
+          description: Last name
+          example: Smith
       required:
-      - clientOrg
-      - member
+      - clientMemberId
+    ClientOrgAccountDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: UUID of the client organization's FBO account
+          example: 4dbdba69-4875-47c5-a663-04d9aee9ee91
+        accountType:
+          type: string
+          description: Type of account
+          example: HSA
+        productName:
+          type: string
+          description: The name of the product
+          example: HSA_01
+        lastFourAccountNumber:
+          type: string
+          description: '9118'
+          example: The last four digits of the bank account number
+        accountQualifierType:
+          type: string
+          description: The purpose for this account
+          example: John Smith's tax-free health spend
+      required:
+      - lastFourAccountNumber
+    ClientOrgDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the client organization
+          example: Health_Plan_ABC_Division
+      required:
+      - name
+    MemberAuthorizationResponseDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        authorizationDate:
+          type: string
+          format: date-time
+        direction:
+          type: string
+          description: Debit vs. Credit
+          example: Debit
+        amount:
+          type: number
+          description: Dollar transaction amount. Either amount or incentiveValue is required.
+          example: 782.34
+        status:
+          type: string
+          description: Status of this transaction
+          example: Settled
+        partnerReasonCode:
+          type: string
+          description: Reason code generated by the authorization system when the transaction fails
+          example: 79
+        partnerReasonCodeDescription:
+          type: string
+          description: 'Reason for a failed transaction '
+          example: lorem
+        merchant:
+          $ref: '#/components/schemas/TransactionMerchantDTO'
+        memberCard:
+          $ref: '#/components/schemas/MemberCardDTO'
+        memberAccount:
+          $ref: '#/components/schemas/MemberAccountDTO'
+        creationDate:
+          type: string
+          format: date-time
+          description: Date when the record was created
+          example: '2024-10-10'
+        updateDate:
+          type: string
+          format: date-time
+          description: Date when the record was last updated
+          example: '2024-10-10'
+    TransactionMerchantDTO:
+      type: object
+      description: Merchant info for transaction authorization summary
+      properties:
+        name:
+          type: string
+          description: Name of merchant accepting the original transaction
+          example: MTA VENDING MACHINES
+        mcc:
+          type: integer
+          format: int32
+          description: Code representing the merchant's line of business
+          example: 5411
     CardActivityDto:
       type: object
       properties:
@@ -3065,69 +3130,6 @@ components:
       required:
       - cardActivityId
       - cardActivityType
-    ClientMemberAuthorizationDTO:
-      type: object
-      properties:
-        direction:
-          type: string
-          description: Debit vs. Credit
-          example: Debit
-        amount:
-          type: number
-          description: Dollar transaction amount. Either amount or incentiveValue is required.
-          example: 782.34
-        status:
-          type: string
-          description: Status of this transaction
-          example: Settled
-        member:
-          $ref: '#/components/schemas/ClientMemberDTO'
-        id:
-          type: string
-          format: uuid
-        authorizationDate:
-          type: string
-          format: date-time
-          description: Date and time the transaction occurred
-        idType:
-          type: string
-          description: Identifies the type of monetary transaction, which can be Transaction, Authorization, or Contribution Request
-        reasonCode:
-          type: string
-          description: Reason code generated by the authorization system when the transaction fails
-          example: 79
-        reasonCodeDescription:
-          type: string
-          description: 'Reason for a failed transaction '
-          example: lorem
-        merchant:
-          $ref: '#/components/schemas/TransactionMerchantDTO'
-    ClientMemberDTO:
-      type: object
-      properties:
-        clientMemberId:
-          type: string
-          description: Unique client-side identifier for the member
-          example: 3f50436491
-        firstName:
-          type: string
-          description: First name
-        lastName:
-          type: string
-          description: Last name
-      required:
-      - clientMemberId
-    GetAllMemberAuthorizationsByClientResponse:
-      type: object
-      properties:
-        clientOrg:
-          $ref: '#/components/schemas/ClientOrgDTO'
-        memberAuthorizations:
-          type: array
-          items:
-            $ref: '#/components/schemas/ClientMemberAuthorizationDTO'
-      required:
-      - clientOrg
   securitySchemes:
     bearerAuth:
       type: http
